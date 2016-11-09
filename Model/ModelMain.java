@@ -47,6 +47,7 @@ class ModelVis{
     Visualizer visNormal;
     Visualizer visTumor;
     GuiWindow win;
+    GuiWindow win2;
     ModelVis(TumorModel model){
         myModel=model;
         int visScale=3;
