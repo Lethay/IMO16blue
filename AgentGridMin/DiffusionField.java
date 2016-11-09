@@ -6,6 +6,7 @@ import java.util.Arrays;
  * Created by bravorr on 10/21/16.
  */
 public class DiffusionField {
+
     final public int xDim;
     final public int yDim;
     final public Visualizer vis;
