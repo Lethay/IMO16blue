@@ -32,7 +32,6 @@ public class NecroticCells extends CellPop {
                 double decayDelta = Death(pop, NECROTIC_DECAY_RATE);
                 swap[i] += pop - decayDelta;
             }
-
         }
     }
 

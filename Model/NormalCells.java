@@ -40,9 +40,10 @@ public class NormalCells extends CellPop {
                 }
                 double birthDelta = Birth(pop, totalPop, NORMAL_PROLIF_RATE);
                 double deathDelta = Death(pop, NORMAL_DEATH_RATE);
+                NecroDeath(myModel.necroCells.swap,i,deathDelta);
                 double migrantDelta = Migrate(myModel, swap, x, y, MigrantPop(totalPop, birthDelta), VN_Hood, migrantPops);
                 swap[i] += pop + birthDelta - deathDelta - migrantDelta;
-                myModel.necroticCells.swap[i]=deathDelta;
+                //NecroDeath(myModel.necroCells.swap,i,deathDelta);
             }
 
         }
@@ -52,7 +53,7 @@ public class NormalCells extends CellPop {
     void Draw() {
         for(int x=0;x<xDim;x++){
             for(int y=0;y<yDim;y++) {
-                //myVis.SetHeat(x,y,pops[I(x,y)]/MAX_POP);
+                myVis.SetHeat(x,y,pops[I(x,y)]/MAX_POP);
             }
         }
     }

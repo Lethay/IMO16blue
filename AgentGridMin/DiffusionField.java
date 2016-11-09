@@ -73,7 +73,9 @@ public class DiffusionField {
                 {
                     f = 1;
                 }
-                vis.Set(x,y,f,0,0);
+                if(vis!=null) {
+                    vis.Set(x, y, f, 0, 0);
+                }
             }
         }
     }

@@ -31,6 +31,9 @@ public class CONST_AND_FUNCTIONS {
         return cellPop*deathRate;
     }
 
+    static void NecroDeath(double[] NecroSwap,int i,double deadCellPop){
+        NecroSwap[i]+=deadCellPop;
+    }
     //gets the population that will migrate, based on the number of cells born
     static double MigrantPop(double totalPop,double numBorn){
         return numBorn * (totalPop / MAX_POP);

@@ -43,16 +43,21 @@ class ModelVis{
     TumorModel myModel;
     Visualizer visVessels;
     Visualizer visO2;
+    Visualizer visNecro;
+    Visualizer visNormal;
     GuiWindow win;
-    GuiWindow win2;
     ModelVis(TumorModel model){
         myModel=model;
         int visScale=3;
-        visVessels=new Visualizer(model.xDim,model.yDim,visScale);
-        visO2=new Visualizer(model.xDim,model.yDim,visScale);
+        //visVessels=new Visualizer(model.xDim,model.yDim,visScale);
+        visNormal=new Visualizer(model.xDim,model.yDim,visScale);
+        visNecro=new Visualizer(model.xDim,model.yDim,visScale);
+        //visO2=new Visualizer(model.xDim,model.yDim,visScale);
         win=new GuiWindow("LungVis",model.xDim*visScale,model.yDim*visScale,2,1);
-        win.AddComponent(visVessels,0,0,1,1);
-        win.AddComponent(visO2,1,0,1,1);
+        win.AddComponent(visNormal,0,0,1,1);
+        win.AddComponent(visNecro,1,0,1,1);
+        //win.AddComponent(visVessels,0,0,1,1);
+        //win.AddComponent(visO2,1,0,1,1);
     }
 }
 
@@ -62,6 +67,7 @@ class TumorModel {
     ArrayList<CellPop> cellPops;
     ArrayList<DiffusionField> diffuseTypes;
     NormalCells normalCells;
+    NecroticCells necroCells;
     Vessels vessels;
     DiffusionField Oxygen;
     Random rand;
@@ -148,10 +154,10 @@ class TumorModel {
         int k = 0;
         for (int i = 0; i<xDim*yDim; i++)
         {
-            if (vessels.pops[i] !=0) {
-                ProdIndices[k] = i;
-                k+=1;
-            }
+//            if (vessels.pops[i] !=0) {
+//                ProdIndices[k] = i;
+//                k+=1;
+//            }
         }
         //Diffuse(diffRate,boolean boundaryCond,double boundaryValue,boolean wrapX)
         for (int di = 0; di < diffuseTypes.size(); di++) {
@@ -164,7 +170,7 @@ class TumorModel {
                 t = t + dt;
             }
         }
-        diffuseTypes.get(0).DrawField();
+//        diffuseTypes.get(0).DrawField();
     }
 
     //gets index from x and y coords
@@ -184,10 +190,11 @@ public class ModelMain {
         TumorModel firstModel = new TumorModel(100, 100);
         ModelVis mainWindow = new ModelVis(firstModel);
         //setting normalCells for access by other populations, adding cellpop for iteration
-        firstModel.normalCells = firstModel.AddCellPop(new NormalCells(firstModel, mainWindow.visVessels));
-        firstModel.AddCellPop(new TumorCellPop(firstModel, mainWindow.visVessels));
-        firstModel.vessels = firstModel.AddCellPop(new Vessels(firstModel, mainWindow.visVessels));
-        firstModel.Oxygen = firstModel.AddDiffusible(new DiffusionField(firstModel.xDim, firstModel.yDim, mainWindow.visO2));
+        firstModel.normalCells = firstModel.AddCellPop(new NormalCells(firstModel, mainWindow.visNormal));
+        firstModel.necroCells=firstModel.AddCellPop(new NecroticCells(firstModel,mainWindow.visNecro));
+        //firstModel.AddCellPop(new TumorCellPop(firstModel, mainWindow.visVessels));
+        //firstModel.vessels = firstModel.AddCellPop(new Vessels(firstModel, mainWindow.visVessels));
+        //firstModel.Oxygen = firstModel.AddDiffusible(new DiffusionField(firstModel.xDim, firstModel.yDim, mainWindow.visO2));
         firstModel.InitPops();
         while (true) {
             firstModel.RunCellStep();
