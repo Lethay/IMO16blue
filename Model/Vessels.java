@@ -13,11 +13,10 @@ public class Vessels extends CellPop {
 
     }
 
-
     void InitPop() {
         for (int x = 0; x < xDim; x++) {
             for (int y = 0; y < yDim; y++) {
-                if ((x % 5 == 0) && (y % 5 == 0) && (y > 30) && (y < 70) && (x > 30) && (x < 70)) {
+                if ((x % 5 == 0) && (y % 5 == 0) && (y > 10) && (y < 70) && (x > 10) && (x < 70)) {
                     pops[I(x, y)] = MAX_POP / 5.;
                 }
             }

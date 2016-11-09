@@ -19,7 +19,7 @@ public class CONST_AND_FUNCTIONS {
 
 
     //diffusible constants
-    static final double OXYGEN_PRODUCTION_RATE=0.3;
+    static final double OXYGEN_PRODUCTION_RATE=0.03;
 
     //returns pop to be born
     static double Birth(double cellPop,double totalPop,double maxProlifRate) {
