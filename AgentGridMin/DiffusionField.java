@@ -6,6 +6,7 @@ import java.util.Arrays;
  * Created by bravorr on 10/21/16.
  */
 public class DiffusionField {
+
     final public int xDim;
     final public int yDim;
     final public Visualizer vis;
@@ -61,19 +62,19 @@ public class DiffusionField {
     }
 
     public void DrawField(){
-        //Now draw the fields
-        for (int x = 0; x<xDim; x++)
-        {
-            for (int y=0; y<yDim; y++)
-            {
-                //vis.SetHeat(x, y, 10*Get(x,y));
-                float f = (float) Get(x,y);
-                f *= 100.;
-                if (f > 1.0)
-                {
-                    f = 1;
+        if (vis != null) {
+            //Now draw the fields
+            for (int x = 0; x < xDim; x++) {
+                for (int y = 0; y < yDim; y++) {
+                    //vis.SetHeat(x, y, 10*Get(x,y));
+                    float f = (float) Get(x, y);
+                    //                f *= 100.;
+                    //                if (f > 1.0)
+                    //                {
+                    //                    f = 1;
+                    //                }
+                    vis.SetHeat(x, y, f);
                 }
-                vis.Set(x,y,f,0,0);
             }
         }
     }

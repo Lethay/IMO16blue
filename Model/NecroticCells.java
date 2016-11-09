@@ -10,8 +10,6 @@ import static Model.CONST_AND_FUNCTIONS.*;
  * Created by Nate on 9/11/2016.
  */
 public class NecroticCells extends CellPop {
-    private SqList VN_Hood = Utils.GenVonNeumannNeighborhood();
-    double[] migrantPops = new double[4];
 
     NecroticCells(TumorModel model, Visualizer vis) {
         super(model,vis);
@@ -31,12 +29,9 @@ public class NecroticCells extends CellPop {
                     swap[i] += pop;
                     continue;
                 }
-                double birthDelta = Birth(pop, totalPop, NORMAL_PROLIF_RATE);
-                double deathDelta = Death(pop, NORMAL_DEATH_RATE);
-                double migrantDelta = Migrate(myModel, swap, x, y, MigrantPop(totalPop, birthDelta), VN_Hood, migrantPops);
-                swap[i] += pop + birthDelta - deathDelta - migrantDelta;
+                double decayDelta = Death(pop, NECROTIC_DECAY_RATE);
+                swap[i] += pop - decayDelta;
             }
-
         }
     }
 

@@ -11,21 +11,22 @@ public class CONST_AND_FUNCTIONS {
 
     //cell constants
     static final double MAX_POP=10000;
-    static final double TIME_STEP=0.1;//in days
-    static final double NORMAL_PROLIF_RATE=0.04*TIME_STEP;
+    static final double TIME_STEP=0.2; //days
+    static final double NECROTIC_DECAY_RATE=0.07*TIME_STEP;
+    static final double NORMAL_PROLIF_RATE=0.02*TIME_STEP;
     static final double NORMAL_DEATH_RATE=0.02*TIME_STEP;
     static final double TUMOUR_SWITCH_RATE=0.01*TIME_STEP;
     static final double DRUG_INHIBITION_RATE=0.03*TIME_STEP;
     static final double IMMUNE_KILL_RATE=0.08*TIME_STEP;
-    static final int TMR_POP_INDEX=1;
-    static final int RESIST_TMR_POP_INDEX=2;
+    static final int TMR_POP_INDEX=2;
+    static final int RESIST_TMR_POP_INDEX=3;
     static final int IMMUNE_POP_INDEX=-1; //TODO give a value for this
     static final double NORMAL_HYPOXIC_THRESHOLD=0.2;
     static final double MAX_HYPOXIC_DEATH_RATE=0.5;
 
 
     //diffusible constants
-    static final double OXYGEN_PRODUCTION_RATE=0.003;
+    static final double OXYGEN_PRODUCTION_RATE=0.03;
 
     //returns pop to be born
     static double Birth(double cellPop,double totalPop,double maxProlifRate) {
@@ -36,6 +37,9 @@ public class CONST_AND_FUNCTIONS {
         return cellPop*deathRate;
     }
 
+    static void NecroDeath(double[] NecroSwap,int i,double deadCellPop){
+        NecroSwap[i]+=deadCellPop;
+    }
     //gets the population that will migrate, based on the number of cells born
     static double MigrantPop(double totalPop,double numBorn){
         return numBorn * (totalPop / MAX_POP);
