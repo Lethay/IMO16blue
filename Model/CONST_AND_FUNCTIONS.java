@@ -14,6 +14,12 @@ public class CONST_AND_FUNCTIONS {
     static final double TIME_STEP=0.1;//in days
     static final double NORMAL_PROLIF_RATE=0.04*TIME_STEP;
     static final double NORMAL_DEATH_RATE=0.02*TIME_STEP;
+    static final double TUMOUR_SWITCH_RATE=0.01*TIME_STEP;
+    static final double DRUG_INHIBITION_RATE=0.03*TIME_STEP;
+    static final double IMMUNE_KILL_RATE=0.08*TIME_STEP;
+    static final int TMR_POP_INDEX=1;
+    static final int RESIST_TMR_POP_INDEX=2;
+    static final int IMMUNE_POP_INDEX=-1; //TODO give a value for this
     static final double NORMAL_HYPOXIC_THRESHOLD=0.2;
     static final double MAX_HYPOXIC_DEATH_RATE=0.5;
 

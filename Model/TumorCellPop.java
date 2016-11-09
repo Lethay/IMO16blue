@@ -2,7 +2,7 @@ package Model;
 import AgentGridMin.Visualizer;
 import Model.ModelMain.*;
 
-import static Model.CONST_AND_FUNCTIONS.MAX_POP;
+import static Model.CONST_AND_FUNCTIONS.*;
 
 /**
  * Created by dannichol on 09/11/2016.
@@ -18,12 +18,12 @@ public class TumorCellPop extends CellPop {
         super(model,vis);
     }
 
-    static private double Death(double cellPop, double totalPop, double deathRate){
-        return cellPop*deathRate;
+    static private double Death(double cellPop, double immunePop, double deathRate, double PDSwitchRate, double killRate){
+        return cellPop*deathRate +  PDSwitchRate*cellPop + killRate*cellPop*immunePop;
     }
 
-    static private double Birth(double cellPop, double totalPop, double birthRate){
-        return cellPop*(birthRate * (1 - totalPop / MAX_POP));
+    static private double Birth(double cellPop, double resistantPop, double drugConc, double totalPop, double birthRate, double PDSwitchRate, double inhibitionRate){
+        return cellPop*(birthRate * (1 - totalPop / MAX_POP)) + PDSwitchRate*resistantPop + inhibitionRate*resistantPop*drugConc;
     }
 
     static private double MigrantPop(double totalPop, double numBorn){
@@ -46,15 +46,17 @@ public class TumorCellPop extends CellPop {
             for(int y=0; y<yDim; y++){
                 int i = I(x,y);
                 double pop = pops[i];
+                double resistantPop=myModel.cellPops.get(RESIST_TMR_POP_INDEX).pops[i];
+                double immunePop=0; //myModel.cellPops.get(IMMUNE_POP_INDEX)[i]; //TODO Correct this variable
+                double drugConcentration=0; //TODO Correct this variable
                 double totalPop = myModel.totalPops[i];
                 if (pop < 1) {
                     swap[i] += pop;
                     continue;
                 }
-                double birthDelta = Birth(pop, totalPop, TUMOR_PROLIF_RATE);
-                double deathDelta = Death(pop, totalPop, TUMOR_DEATH_RATE);
+                double birthDelta = Birth(pop, resistantPop, drugConcentration, totalPop, TUMOR_PROLIF_RATE, TUMOUR_SWITCH_RATE, DRUG_INHIBITION_RATE);
+                double deathDelta = Death(pop, immunePop, TUMOR_DEATH_RATE, TUMOUR_SWITCH_RATE, IMMUNE_KILL_RATE);
                 double migrantDelta = MigrantPop(totalPop, birthDelta);
-
                 swap[i] += pop + birthDelta - deathDelta - migrantDelta;
 
             }

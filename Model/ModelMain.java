@@ -183,8 +183,9 @@ public class ModelMain {
         TumorModel firstModel = new TumorModel(100, 100);
         ModelVis mainWindow = new ModelVis(firstModel);
         //setting normalCells for access by other populations, adding cellpop for iteration
-        firstModel.normalCells = firstModel.AddCellPop(new NormalCells(firstModel, mainWindow.visVessels));
-        firstModel.AddCellPop(new TumorCellPop(firstModel, mainWindow.visVessels));
+        firstModel.normalCells = firstModel.AddCellPop(new NormalCells(firstModel, mainWindow.visVessels));//0
+        firstModel.AddCellPop(new TumorCellPop(firstModel, mainWindow.visVessels));//1
+        firstModel.AddCellPop(new resistantTumorCellPop(firstModel, mainWindow.visVessels));//2
         firstModel.vessels = firstModel.AddCellPop(new Vessels(firstModel, mainWindow.visVessels));
         firstModel.Oxygen = firstModel.AddDiffusible(new DiffusionField(firstModel.xDim, firstModel.yDim, mainWindow.visO2));
         firstModel.InitPops();
