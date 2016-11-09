@@ -144,6 +144,7 @@ public class ModelMain{
             //setting normalCells for access by other populations, adding cellpop for iteration
             firstModel.normalCells=firstModel.AddCellPop(new NormalCells(firstModel,mainWindow.vis));
             firstModel.AddCellPop(new TumorCellPop(firstModel, mainWindow.vis));
+            firstModel.AddCellPop(new Vessels(firstModel, mainWindow.vis));
             firstModel.InitPops();
             while(true){
                 firstModel.RunStep();
