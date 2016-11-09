@@ -153,8 +153,10 @@ class TumorModel {
         int[] ProdIndices = new int[xDim * yDim];
         int k = 0;
         for (int i = 0; i < xDim * yDim; i++) {
-            if (vessels.pops[i] != 0) {
-                ProdIndices[k] = i;
+            if (vessels != null) {
+                if (vessels.pops[i] != 0) {
+                    ProdIndices[k] = i;
+                }
             }
             k += 1;
         }
@@ -164,10 +166,10 @@ class TumorModel {
             while (t < discreteTimeStep) {
                 //Cell-type specific consumption
                 for (int ci = 0; ci < xDim * yDim; ci++) {
-//                    DType.field[ci] -= normalCells.pops[ci] * normalCells.OxygenConsumption * dt;
-//                    if (DType.field[ci] < 0) {
-//                        DType.field[ci] = 0.0;
-//                    }
+                    DType.field[ci] -= normalCells.pops[ci] * normalCells.OxygenConsumption * dt;
+                    if (DType.field[ci] < 0) {
+                        DType.field[ci] = 0.0;
+                    }
                 }
 
                 for (int vi = 0; vi < k; vi++) {
@@ -179,7 +181,10 @@ class TumorModel {
                 t = t + dt;
             }
         }
-        diffuseTypes.get(0).DrawField();
+
+        for (int di = 0; di < diffuseTypes.size(); di++) {
+            diffuseTypes.get(di).DrawField();
+        }
     }
 
     //gets index from x and y coords
