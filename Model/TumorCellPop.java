@@ -48,6 +48,7 @@ public class TumorCellPop extends CellPop {
                 }
                 double birthDelta = Birth(pop, totalPop, TUMOR_PROLIF_RATE);
                 double deathDelta = Death(pop, totalPop, TUMOR_DEATH_RATE);
+                NecroDeath(myModel.necroCells.swap,i,deathDelta);
                 double migrantDelta = Migrate(myModel, swap, x, y, MigrantPop(totalPop, birthDelta), VN_Hood, migrantPops);
                 swap[i] += pop + birthDelta - deathDelta - migrantDelta;
 
