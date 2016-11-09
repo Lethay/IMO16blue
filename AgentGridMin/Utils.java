@@ -311,14 +311,14 @@ public final class Utils {
             outGrid[yDim-1]=inGrid[yDim-1]+DiffRate*(-inGrid[yDim-1]*4+inGrid[yDim+yDim-1]+inGrid[yDim-2]+2*BoundaryValue);
         }
         else if(wrapX){
-            outGrid[0]=inGrid[0]+DiffRate*(-inGrid[0]*3+inGrid[1]+inGrid[yDim]+inGrid[xDim-1*yDim]);
-            outGrid[(xDim-1)*yDim]=inGrid[(xDim-1)*yDim]+DiffRate*(-inGrid[xDim-1*yDim+0]*3+inGrid[xDim-2*yDim]+inGrid[xDim-1*yDim+1]+inGrid[0]);
+            outGrid[0]=inGrid[0]+DiffRate*(-inGrid[0]*3+inGrid[1]+inGrid[yDim]+inGrid[(xDim-1)*yDim]);
+            outGrid[(xDim-1)*yDim]=inGrid[(xDim-1)*yDim]+DiffRate*(-inGrid[(xDim-1)*yDim+0]*3+inGrid[(xDim-2)*yDim]+inGrid[(xDim-1)*yDim+1]+inGrid[0]);
             outGrid[(xDim-1)*yDim+yDim-1]=inGrid[(xDim-1)*yDim+yDim-1]+DiffRate*(-inGrid[(xDim-1)*yDim+yDim-1]*3+inGrid[(xDim-2)*yDim+yDim-1]+inGrid[(xDim-1)*yDim+yDim-2]+outGrid[yDim-1]);
             outGrid[yDim-1]=inGrid[yDim-1]+DiffRate*(-inGrid[yDim-1]*3+inGrid[yDim+yDim-1]+inGrid[yDim-2]+outGrid[(xDim-1)*yDim+yDim-1]);
         }
         else{
             outGrid[0]=inGrid[0]+DiffRate*(-inGrid[0]*2+inGrid[1]+inGrid[yDim]);
-            outGrid[(xDim-1)*yDim]=inGrid[(xDim-1)*yDim]+DiffRate*(-inGrid[xDim-1*yDim+0]*2+inGrid[xDim-2*yDim]+inGrid[xDim-1*yDim+1]);
+            outGrid[(xDim-1)*yDim]=inGrid[(xDim-1)*yDim]+DiffRate*(-inGrid[(xDim-1)*yDim+0]*2+inGrid[(xDim-2)*yDim]+inGrid[(xDim-1)*yDim+1]);
             outGrid[(xDim-1)*yDim+yDim-1]=inGrid[(xDim-1)*yDim+yDim-1]+DiffRate*(-inGrid[(xDim-1)*yDim+yDim-1]*2+inGrid[(xDim-2)*yDim+yDim-1]+inGrid[(xDim-1)*yDim+yDim-2]);
             outGrid[yDim-1]=inGrid[yDim-1]+DiffRate*(-inGrid[yDim-1]*2+inGrid[yDim+yDim-1]+inGrid[yDim-2]);
         }
