@@ -29,12 +29,6 @@ abstract class CellPop {
     int I(int x,int y) {
         return x*yDim+y;
     }
-    boolean WithinGrid(int x,int y) {
-        if(x>=0&&x<xDim&&y>=0&&y<yDim) {
-            return true;
-        }
-        return false;
-    }
     //runs once at the begining of the model to initialize cell pops
     abstract void InitPop();
     //called once every tick
@@ -99,7 +93,7 @@ class TumorModel {
         Arrays.fill(totalPops,0);
         for(int iPop=0;iPop<cellPops.size();iPop++) {
             CellPop currPop=cellPops.get(iPop);
-            for (int i = 0; i < normalCells.pops.length; i++) {
+            for (int i = 0; i < currPop.pops.length; i++) {
                 totalPops[i] += currPop.pops[i];
             }
         }
@@ -111,6 +105,7 @@ class TumorModel {
         for(int iPop=0;iPop<cellPops.size();iPop++) {
             cellPops.get(iPop).Step();
         }
+        //(PDE step here)
         //switch pops and swaps in preparation for next time step
         for(int iPop=0;iPop<cellPops.size();iPop++){
             CellPop currPop = cellPops.get(iPop);
@@ -154,4 +149,4 @@ public class ModelMain{
                 firstModel.RunStep();
             }
         }
-        }
+}
