@@ -18,7 +18,7 @@ public class Vessels extends CellPop {
     void InitPop() {
         for (int x = 0; x < xDim; x++) {
             for (int y = 0; y < yDim; y++) {
-               if (rand.nextFloat() < 0.01)
+               if (rand.nextFloat() < 0.001)
                 {
                     pops[I(x, y)] = MAX_POP / 5.;
                 }

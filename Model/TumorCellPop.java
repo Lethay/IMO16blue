@@ -19,11 +19,16 @@ public class TumorCellPop extends CellPop {
 
 
     TumorCellPop(TumorModel model, Visualizer vis) {
-        super(model,vis);
+        super(model, vis);
     }
 
-    static private double Death(double cellPop, double immunePop, double deathRate, double PDSwitchRate, double killRate){
-        return cellPop*deathRate  +  PDSwitchRate*cellPop + killRate*cellPop*immunePop;
+    static private double Death(double cellPop, double immunePop, double deathRate, double PDSwitchRate, double killRate) {
+        return cellPop * deathRate + PDSwitchRate * cellPop + killRate * cellPop * immunePop;
+    }
+
+    static private double HypoxicDeath(double cellPop, double oxygen, double gluc, double acid)
+    {
+        return 0.0;
     }
 
     static private double Birth(double cellPop, double resistantPop, double drugConc, double totalPop, double birthRate, double PDSwitchRate, double inhibitionRate) {
@@ -52,6 +57,7 @@ public class TumorCellPop extends CellPop {
 
                 double birthDelta = Birth(pop, resistantPop, drugConcentration, totalPop, TUMOR_PROLIF_RATE, TUMOUR_SWITCH_RATE, DRUG_INHIBITION_RATE);
                 double deathDelta = Death(pop, immunePop, TUMOR_DEATH_RATE, TUMOUR_SWITCH_RATE, IMMUNE_KILL_RATE);
+//                double oxyDeathDelta =
                 double migrantDelta = Migrate(myModel, swap, x, y, MigrantPop(totalPop, birthDelta), VN_Hood, migrantPops);
                 swap[i] += pop + birthDelta - deathDelta - migrantDelta;
 

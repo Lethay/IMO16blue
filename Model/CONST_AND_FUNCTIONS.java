@@ -26,7 +26,14 @@ public class CONST_AND_FUNCTIONS {
 
 
     //diffusible constants
-    static final double OXYGEN_PRODUCTION_RATE=0.03;
+
+    static final double OXYGEN_DIFFUSION_RATE = 0.001;
+    static final double GLUCOSE_DIFFUSION_RATE = 0.001;
+    static final double ACID_DIFFUSION_RATE = 0.001;
+
+    static final double OXYGEN_PRODUCTION_RATE=0.3; //per dt, per unit density
+    static final double GLUCOSE_PRODUCTION_RATE=0.3; //per dt, per unit density
+    static final double ACID_PRODUCTION_RATE=0.03; //per dt, per unit density
 
     //returns pop to be born
     static double Birth(double cellPop,double totalPop,double maxProlifRate) {

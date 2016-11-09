@@ -13,6 +13,10 @@ public class NormalCells extends CellPop {
     private SqList VN_Hood = Utils.GenVonNeumannNeighborhood();
     double[] migrantPops = new double[4];
 
+    final public double OxygenConsumption = 0.0000003;
+    final public double GlucoseConsumption = 0.0000003;
+
+
     NormalCells(TumorModel model,Visualizer vis) {
         super(model,vis);
     }
