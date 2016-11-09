@@ -12,14 +12,14 @@ public class CONST_AND_FUNCTIONS {
     //cell constants
     static final double MAX_POP=10000;
     static final double TIME_STEP=0.1;//in days
-    static final double NORMAL_PROLIF_RATE=0.04*TIME_STEP;
+    static final double NORMAL_PROLIF_RATE=0.02*TIME_STEP;
     static final double NORMAL_DEATH_RATE=0.02*TIME_STEP;
     static final double NORMAL_HYPOXIC_THRESHOLD=0.2;
     static final double MAX_HYPOXIC_DEATH_RATE=0.5;
 
 
     //diffusible constants
-    static final double OXYGEN_PRODUCTION_RATE=0.003;
+    static final double OXYGEN_PRODUCTION_RATE=0.3;
 
     //returns pop to be born
     static double Birth(double cellPop,double totalPop,double maxProlifRate) {

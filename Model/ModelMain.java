@@ -12,6 +12,7 @@ import static Model.CONST_AND_FUNCTIONS.*;
  */
 
 abstract class CellPop {
+    final public double OxygenConsumption = 0.0000003;
     Visualizer myVis;
     TumorModel myModel;
     double[]pops;
@@ -43,15 +44,21 @@ class ModelVis{
     TumorModel myModel;
     Visualizer visVessels;
     Visualizer visO2;
+    Visualizer visNormal;
+    Visualizer visTumor;
     GuiWindow win;
     ModelVis(TumorModel model){
         myModel=model;
         int visScale=3;
         visVessels=new Visualizer(model.xDim,model.yDim,visScale);
         visO2=new Visualizer(model.xDim,model.yDim,visScale);
+        visNormal=new Visualizer(model.xDim,model.yDim,visScale);
+        visTumor=new Visualizer(model.xDim,model.yDim,visScale);
         win=new GuiWindow("LungVis",model.xDim*visScale,model.yDim*visScale,2,1);
         win.AddComponent(visVessels,0,0,1,1);
-        win.AddComponent(visO2,1,0,1,1);
+        win.AddComponent(visNormal,1,0,1,1);
+        win.AddComponent(visTumor,2,0,1,1);
+        win.AddComponent(visO2,3,0,1,1);
     }
 }
 
@@ -138,27 +145,35 @@ class TumorModel {
         System.out.println("Day: "+tick*TIME_STEP);
     }
 
-    void RunDiffuseStep(double discreteTimeStep)
-    {
+    void RunDiffuseStep(double discreteTimeStep) {
         double t = 0.0;
         double dt = 0.001;
 
-        int[] ProdIndices = new int[xDim*yDim];
+        int[] ProdIndices = new int[xDim * yDim];
         int k = 0;
-        for (int i = 0; i<xDim*yDim; i++)
-        {
-            if (vessels.pops[i] !=0) {
+        for (int i = 0; i < xDim * yDim; i++) {
+            if (vessels.pops[i] != 0) {
                 ProdIndices[k] = i;
-                k+=1;
             }
+            k += 1;
         }
         //Diffuse(diffRate,boolean boundaryCond,double boundaryValue,boolean wrapX)
         for (int di = 0; di < diffuseTypes.size(); di++) {
             DiffusionField DType = diffuseTypes.get(di);
             while (t < discreteTimeStep) {
-                for (int vi=0; vi < k; vi++) {
-                    DType.field[ProdIndices[vi]] = vessels.pops[ProdIndices[vi]] * OXYGEN_PRODUCTION_RATE;
+                //Cell-type specific consumption
+                for (int ci = 0; ci < xDim * yDim; ci++) {
+//                    DType.field[ci] -= normalCells.pops[ci] * normalCells.OxygenConsumption * dt;
+//                    if (DType.field[ci] < 0) {
+//                        DType.field[ci] = 0.0;
+//                    }
                 }
+
+                for (int vi = 0; vi < k; vi++) {
+                    //Vessel production (fixed conc)
+                    DType.field[ProdIndices[vi]] = vessels.pops[ProdIndices[vi]] * 10*OXYGEN_PRODUCTION_RATE * dt;
+                }
+
                 DType.Diffuse(0.0001, false, 0.0, false);
                 t = t + dt;
             }
@@ -183,8 +198,8 @@ public class ModelMain {
         TumorModel firstModel = new TumorModel(100, 100);
         ModelVis mainWindow = new ModelVis(firstModel);
         //setting normalCells for access by other populations, adding cellpop for iteration
-        firstModel.normalCells = firstModel.AddCellPop(new NormalCells(firstModel, mainWindow.visVessels));
-        firstModel.AddCellPop(new TumorCellPop(firstModel, mainWindow.visVessels));
+        firstModel.normalCells = firstModel.AddCellPop(new NormalCells(firstModel, mainWindow.visNormal));
+        firstModel.AddCellPop(new TumorCellPop(firstModel, mainWindow.visTumor));
         firstModel.vessels = firstModel.AddCellPop(new Vessels(firstModel, mainWindow.visVessels));
         firstModel.Oxygen = firstModel.AddDiffusible(new DiffusionField(firstModel.xDim, firstModel.yDim, mainWindow.visO2));
         firstModel.InitPops();

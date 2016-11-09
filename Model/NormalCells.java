@@ -19,10 +19,9 @@ public class NormalCells extends CellPop {
 
     //initializes the grid with a starting population, called once
     void InitPop() {
-        for (int x = (int)(xDim*3.0/8); x < xDim*5.0/8; x++) {
-            for (int y = (int)(yDim*3.0/8); y < xDim*5.0/8; y++) {
-                double start= myModel.rand.nextDouble()*MAX_POP;
-                pops[I(x,y)]=start;
+        for (int x = 0; x < xDim; x++) {
+            for (int y = 0; y < yDim; y++) {
+                //pops[I(x,y)] = MAX_POP / 10.;
             }
         }
     }
@@ -51,7 +50,7 @@ public class NormalCells extends CellPop {
     void Draw() {
         for(int x=0;x<xDim;x++){
             for(int y=0;y<yDim;y++) {
-                //myVis.SetHeat(x,y,pops[I(x,y)]/MAX_POP);
+                myVis.SetHeat(x,y,pops[I(x,y)]/MAX_POP);
             }
         }
     }
