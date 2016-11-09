@@ -55,6 +55,8 @@ public class Visualizer extends JPanel{
         //buff.setRGB(x,yDim-1-y,c.getRGB());
         data[(yDim-y-1)*xDim+x]=c.getRGB();
     }
+
+
     public void Clear(float r,float g,float b){
         Color c=new Color(r,g,b);
         Arrays.fill(data,c.getRGB());

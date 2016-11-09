@@ -47,14 +47,17 @@ abstract class CellPop {
 //gui and visualizer
 class ModelVis{
     TumorModel myModel;
-    Visualizer vis;
+    Visualizer visVessels;
+    Visualizer visO2;
     GuiWindow win;
     ModelVis(TumorModel model){
         myModel=model;
-        int visScale=8;
-        vis=new Visualizer(model.xDim,model.yDim,visScale);
-        win=new GuiWindow("LungVis",model.xDim*visScale,model.yDim*visScale,1,1);
-        win.AddComponent(vis,0,0,1,1);
+        int visScale=3;
+        visVessels=new Visualizer(model.xDim,model.yDim,visScale);
+        visO2=new Visualizer(model.xDim,model.yDim,visScale);
+        win=new GuiWindow("LungVis",model.xDim*visScale,model.yDim*visScale,2,1);
+        win.AddComponent(visVessels,0,0,1,1);
+        win.AddComponent(visO2,1,0,1,1);
     }
 }
 
@@ -62,7 +65,9 @@ class ModelVis{
 //model of tumor
 class TumorModel {
     ArrayList<CellPop> cellPops;
+    ArrayList<DiffusionField> diffuseTypes;
     NormalCells normalCells;
+    Vessels vessels;
     DiffusionField Oxygen;
     Random rand;
     double[] totalPops;
@@ -74,9 +79,10 @@ class TumorModel {
 
     TumorModel(int x, int y) {
         cellPops=new ArrayList<CellPop>();
+        diffuseTypes = new ArrayList<DiffusionField>();
         tick=0;
         rand = new Random();
-//        Oxygen=new DiffusionField(x,y);
+
         totalPops = new double[x * y];
         xDim = x;
         yDim = y;
@@ -88,13 +94,19 @@ class TumorModel {
         return addMe;
     }
 
+     DiffusionField AddDiffusible(DiffusionField addMe) {
+         diffuseTypes.add(addMe);
+         return addMe;
+     }
+
     void InitPops(){
         for(int iPop=0;iPop<cellPops.size();iPop++) {
             cellPops.get(iPop).InitPop();
         }
+
     }
 
-    void RunStep(){
+    void RunCellStep(){
         //clear and fill total pop grid
         Arrays.fill(totalPops,0);
         for(int iPop=0;iPop<cellPops.size();iPop++) {
@@ -125,9 +137,38 @@ class TumorModel {
                 currPop.Draw();
             }
         }
+
         //print how much time has passed
         tick++;
         System.out.println("Day: "+tick*TIME_STEP);
+    }
+
+    void RunDiffuseStep(double discreteTimeStep)
+    {
+        double t = 0.0;
+        double dt = 0.001;
+
+        int[] ProdIndices = new int[xDim*yDim];
+        int k = 0;
+        for (int i = 0; i<xDim*yDim; i++)
+        {
+            if (vessels.pops[i] !=0) {
+                ProdIndices[k] = i;
+                k+=1;
+            }
+        }
+        //Diffuse(diffRate,boolean boundaryCond,double boundaryValue,boolean wrapX)
+        for (int di = 0; di < diffuseTypes.size(); di++) {
+            DiffusionField DType = diffuseTypes.get(di);
+            while (t < discreteTimeStep) {
+                for (int vi=0; vi < k; vi++) {
+                    DType.field[ProdIndices[vi]] = vessels.pops[ProdIndices[vi]] * OXYGEN_PRODUCTION_RATE;
+                }
+                DType.Diffuse(0.0001, false, 0.0, false);
+                t = t + dt;
+            }
+        }
+        diffuseTypes.get(0).DrawField();
     }
 
     //gets index from x and y coords
@@ -142,17 +183,20 @@ class TumorModel {
     }
 }
 
-public class ModelMain{
-        public static void main(String[] args){
-            TumorModel firstModel=new TumorModel(100,100);
-            ModelVis mainWindow=new ModelVis(firstModel);
-            //setting normalCells for access by other populations, adding cellpop for iteration
-            firstModel.normalCells=firstModel.AddCellPop(new NormalCells(firstModel,mainWindow.vis));
-            firstModel.AddCellPop(new TumorCellPop(firstModel, mainWindow.vis));
-            firstModel.AddCellPop(new Vessels(firstModel, mainWindow.vis));
-            firstModel.InitPops();
-            while(true){
-                firstModel.RunStep();
-            }
+public class ModelMain {
+    public static void main(String[] args) {
+        TumorModel firstModel = new TumorModel(100, 100);
+        ModelVis mainWindow = new ModelVis(firstModel);
+        //setting normalCells for access by other populations, adding cellpop for iteration
+        firstModel.normalCells = firstModel.AddCellPop(new NormalCells(firstModel, mainWindow.visVessels));
+        firstModel.AddCellPop(new TumorCellPop(firstModel, mainWindow.visVessels));
+        firstModel.vessels = firstModel.AddCellPop(new Vessels(firstModel, mainWindow.visVessels));
+        firstModel.Oxygen = firstModel.AddDiffusible(new DiffusionField(firstModel.xDim, firstModel.yDim, mainWindow.visO2));
+        firstModel.InitPops();
+        while (true) {
+            firstModel.RunCellStep();
+            firstModel.RunDiffuseStep(0.1);
+
         }
-        }
+    }
+}

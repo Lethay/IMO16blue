@@ -17,8 +17,9 @@ public class CONST_AND_FUNCTIONS {
     static final double NORMAL_HYPOXIC_THRESHOLD=0.2;
     static final double MAX_HYPOXIC_DEATH_RATE=0.5;
 
-    //reusable functions for cell populations
 
+    //diffusible constants
+    static final double OXYGEN_PRODUCTION_RATE=0.003;
 
     //returns pop to be born
     static double Birth(double cellPop,double totalPop,double maxProlifRate) {
