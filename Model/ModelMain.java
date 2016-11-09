@@ -4,6 +4,8 @@ import AgentGridMin.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import static Model.CONST_AND_FUNCTIONS.*;
 
@@ -53,8 +55,8 @@ class ModelVis{
 
     ModelVis(TumorModel model){
         myModel=model;
-        int visScale=2;
-        //Cell types
+
+        int visScale=3;
         visVessels=new Visualizer(model.xDim,model.yDim,visScale);
         visTumor=new Visualizer(model.xDim,model.yDim,visScale);
         visNormal=new Visualizer(model.xDim,model.yDim,visScale);
@@ -73,6 +75,13 @@ class ModelVis{
         win.AddComponent(visO2,0,1,1,1);
         win.AddComponent(visPH,1,1,1,1);
         win.AddComponent(visGL,2,1,1,1);
+
+        win.addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent e) {
+                myModel.printCellPops();
+            }
+        });
+
     }
 }
 
@@ -164,7 +173,7 @@ class TumorModel {
 
         //print how much time has passed
         tick++;
-        System.out.println("Day: "+tick*TIME_STEP);
+        System.err.println("Day: "+tick*TIME_STEP); //TODO: put this information onto the GUI.
     }
 
     void RunDiffuseStep(double discreteTimeStep) {
@@ -229,6 +238,16 @@ class TumorModel {
         }
         return false;
     }
+
+    //Print data out
+    void printCellPops(){
+        for(int x=0; x<xDim; x++){
+            for(int y=0; y<yDim; y++){
+                System.out.printf("%g ",totalPops[I(x, y)]);
+            }
+            System.out.print("\n");
+        }
+    }
 }
 
 public class ModelMain {
@@ -253,7 +272,6 @@ public class ModelMain {
         while (true) {
             firstModel.RunCellStep();
             firstModel.RunDiffuseStep(0.1);
-
         }
     }
 }
