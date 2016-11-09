@@ -32,12 +32,13 @@ public class TumorCellPop extends CellPop {
 
     //runs once at the begining of the model to initialize cell pops
     public void InitPop(){
-        for (int x = xDim/3; x < xDim*2.0/3; x++) {
-            for (int y = yDim/3; y < xDim*2.0/3; y++) {
-                double start= myModel.rand.nextDouble()*MAX_POP;
-                pops[I(x,y)]=start;
+        for (int x=0; x<50; x++){
+            for (int y = 0; y<50; y++) {
+                pops[I(x,y)]=1000;
             }
+
         }
+        pops[I(50,50)] = 0;
     }
     //called once every tick
     public void Step(){
@@ -63,7 +64,9 @@ public class TumorCellPop extends CellPop {
     public void Draw() {
         for (int x = 0; x < xDim; x++) {
             for (int y = 0; y < yDim; y++) {
-                myVis.Set(x, y, 0,0,1);
+                if (pops[I(x,y)] != 0) {
+                    //myVis.Set(x, y, 0, 0, 1);
+                }
             }
         }
     }
