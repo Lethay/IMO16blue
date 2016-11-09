@@ -1,6 +1,7 @@
 package Model;
 
 import AgentGridMin.Visualizer;
+import java.util.Random;
 
 import static Model.CONST_AND_FUNCTIONS.MAX_POP;
 
@@ -8,6 +9,7 @@ import static Model.CONST_AND_FUNCTIONS.MAX_POP;
  * Created by rafael on 11/8/16.
  */
 public class Vessels extends CellPop {
+    Random rand = new Random();
     Vessels(TumorModel myModel, Visualizer vis) {
         super(myModel, vis);
 
@@ -16,9 +18,11 @@ public class Vessels extends CellPop {
     void InitPop() {
         for (int x = 0; x < xDim; x++) {
             for (int y = 0; y < yDim; y++) {
-                if ((x % 5 == 0) && (y % 5 == 0) && (y > 10) && (y < 70) && (x > 10) && (x < 70)) {
+               if (rand.nextFloat() < 0.01)
+                {
                     pops[I(x, y)] = MAX_POP / 5.;
                 }
+
             }
         }
 

@@ -157,8 +157,10 @@ class TumorModel {
         int[] ProdIndices = new int[xDim * yDim];
         int k = 0;
         for (int i = 0; i < xDim * yDim; i++) {
-            if (vessels.pops[i] != 0) {
-                ProdIndices[k] = i;
+            if (vessels != null) {
+                if (vessels.pops[i] != 0) {
+                    ProdIndices[k] = i;
+                }
             }
             k += 1;
         }
@@ -181,6 +183,9 @@ class TumorModel {
                 DType.Diffuse(0.0001, false, 0.0, false);
                 t = t + dt;
             }
+        }
+        for (int di = 0; di < diffuseTypes.size(); di++) {
+            diffuseTypes.get(di).DrawField();
         }
     }
 

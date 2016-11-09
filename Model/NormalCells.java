@@ -42,7 +42,7 @@ public class NormalCells extends CellPop {
                 NecroDeath(myModel.necroCells.swap,i,deathDelta);
                 double migrantDelta = Migrate(myModel, swap, x, y, MigrantPop(totalPop, birthDelta), VN_Hood, migrantPops);
                 swap[i] += pop + birthDelta - deathDelta - migrantDelta;
-                //NecroDeath(myModel.necroCells.swap,i,deathDelta);
+                NecroDeath(myModel.necroCells.swap,i,deathDelta);
             }
 
         }
