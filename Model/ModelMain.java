@@ -81,19 +81,19 @@ class ModelVis{
         win.AddComponent(visTumor,2,0,1,1);
         win.AddComponent(visVessels,0,1,1,1);
         win.AddComponent(visO2,1,1,1,1);
-        win.AddComponent(visTcells,2,1,1,1);
+        win.AddComponent(visTcells,4,1,1,1);
         win.AddComponent(visVessels,3,0,1,1);
         win.AddComponent(visO2,0,1,1,1);
         win.AddComponent(visPH,1,1,1,1);
         win.AddComponent(visGL,2,1,1,1);
         win.AddComponent(visDR,3,1,1,1);
 
-
-        win.addWindowListener(new WindowAdapter() {
-            public void windowClosing(WindowEvent e) {
-                myModel.printCellPops();
-            }
-        });
+//
+//        win.addWindowListener(new WindowAdapter() {
+//            public void windowClosing(WindowEvent e) {
+//                myModel.printCellPops();
+//            }
+//        });
 
 
     }
