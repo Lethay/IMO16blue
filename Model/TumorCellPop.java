@@ -79,26 +79,31 @@ public class TumorCellPop extends CellPop {
             for (int y = 0; y < yDim; y++) {
                 int i = I(x, y);
                 double pop = pops[i];
-                double immunePop=myModel.tCells.pops[i];
-                double acidNumber=0*cellSize; //TODO correct this - the "0" needs to be acidConc
+                double immunePop = myModel.tCells.pops[i];
+                double acidNumber = 0 * cellSize; //TODO correct this - the "0" needs to be acidConc
                 double totalPop = myModel.totalPops[i];
                 if (pop < 1) {
-                    swap[i] += Math.max(pop,0);
+                    swap[i] += Math.max(pop, 0);
                     continue;
                 }
 
-                double oxy = myModel.Oxygen.field[I(x,y)];
-                double gluc = myModel.Glucose.field[I(x,y)];
-                double acid = myModel.Acid.field[I(x,y)];
+                double hypoxicDeathDelta = 0;
+                if (OXYGEN_ACTIVE && GLUCOSE_ACTIVE && ACID_ACTIVE) {
+                    double oxy = myModel.Oxygen.field[I(x, y)];
+                    double gluc = myModel.Glucose.field[I(x, y)];
+                    double acid = myModel.Acid.field[I(x, y)];
 
-                double hypoxicDeathDelta = HypoxicDeath(pop, oxy, gluc, acid);
-                double birthDelta = Birth(pop,totalPop, TUMOR_PROLIF_RATE);
+                    hypoxicDeathDelta = HypoxicDeath(pop, oxy, gluc, acid);
+                }
+                double birthDelta = Birth(pop, totalPop, TUMOR_PROLIF_RATE);
                 double deathDelta = Death(pop, immunePop, acidNumber, TUMOR_DEATH_RATE, IMMUNE_KILL_RATE);
                 double migrantDelta = Migrate(myModel, swap, x, y, MigrantPop(totalPop, birthDelta), VN_Hood, migrantPops);
                 swap[i] += pop + birthDelta - deathDelta - hypoxicDeathDelta - migrantDelta;
-                myModel.necroCells.swap[i] += hypoxicDeathDelta;
-                if (swap[i] < 0.0){
-                    swap[i]=0.0;
+                if(NECRO_CELLS_ACTIVE) {
+                    myModel.necroCells.swap[i] += hypoxicDeathDelta;
+                }
+                if (swap[i] < 0.0) {
+                    swap[i] = 0.0;
                 }
             }
         }
