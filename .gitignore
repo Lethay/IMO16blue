@@ -3,3 +3,4 @@ commons-math3-3.6.1/*
 .idea/*
 *.iml
 *.pyc
+*cellDensities*.txt
