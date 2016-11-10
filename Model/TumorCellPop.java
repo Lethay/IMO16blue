@@ -35,11 +35,11 @@ public class TumorCellPop extends CellPop {
         double hypDeath = 0.0;
         if (oxygen < TUMOUR_LOW_OXYGEN_DEATH_THRESHOLD)
         {
-            hypDeath += 0.3;
+            hypDeath += 0.1;
         }
         if (acid > TUMOUR_HIGH_ACID_DEATH_THRESHOLD)
         {
-            hypDeath += 0.2;
+            hypDeath += 0.0;
         }
         return hypDeath * cellPop;
     }

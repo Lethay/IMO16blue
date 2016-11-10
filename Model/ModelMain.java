@@ -89,6 +89,12 @@ class ModelVis{
         win.AddComponent(visDR,3,1,1,1);
 
 
+        win.addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent e) {
+                myModel.printCellPops();
+            }
+        });
+
 
     }
 }

@@ -58,6 +58,7 @@ public class CONST_AND_FUNCTIONS {
     static final double OXYGEN_USAGE_NORMAL=2; //number of oxygen needed for a single birth (for normal cells)
     static final double GLUCOSE_USAGE_NORMAL=2; // number of glucose needed for a single birth (for normal cells)
     static final double ACID_RATE_NORMAL=.1; // amount of acid produced per glycolysis (for normal cells)
+
     static double modifiedBirthRate(double birthRate, double oxy, double gluc) {
         double oxyPenalty = 1.0;
         double glucPenalty = 1.0;
