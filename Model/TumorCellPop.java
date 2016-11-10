@@ -69,7 +69,6 @@ public class TumorCellPop extends CellPop {
 
                 double hypoxicDeathDelta = HypoxicDeath(pop, oxy, gluc, acid);
                 double birthDelta = Birth(pop, resistantPop, drugConcentration, totalPop, TUMOR_PROLIF_RATE, TUMOUR_SWITCH_RATE, DRUG_INHIBITION_RATE, gluc, oxy);
-
                 double migrantDelta = Migrate(myModel, swap, x, y, MigrantPop(totalPop, birthDelta), VN_Hood, migrantPops);
                 swap[i] += pop + birthDelta - deathDelta - hypoxicDeathDelta - migrantDelta;
                 if (swap[i] < 1.0){

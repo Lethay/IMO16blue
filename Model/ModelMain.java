@@ -257,9 +257,9 @@ public class ModelMain {
         ModelVis mainWindow = new ModelVis(firstModel);
         //setting normalCells for access by other populations, adding cellpop for iteration
         firstModel.normalCells = firstModel.AddCellPop(new NormalCells(firstModel, mainWindow.visNormal)); //0
-        firstModel.necroCells=firstModel.AddCellPop(new NecroticCells(firstModel,mainWindow.visNecro));//1
         firstModel.tumorCells=firstModel.AddCellPop(new TumorCellPop(firstModel, mainWindow.visTumor));//2
         firstModel.resistantTumorCells=firstModel.AddCellPop(new resistantTumorCellPop(firstModel, mainWindow.visTumor));//3
+        firstModel.necroCells=firstModel.AddCellPop(new NecroticCells(firstModel,mainWindow.visNecro));//1
 
         //The vessels
         firstModel.vessels = firstModel.AddCellPop(new Vessels(firstModel, mainWindow.visVessels));//4
