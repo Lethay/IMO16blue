@@ -36,6 +36,11 @@ public class CONST_AND_FUNCTIONS {
     static final int IMMUNE_POP_INDEX=-1; //TODO give a value for this
     static final double NORMAL_HYPOXIC_THRESHOLD=0.2;
     static final double MAX_HYPOXIC_DEATH_RATE=0.5;
+    static final double VESSELS_TO_TCELLS=10*TIME_STEP;
+    static final double TCELLS_VS_TUMORCELLS=0.03;
+    static final double TCELL_MOVE_RATE=0.95;
+    static final double TCELL_DEATH_RATE=0.02*TIME_STEP;
+    //static final double TCELL_MOVE_RATE=0.75*TIME_STEP;
 
 
     //diffusible constants
@@ -143,5 +148,37 @@ public class CONST_AND_FUNCTIONS {
             }
         }
         return surroundingDiff>0?popToMigrate:0;
+    }
+
+    static void TCellDiffusion(TumorModel myModel,TCells tCells, int x,int y,double popToMigrate){
+
+    }
+
+    static void MigrateTCells(TumorModel myModel,double[] swap,int x,int y,double popToMigrate,SqList neighborhood,double[] storePops,double cellSize){
+        double totalPop=popToMigrate;
+        double movedPop=0;
+        Arrays.fill(storePops,0);
+        double totSpace=0;
+        for(int i=0;i<neighborhood.length;i++){
+            int checkX = neighborhood.Xsq(i) + x;
+            int checkY = neighborhood.Ysq(i) + y;
+            if (myModel.WithinGrid(checkX, checkY)) {
+                double space = MAX_POP - myModel.totalPops[myModel.I(checkX, checkY)];
+                if(space>0) {
+                    storePops[i] = space;
+                    totSpace += space;
+                }
+            }
+        }
+        popToMigrate=totSpace/cellSize>popToMigrate?popToMigrate:totSpace/cellSize;
+        for(int i=0;i<neighborhood.length;i++){
+            if(storePops[i]>0) {
+                swap[myModel.I(neighborhood.Xsq(i) + x, neighborhood.Ysq(i) + y)] += popToMigrate * (storePops[i] / totSpace);
+                movedPop+=popToMigrate * (storePops[i] / totSpace);
+            }
+        }
+        if(Math.abs(totalPop-movedPop)>1){
+            throw new RuntimeException("tcell movement changed the pop"+(totalPop-movedPop));
+        }
     }
 }

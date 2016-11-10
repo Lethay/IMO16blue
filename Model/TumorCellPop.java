@@ -71,7 +71,7 @@ public class TumorCellPop extends CellPop {
                 double drugConcentration=0; //TODO Correct this variable
                 double totalPop = myModel.totalPops[i];
                 if (pop < 1) {
-                    swap[i] += pop;
+                    swap[i] += Math.max(pop,0);
                     continue;
                 }
 
@@ -98,6 +98,9 @@ public class TumorCellPop extends CellPop {
     public void Draw() {
         for (int x = 0; x < xDim; x++) {
             for (int y = 0; y < yDim; y++) {
+                if(myVis!=null&&pops[I(x,y)]>1) {
+                    myVis.SetHeat(x, y, pops[I(x, y)] / MAX_POP);
+                }
                 myVis.SetHeat(x, y, 30*pops[I(x, y)] / MAX_POP);
             }
         }
