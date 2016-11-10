@@ -10,13 +10,18 @@ import java.util.Arrays;
 public class CONST_AND_FUNCTIONS {
 
     static final double DIFFUSE_TIME_LENGTH = 1.0;
+    static final double DIFFUSE_DT = 0.01;
 
     //cell constants
     static final double MAX_POP=10000;
     static final double TIME_STEP=0.2; //days
-    static final double NECROTIC_DECAY_RATE=0.07*TIME_STEP;
+    static final double NECROTIC_DECAY_RATE=0.01*TIME_STEP;
     static final double NORMAL_PROLIF_RATE=0.02*TIME_STEP;
     static final double NORMAL_DEATH_RATE=0.02*TIME_STEP;
+
+    static final double TUMOR_PROLIF_RATE = 0.4 * TIME_STEP;
+    static final double TUMOR_DEATH_RATE = 0.02*TIME_STEP;
+
     static final double TUMOUR_SWITCH_RATE=0.01*TIME_STEP;
     static final double DRUG_INHIBITION_RATE=0.03*TIME_STEP;
     static final double IMMUNE_KILL_RATE=0.08*TIME_STEP;
@@ -32,13 +37,14 @@ public class CONST_AND_FUNCTIONS {
     static final double GLUCOSE_DIFFUSION_RATE = 0.1;
     static final double ACID_DIFFUSION_RATE = 0.1;
 
-    static final double OXYGEN_PRODUCTION_RATE=0.3; //per dt, per unit density
-    static final double GLUCOSE_PRODUCTION_RATE=0.3; //per dt, per unit density
+    static final double OXYGEN_PRODUCTION_RATE=0.003; //per dt, per unit density
+    static final double GLUCOSE_PRODUCTION_RATE=0.003; //per dt, per unit density
     static final double ACID_PRODUCTION_RATE=1.0; //per dt, per unit density
 
     //Govern gluc/oxy on
     static final double GLUCOSE_THRESHOLD = 0.05;
     static final double OXYGEN_THRESHOLD = 0.05;
+
     static  double modifiedBirthRate(double birthRate, double oxy, double gluc) {
         double oxyPenalty = 1.0;
         double glucPenalty = 1.0;
@@ -51,9 +57,7 @@ public class CONST_AND_FUNCTIONS {
             oxyPenalty = 0.1;
         }
         return birthRate * glucPenalty * oxyPenalty;
-
     }
-
 
     //returns pop to be born
     static double Birth(double cellPop,double totalPop,double maxProlifRate) {

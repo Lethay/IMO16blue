@@ -178,7 +178,7 @@ class TumorModel {
 
     void RunDiffuseStep(double discreteTimeStep) {
         double t = 0.0;
-        double dt = 0.01;
+        double dt = DIFFUSE_DT;
 
         int[] ProdIndices = new int[xDim * yDim];
         int k = 0;
@@ -195,8 +195,8 @@ class TumorModel {
         //DTypes into vessel-produced and cell-produced
         for (int vi = 0; vi < k; vi++) {
             //Vessel production (fixed conc)
-            Oxygen.field[ProdIndices[vi]] = vessels.pops[ProdIndices[vi]] * OXYGEN_PRODUCTION_RATE * dt;
-            Glucose.field[ProdIndices[vi]] = vessels.pops[ProdIndices[vi]] * GLUCOSE_PRODUCTION_RATE * dt;
+            Oxygen.field[ProdIndices[vi]] = vessels.pops[ProdIndices[vi]] * OXYGEN_PRODUCTION_RATE;
+            Glucose.field[ProdIndices[vi]] = vessels.pops[ProdIndices[vi]] * GLUCOSE_PRODUCTION_RATE;
         }
 
         while (t < discreteTimeStep) {
@@ -257,9 +257,10 @@ public class ModelMain {
         ModelVis mainWindow = new ModelVis(firstModel);
         //setting normalCells for access by other populations, adding cellpop for iteration
         firstModel.normalCells = firstModel.AddCellPop(new NormalCells(firstModel, mainWindow.visNormal)); //0
-        firstModel.necroCells=firstModel.AddCellPop(new NecroticCells(firstModel,mainWindow.visNecro));//1
         firstModel.tumorCells=firstModel.AddCellPop(new TumorCellPop(firstModel, mainWindow.visTumor));//2
         firstModel.resistantTumorCells=firstModel.AddCellPop(new resistantTumorCellPop(firstModel, mainWindow.visTumor));//3
+        firstModel.necroCells=firstModel.AddCellPop(new NecroticCells(firstModel,mainWindow.visNecro));//1
+
 
         //The vessels
         firstModel.vessels = firstModel.AddCellPop(new Vessels(firstModel, mainWindow.visVessels));//4

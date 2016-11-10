@@ -50,6 +50,22 @@ public class Visualizer extends JPanel{
             Set(x, y, r, g, b);
         }
     }
+
+    public void SetHeatCold(int x,int y,double val){
+        if(val>0) {
+            float b = (float) Math.min(1, val * 3);
+            float g = 0;
+            float r = 0;
+            if (val > 0.333) {
+                g = (float) Math.min(1, (val - 0.333) * 3);
+            }
+            if (val > 0.666) {
+                r = (float) Math.min(1, (val - 0.666) * 3);
+            }
+            Set(x, y, r, g, b);
+        }
+    }
+
     public void Set(int x,int y,float r,float g,float b){
         Color c=new Color(r,g,b);
         //buff.setRGB(x,yDim-1-y,c.getRGB());

@@ -11,16 +11,12 @@ import static Model.CONST_AND_FUNCTIONS.*;
  */
 public class TumorCellPop extends CellPop {
 
-    final public double OxygenConsumption = 0.00003;
-    final public double GlucoseConsumption = 0.00003;
+    final public double OxygenConsumption = 0.003;
+    final public double GlucoseConsumption = 0.0003;
 
 
-    private SqList VN_Hood = Utils.GenVonNeumannNeighborhood();
-    double[] migrantPops = new double[4];
-
-    static final private double TUMOR_PROLIF_RATE = 0.4 * CONST_AND_FUNCTIONS.TIME_STEP;
-    static final double TUMOR_DEATH_RATE = 0.02 * CONST_AND_FUNCTIONS.TIME_STEP;
-
+    private SqList VN_Hood = Utils.GenMooreNeighborhood();
+    double[] migrantPops = new double[8];
 
     TumorCellPop(TumorModel model, Visualizer vis) {
         super(model, vis);
@@ -43,7 +39,7 @@ public class TumorCellPop extends CellPop {
 
     //runs once at the begining of the model to initialize cell pops
     public void InitPop() {
-        pops[I(xDim / 2, yDim / 2)] = MAX_POP / 10.;
+        pops[I(xDim / 2, yDim / 2)] = MAX_POP / 20.;
     }
 
     //called once every tick
@@ -72,9 +68,10 @@ public class TumorCellPop extends CellPop {
 
                 double migrantDelta = Migrate(myModel, swap, x, y, MigrantPop(totalPop, birthDelta), VN_Hood, migrantPops);
                 swap[i] += pop + birthDelta - deathDelta - hypoxicDeathDelta - migrantDelta;
-                if (swap[i] < 1.0){
-                    swap[i]=0.0;
-                }
+                myModel.necroCells.swap[i] += deathDelta;
+//                if (swap[i] < 1.0){
+//                    swap[i]=0.0;
+//                }
 
             }
         }
@@ -84,7 +81,7 @@ public class TumorCellPop extends CellPop {
     public void Draw() {
         for (int x = 0; x < xDim; x++) {
             for (int y = 0; y < yDim; y++) {
-                myVis.SetHeat(x, y, pops[I(x, y)] / MAX_POP);
+                myVis.SetHeat(x, y, 5*pops[I(x, y)] / MAX_POP);
             }
         }
     }

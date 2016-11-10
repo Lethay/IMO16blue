@@ -4,6 +4,8 @@ import AgentGridMin.SqList;
 import AgentGridMin.Utils;
 import AgentGridMin.Visualizer;
 
+import java.util.Random;
+
 import static Model.CONST_AND_FUNCTIONS.*;
 
 /**
@@ -12,9 +14,10 @@ import static Model.CONST_AND_FUNCTIONS.*;
 public class NormalCells extends CellPop {
     private SqList VN_Hood = Utils.GenVonNeumannNeighborhood();
     double[] migrantPops = new double[4];
+    Random rand = new Random();
 
-    final public double OxygenConsumption = 0.0000003;
-    final public double GlucoseConsumption = 0.0000003;
+    final public double OxygenConsumption = 0.00003;
+    final public double GlucoseConsumption = 0.00003;
 
 
     NormalCells(TumorModel model,Visualizer vis) {
@@ -25,7 +28,13 @@ public class NormalCells extends CellPop {
     void InitPop() {
         for (int x = 0; x < xDim; x++) {
             for (int y = 0; y < yDim; y++) {
-                pops[I(x, y)] = MAX_POP / 3.;
+                double tisDensity = 10 + (rand.nextGaussian());
+                if (tisDensity < 7. || tisDensity > 13.)
+                {
+                    tisDensity = 10.;
+                }
+//                double tisDensity = 10.;
+                pops[I(x, y)] = MAX_POP / (tisDensity);
             }
         }
     }
