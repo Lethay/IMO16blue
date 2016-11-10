@@ -65,7 +65,7 @@ public class acidProducingTumorCellPop extends CellPop {
             for (int y = 0; y < yDim; y++) {
                 int i = I(x, y);
                 double pop = pops[i];
-                double immunePop=0; //myModel.cellPops.get(IMMUNE_POP_INDEX)[i]; //TODO Correct this variable
+                double immunePop=myModel.tCells.pops[i];
                 double acidNumber=0*cellSize; //TODO correct this - the "0" needs to be acidConc
                 double totalPop = myModel.totalPops[i];
                 if (pop < 1) {

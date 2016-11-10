@@ -25,13 +25,14 @@ public class TCells extends CellPop{
         this.diffConsts=new double[xDim*yDim];
     }
     double Interact(int i,double interactPop){
-        double tVsC=interactPop-myModel.tumorCells.pops[i];
-        if(tVsC>0){
-            myModel.tumorCells.swap[i]-=interactPop*TCELLS_VS_TUMORCELLS;
-            return interactPop-interactPop;
-        }
-        myModel.tumorCells.swap[i]-=myModel.tumorCells.pops[i]*TCELLS_VS_TUMORCELLS;
         return 0;
+//        double tVsC=interactPop-myModel.tumorCells.pops[i];
+//        if(tVsC>0){
+// //           myModel.tumorCells.swap[i]-=interactPop*TCELLS_VS_TUMORCELLS;
+//            return interactPop-interactPop;
+//        }
+//        //       myModel.tumorCells.swap[i]-=myModel.tumorCells.pops[i]*TCELLS_VS_TUMORCELLS;
+//        return 0;
     }
     void InitPop() {
     }

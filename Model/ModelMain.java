@@ -1,6 +1,6 @@
 package Model;
 import AgentGridMin.*;
-import sun.awt.X11.Visual;
+//import sun.awt.X11.Visual;
 
 import javax.swing.*;
 import java.io.IOException;
