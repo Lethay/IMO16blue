@@ -24,11 +24,14 @@ public class CONST_AND_FUNCTIONS {
     static final int SEED_TIME = 200;
     static final int IMMUNE_TIME = 400;
 
+    static final double BIN_LENGTH = 10.0; //microns
+    static final double BIN_VOLUME = BIN_LENGTH*BIN_LENGTH; //n.b. 2D
+    static final int NUM_BINS_1D = 110;
     static final double DIFFUSE_TIME_LENGTH = 1.0;
     static final double DIFFUSE_DT = 0.01;
 
     //cell constants
-    static final public double MAX_POP=10000;
+    static final public double MAX_POP=BIN_LENGTH*BIN_LENGTH*NUM_BINS_1D*NUM_BINS_1D;
     static final double TIME_STEP=0.2; //days
     static final double TUMOR_PROLIF_RATE=0.1*TIME_STEP;
     static final double NECROTIC_DECAY_RATE=0.01*TIME_STEP;
@@ -40,6 +43,7 @@ public class CONST_AND_FUNCTIONS {
 
     static final double TUMOUR_LOW_OXYGEN_DEATH_THRESHOLD = 0.01;
     static final double TUMOUR_HIGH_ACID_DEATH_THRESHOLD = 0.1;
+    static final double IMMUNE_CELL_MAX_HYPOXIC_KILL_RATE_REDUCTION = 0.1;
 
     static final double DRUG_EFFICACY=0.01; //DRUG_EFFICACY*DRUG_CONC represents the modification to the immune kill rate. 1% of drug is useful, and the other factor represents reduction due to PD-L1.
     static final double IMMUNE_KILL_RATE_SHAPE_FACTOR=100;
