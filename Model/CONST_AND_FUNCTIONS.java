@@ -27,20 +27,16 @@ public class CONST_AND_FUNCTIONS {
     static final double TUMOUR_LOW_OXYGEN_DEATH_THRESHOLD = 0.01;
     static final double TUMOUR_HIGH_ACID_DEATH_THRESHOLD = 0.1;
 
-
-    static final double TUMOUR_SWITCH_RATE=0.01*TIME_STEP;
-    static final double DRUG_INHIBITION_RATE=0.03*TIME_STEP;
+    static final double DRUG_EFFICACY=0.01; //DRUG_EFFICACY*DRUG_CONC represents the modification to the immune kill rate. 1% of drug is useful, and the other factor represents reduction due to PD-L1.
+    static final double IMMUNE_KILL_RATE_SHAPE_FACTOR=100;
     static final double IMMUNE_KILL_RATE=0.08*TIME_STEP;
-    static final int TMR_POP_INDEX=2;
-    static final int RESIST_TMR_POP_INDEX=3;
     static final int IMMUNE_POP_INDEX=-1; //TODO give a value for this
     static final double NORMAL_HYPOXIC_THRESHOLD=0.2;
     static final double MAX_HYPOXIC_DEATH_RATE=0.5;
-    static final double VESSELS_TO_TCELLS=5*TIME_STEP;
-    static final double TCELLS_VS_TUMORCELLS=0.001;
+    static final double VESSELS_TO_TCELLS=.01*TIME_STEP;
+    static final double TCELLS_VS_TUMORCELLS=0.05;
     static final double TCELL_MOVE_RATE=0.5*TIME_STEP;
     static final double TCELL_DEATH_RATE=0.02*TIME_STEP;
-    //static final double TCELL_MOVE_RATE=0.75*TIME_STEP;
 
 
     //diffusible constants
@@ -61,6 +57,7 @@ public class CONST_AND_FUNCTIONS {
     static final double OXYGEN_USAGE_NORMAL=2; //number of oxygen needed for a single birth (for normal cells)
     static final double GLUCOSE_USAGE_NORMAL=2; // number of glucose needed for a single birth (for normal cells)
     static final double ACID_RATE_NORMAL=.1; // amount of acid produced per glycolysis (for normal cells)
+
     static double modifiedBirthRate(double birthRate, double oxy, double gluc) {
         double oxyPenalty = 1.0;
         double glucPenalty = 1.0;
@@ -149,35 +146,35 @@ public class CONST_AND_FUNCTIONS {
         return surroundingDiff>0?popToMigrate:0;
     }
 
-    static void TCellDiffusion(TumorModel myModel,TCells tCells, int x,int y,double popToMigrate){
+//    static void TCellDiffusion(TumorModel myModel,TCells tCells, int x,int y,double popToMigrate){
+//
+//    }
 
-    }
-
-    static void MigrateTCells(TumorModel myModel,double[] swap,int x,int y,double popToMigrate,SqList neighborhood,double[] storePops,double cellSize){
-        double totalPop=popToMigrate;
-        double movedPop=0;
-        Arrays.fill(storePops,0);
-        double totSpace=0;
-        for(int i=0;i<neighborhood.length;i++){
-            int checkX = neighborhood.Xsq(i) + x;
-            int checkY = neighborhood.Ysq(i) + y;
-            if (myModel.WithinGrid(checkX, checkY)) {
-                double space = MAX_POP - myModel.totalPops[myModel.I(checkX, checkY)];
-                if(space>0) {
-                    storePops[i] = space;
-                    totSpace += space;
-                }
-            }
-        }
-        popToMigrate=totSpace/cellSize>popToMigrate?popToMigrate:totSpace/cellSize;
-        for(int i=0;i<neighborhood.length;i++){
-            if(storePops[i]>0) {
-                swap[myModel.I(neighborhood.Xsq(i) + x, neighborhood.Ysq(i) + y)] += popToMigrate * (storePops[i] / totSpace);
-                movedPop+=popToMigrate * (storePops[i] / totSpace);
-            }
-        }
-        if(Math.abs(totalPop-movedPop)>1){
-            throw new RuntimeException("tcell movement changed the pop"+(totalPop-movedPop));
-        }
-    }
+//    static void MigrateTCells(TumorModel myModel,double[] swap,int x,int y,double popToMigrate,SqList neighborhood,double[] storePops,double cellSize){
+//        double totalPop=popToMigrate;
+//        double movedPop=0;
+//        Arrays.fill(storePops,0);
+//        double totSpace=0;
+//        for(int i=0;i<neighborhood.length;i++){
+//            int checkX = neighborhood.Xsq(i) + x;
+//            int checkY = neighborhood.Ysq(i) + y;
+//            if (myModel.WithinGrid(checkX, checkY)) {
+//                double space = MAX_POP - myModel.totalPops[myModel.I(checkX, checkY)];
+//                if(space>0) {
+//                    storePops[i] = space;
+//                    totSpace += space;
+//                }
+//            }
+//        }
+//        popToMigrate=totSpace/cellSize>popToMigrate?popToMigrate:totSpace/cellSize;
+//        for(int i=0;i<neighborhood.length;i++){
+//            if(storePops[i]>0) {
+//                swap[myModel.I(neighborhood.Xsq(i) + x, neighborhood.Ysq(i) + y)] += popToMigrate * (storePops[i] / totSpace);
+//                movedPop+=popToMigrate * (storePops[i] / totSpace);
+//            }
+//        }
+//        if(Math.abs(totalPop-movedPop)>1){
+//            throw new RuntimeException("tcell movement changed the pop"+(totalPop-movedPop));
+//        }
+//    }
 }

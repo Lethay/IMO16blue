@@ -101,8 +101,12 @@ class ModelVis{
         AddVis(visGL,1,2,"Gluc");
         AddVis(visDR,2,2,"Drug");
 
-
-
+        win.addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent e) {
+                boolean print_stuff=false;
+                if(print_stuff) {myModel.printCellPops();}
+            }
+        });
     }
 }
 
@@ -117,8 +121,9 @@ class TumorModel {
     NormalCells normalCells;
     NecroticCells necroCells;
     TumorCellPop tumorCells;
+    PDL1TumorCellPop PDL1TumorCells;
+    acidProducingTumorCellPop acidTumorCells;
     TCells tCells;
-    resistantTumorCellPop resistantTumorCells;
     Vessels vessels;
 
     //The fields
@@ -291,14 +296,15 @@ public class ModelMain {
         TumorModel firstModel = new TumorModel(110, 110);
         ModelVis mainWindow = new ModelVis(firstModel);
         //setting normalCells for access by other populations, adding cellpop for iteration
-        firstModel.normalCells = firstModel.AddCellPop(new NormalCells(firstModel, mainWindow.visNormal)); //0
-        firstModel.tumorCells=firstModel.AddCellPop(new TumorCellPop(firstModel, mainWindow.visTumor));//2
-        firstModel.resistantTumorCells=firstModel.AddCellPop(new resistantTumorCellPop(firstModel, mainWindow.visTumor));//3
-        firstModel.necroCells=firstModel.AddCellPop(new NecroticCells(firstModel,mainWindow.visNecro));//1
+        firstModel.normalCells = firstModel.AddCellPop(new NormalCells(firstModel, mainWindow.visNormal)); //index 0
+        firstModel.tumorCells=firstModel.AddCellPop(new TumorCellPop(firstModel, mainWindow.visTumor));//index 1
+        firstModel.PDL1TumorCells=firstModel.AddCellPop(new PDL1TumorCellPop(firstModel, mainWindow.visTumor));//index 2
+        firstModel.acidTumorCells=firstModel.AddCellPop(new acidProducingTumorCellPop(firstModel, mainWindow.visTumor));//index 3
+        firstModel.necroCells=firstModel.AddCellPop(new NecroticCells(firstModel,mainWindow.visNecro));//index 4
 
         //The vessels
-        firstModel.vessels = firstModel.AddCellPop(new Vessels(firstModel, mainWindow.visVessels));//4
-        firstModel.tCells = firstModel.AddCellPop(new TCells(firstModel,mainWindow.visTcells));
+        firstModel.vessels = firstModel.AddCellPop(new Vessels(firstModel, mainWindow.visVessels));//index 5
+        firstModel.tCells = firstModel.AddCellPop(new TCells(firstModel,mainWindow.visTcells));//index 6
 
         //The diffusibles
         firstModel.Oxygen = firstModel.AddDiffusible(new DiffusionField(firstModel.xDim, firstModel.yDim, OXYGEN_DIFFUSION_RATE, mainWindow.visO2));
