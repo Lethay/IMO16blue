@@ -79,29 +79,36 @@ public class TumorCellPop extends CellPop {
             for (int y = 0; y < yDim; y++) {
                 int i = I(x, y);
                 double pop = pops[i];
-                double immunePop=myModel.tCells.pops[i];
-                double acidNumber=0*cellSize; //TODO correct this - the "0" needs to be acidConc
+                double immunePop = myModel.tCells.pops[i];
                 double totalPop = myModel.totalPops[i];
                 if (pop < 1) {
-                    swap[i] += Math.max(pop,0);
+                    swap[i] += Math.max(pop, 0);
                     continue;
                 }
 
-                double oxy = myModel.Oxygen.field[I(x,y)];
-                double gluc = myModel.Glucose.field[I(x,y)];
-                double acid = myModel.Acid.field[I(x,y)];
+                double hypoxicDeathDelta = 0, acidAmnt=0, oxy=0,gluc=0,acid=0;
+                if (OXYGEN_ACTIVE && GLUCOSE_ACTIVE && ACID_ACTIVE) {
+                    oxy = myModel.Oxygen.field[I(x, y)];
+                    gluc = myModel.Glucose.field[I(x, y)];
+                    acid = myModel.Acid.field[I(x, y)];
+
+                    hypoxicDeathDelta = HypoxicDeath(pop, oxy, gluc, acid);
+                    acidAmnt=acid*BIN_VOLUME;
+                }
                 double hypoxicKillingReduction=oxy*BIN_VOLUME/(1+oxy*BIN_VOLUME);
                 if(hypoxicKillingReduction<IMMUNE_CELL_MAX_HYPOXIC_KILL_RATE_REDUCTION){
                     hypoxicKillingReduction=IMMUNE_CELL_MAX_HYPOXIC_KILL_RATE_REDUCTION;
                 }
-                double hypoxicDeathDelta = HypoxicDeath(pop, oxy, gluc, acid);
-                double birthDelta = Birth(pop,totalPop, TUMOR_PROLIF_RATE);
-                double deathDelta = Death(pop, immunePop, acidNumber, hypoxicKillingReduction, TUMOR_DEATH_RATE, IMMUNE_KILL_RATE);
+
+                double birthDelta = Birth(pop, totalPop, TUMOR_PROLIF_RATE);
+                double deathDelta = Death(pop, immunePop, acidAmnt, hypoxicKillingReduction, TUMOR_DEATH_RATE, IMMUNE_KILL_RATE);
                 double migrantDelta = Migrate(myModel, swap, x, y, MigrantPop(totalPop, birthDelta), VN_Hood, migrantPops);
                 swap[i] += pop + birthDelta - deathDelta - hypoxicDeathDelta - migrantDelta;
-                myModel.necroCells.swap[i] += hypoxicDeathDelta;
-                if (swap[i] < 0.0){
-                    swap[i]=0.0;
+                if(NECRO_CELLS_ACTIVE) {
+                    myModel.necroCells.swap[i] += hypoxicDeathDelta;
+                }
+                if (swap[i] < 0.0) {
+                    swap[i] = 0.0;
                 }
             }
         }

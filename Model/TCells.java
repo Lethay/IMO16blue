@@ -55,29 +55,35 @@ public class TCells extends CellPop{
                 swap[i]+=pops[i];
                 swap[i]-=Death(pops[i],TCELL_DEATH_RATE);
                 //interaction with tumor cells on same square
-                double popsToInteract=pops[i];
-                if(myModel.tumorCells.pops[i]>1){
-                    popsToInteract-=Interact(i,popsToInteract);
-                }
-                double totalPop=0;
-                Arrays.fill(popList,0);
-                for(int j=0;j<VNHood.length;j++){
-                    int lookX=VNHood.Xsq(j)+x;
-                    int lookY=VNHood.Ysq(j)+y;
-                    if(myModel.WithinGrid(lookX,lookY)&&myModel.tumorCells.pops[I(lookX,lookY)]>1){
-                        popList[j]=myModel.tumorCells.pops[j];
-                        totalPop+=myModel.totalPops[j];
-                    }
-                }
-                //interaction with tumor cells on other squares
-                double interacted=0;
-                for(int j=0;j<VNHood.length;j++){
-                    if(popList[j]>0){
-                        interacted+=Interact(I(VNHood.Xsq(j)+x,VNHood.Ysq(j)+y),popsToInteract*(popList[j]/totalPop));
-                    }
-                }
-                popsToInteract-=interacted;
-                MovePops[i]=popsToInteract;
+                //double popsToInteract=pops[i];
+                //if(myModel.tumorCells.pops[i]>1){
+                //    popsToInteract-=Interact(i,popsToInteract);
+                //}
+                //double totalPop=0;
+                //Arrays.fill(popList,0);
+                //for(int j=0;j<VNHood.length;j++){
+                //    int lookX=VNHood.Xsq(j)+x;
+                //    int lookY=VNHood.Ysq(j)+y;
+                //    if(myModel.WithinGrid(lookX,lookY)&&myModel.tumorCells.pops[I(lookX,lookY)]>1){
+                //        popList[j]=myModel.tumorCells.pops[j];
+                //        totalPop+=myModel.totalPops[j];
+                //    }
+                //}
+                ////interaction with tumor cells on other squares
+                //double interacted=0;
+                //for(int j=0;j<VNHood.length;j++){
+                //    if(popList[j]>0){
+                //        interacted+=Interact(I(VNHood.Xsq(j)+x,VNHood.Ysq(j)+y),popsToInteract*(popList[j]/totalPop));
+                //    }
+                //}
+                //popsToInteract-=interacted;
+                //MovePops[i]=popsToInteract;
+                //if(myModel.tumorCells.pops[i]>10||myModel.PDL1TumorCells.pops[i]>10) {
+                //    MovePops[i]=0;
+                //}
+                //else{
+                    MovePops[i] = pops[i];
+                //}
                 //cell migration
             }
         }

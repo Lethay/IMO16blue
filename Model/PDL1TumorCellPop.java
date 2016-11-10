@@ -1,4 +1,6 @@
 package Model;
+import AgentGridMin.SqList;
+import AgentGridMin.Utils;
 import AgentGridMin.Visualizer;
 import Model.ModelMain.*;
 
@@ -11,16 +13,17 @@ import static Model.CONST_AND_FUNCTIONS.*;
  */
 public class PDL1TumorCellPop extends CellPop {
 
-
     static final private double TUMOR_PROLIF_RATE=0.04*CONST_AND_FUNCTIONS.TIME_STEP;
     static final double TUMOR_DEATH_RATE=0.02*CONST_AND_FUNCTIONS.TIME_STEP;
 
+    private SqList VN_Hood = Utils.GenMooreNeighborhood();
+    double[] migrantPops = new double[8];
 
     PDL1TumorCellPop(TumorModel model, Visualizer vis) {
         super(model,vis);
     }
 
-    static private double Death(double cellPop, double immunePop, double drugConc, double hypoxicKillingReduction, double acidNumber, double drugEfficacy, double deathRate, double killRate){
+    static private double Death(double cellPop, double immunePop, double drugConc, double acidNumber, double hypoxicKillingReduction, double drugEfficacy, double deathRate, double killRate){
         return deathRate*cellPop + cellPop*immunePop/(IMMUNE_KILL_RATE_SHAPE_FACTOR+cellPop)*killRate  *drugEfficacy*drugConc/(1+drugEfficacy*drugConc) / (1+acidNumber) *hypoxicKillingReduction;
     }
 
@@ -62,20 +65,29 @@ public class PDL1TumorCellPop extends CellPop {
                     swap[i] += pop;
                     continue;
                 }
-                double oxy = myModel.Oxygen.field[I(x,y)];
-                double gluc = myModel.Glucose.field[I(x,y)];
-                double acid = myModel.Acid.field[I(x,y)];
+               
+                double hypoxicDeathDelta = 0, acidAmnt=0, oxy=0,gluc=0,acid=0;
+                if (OXYGEN_ACTIVE && GLUCOSE_ACTIVE && ACID_ACTIVE) {
+                    oxy = myModel.Oxygen.field[I(x, y)];
+                    gluc = myModel.Glucose.field[I(x, y)];
+                    acid = myModel.Acid.field[I(x, y)];
+
+                    hypoxicDeathDelta = HypoxicDeath(pop, oxy, gluc, acid);
+                    acidAmnt=acid*BIN_VOLUME;
+                }
                 double hypoxicKillingReduction=oxy*BIN_VOLUME/(1+oxy*BIN_VOLUME);
                 if(hypoxicKillingReduction<IMMUNE_CELL_MAX_HYPOXIC_KILL_RATE_REDUCTION){
                     hypoxicKillingReduction=IMMUNE_CELL_MAX_HYPOXIC_KILL_RATE_REDUCTION;
                 }
+                
                 double birthDelta = Birth(pop,totalPop, TUMOR_PROLIF_RATE);
-                double deathDelta = Death(pop, immunePop, drugConc, hypoxicKillingReduction, acidNumber, DRUG_EFFICACY, TUMOR_DEATH_RATE, IMMUNE_KILL_RATE);
-                double hypoxicDeathDelta = HypoxicDeath(pop, oxy, gluc, acid);
-                double migrantDelta = MigrantPop(totalPop, birthDelta);
-
+                double deathDelta = Death(pop, immunePop, drugConc, acidAmnt, hypoxicKillingReduction, DRUG_EFFICACY, TUMOR_DEATH_RATE, IMMUNE_KILL_RATE);
+                double migrantDelta = Migrate(myModel, swap, x, y, MigrantPop(totalPop, birthDelta), VN_Hood, migrantPops);
+                
                 swap[i] += pop + birthDelta - deathDelta - hypoxicDeathDelta - migrantDelta;
-                myModel.necroCells.swap[i] += hypoxicDeathDelta;
+                if(NECRO_CELLS_ACTIVE) {
+                    myModel.necroCells.swap[i] += hypoxicDeathDelta;
+                }
                 if (swap[i] < 0.0){
                     swap[i]=0.0;
                 }
@@ -87,7 +99,7 @@ public class PDL1TumorCellPop extends CellPop {
         for (int x = 0; x < xDim; x++) {
             for (int y = 0; y < yDim; y++) {
                 if (pops[I(x,y)] != 0) {
-                    //myVis.Set(x, y, 0, 0, 1);
+                    myVis.SetHeat(x, y,pops[I(x,y)]);
                 }
             }
         }

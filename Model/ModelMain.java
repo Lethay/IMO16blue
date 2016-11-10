@@ -63,6 +63,7 @@ class ModelVis{
     Visualizer visNormal;
     Visualizer visTumor;
     Visualizer visTcells;
+    Visualizer visPDL1;
     Visualizer visPH;
     Visualizer visGL;
     Visualizer visDR;
@@ -86,6 +87,7 @@ class ModelVis{
         visNecro=new Visualizer(model.xDim,model.yDim,visScale);
         visO2=new Visualizer(model.xDim,model.yDim,visScale);
         visTcells=new Visualizer(model.xDim,model.yDim,visScale);
+        visPDL1=new Visualizer(model.xDim,model.yDim,visScale);
 
         //Diffusible
         visO2 = new Visualizer(model.xDim,model.yDim,visScale);
@@ -96,19 +98,19 @@ class ModelVis{
         //The full viz
         visFULL = new Visualizer(model.xDim,model.yDim,visScale);
 
-        win=new GuiWindow("LungVis",model.xDim*visScale,model.yDim*visScale,3,6);
+        win=new GuiWindow("LungVis",model.xDim*visScale,model.yDim*visScale,4,6);
         //first layer
         AddVis(visNormal,0,0,"Normal");
         AddVis(visNecro,1,0,"Necro");
         AddVis(visTumor,2,0,"Tumor");
-        //second layer
-        AddVis(visVessels,0,1,"Vessel");
-        AddVis(visTcells,1,1,"TCells");
-        AddVis(visO2,2,1,"O2");
+        AddVis(visVessels,3,0,"Vessel");
+        AddVis(visTcells,0,1,"TCells");
+        AddVis(visO2,1,1,"O2");
         //third layer
-        AddVis(visPH,0,2,"Ph");
-        AddVis(visGL,1,2,"Gluc");
-        AddVis(visDR,2,2,"Drug");
+        AddVis(visPH,2,1,"Ph");
+        AddVis(visGL,3,1,"Gluc");
+        AddVis(visDR,0,2,"Drug");
+        AddVis(visPDL1,1,2,"PDL1");
 
         win.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
@@ -248,32 +250,46 @@ class TumorModel {
         //DTypes into vessel-produced and cell-produced
         for (int vi = 0; vi < k; vi++) {
             //Vessel production (fixed conc)
-            Oxygen.field[ProdIndices[vi]] = vessels.pops[ProdIndices[vi]] * OXYGEN_PRODUCTION_RATE;
-            Glucose.field[ProdIndices[vi]] = vessels.pops[ProdIndices[vi]] * GLUCOSE_PRODUCTION_RATE;
-            Drug.field[ProdIndices[vi]] = vessels.pops[ProdIndices[vi]] * DRUG_PRODUCTION_RATE;
+            if(OXYGEN_ACTIVE) {
+                Oxygen.field[ProdIndices[vi]] = vessels.pops[ProdIndices[vi]] * OXYGEN_PRODUCTION_RATE;
+            }
+            if(GLUCOSE_ACTIVE) {
+                Glucose.field[ProdIndices[vi]] = vessels.pops[ProdIndices[vi]] * GLUCOSE_PRODUCTION_RATE;
+            }
+            if(DRUG_ACTIVE) {
+                Drug.field[ProdIndices[vi]] = vessels.pops[ProdIndices[vi]] * DRUG_PRODUCTION_RATE;
+            }
         }
 
         while (t < discreteTimeStep) {
             //Cell-type specific consumption
             for (int ci = 0; ci < xDim * yDim; ci++) {
-                Oxygen.field[ci] -= tumorCells.pops[ci] * tumorCells.OxygenConsumption * dt;
-                Oxygen.field[ci] -= normalCells.pops[ci] * normalCells.OxygenConsumption * dt;
-                if (Oxygen.field[ci] < 0) {
-                    Oxygen.field[ci] = 0.0;
+                if(OXYGEN_ACTIVE) {
+                    Oxygen.field[ci] -= tumorCells.pops[ci] * tumorCells.OxygenConsumption * dt;
+                    Oxygen.field[ci] -= normalCells.pops[ci] * normalCells.OxygenConsumption * dt;
+                    if (Oxygen.field[ci] < 0) {
+                        Oxygen.field[ci] = 0.0;
+                    }
                 }
-                Acid.field[ci] -= normalCells.pops[ci] * 0.0 * normalCells.OxygenConsumption * dt;
-                if (Acid.field[ci] < 0) {
-                    Acid.field[ci] = 0.0;
+                if(ACID_ACTIVE) {
+                    Acid.field[ci] -= normalCells.pops[ci] * 0.0 * normalCells.OxygenConsumption * dt;
+                    if (Acid.field[ci] < 0) {
+                        Acid.field[ci] = 0.0;
+                    }
                 }
-                Glucose.field[ci] -= tumorCells.pops[ci] * tumorCells.GlucoseConsumption * dt;
-                Glucose.field[ci] -= normalCells.pops[ci] * normalCells.GlucoseConsumption * dt;
-                if (Glucose.field[ci] < 0) {
-                    Glucose.field[ci] = 0.0;
+                if(GLUCOSE_ACTIVE) {
+                    Glucose.field[ci] -= tumorCells.pops[ci] * tumorCells.GlucoseConsumption * dt;
+                    Glucose.field[ci] -= normalCells.pops[ci] * normalCells.GlucoseConsumption * dt;
+                    if (Glucose.field[ci] < 0) {
+                        Glucose.field[ci] = 0.0;
+                    }
                 }
-                Drug.field[ci] -= tumorCells.pops[ci] * tumorCells.DrugConsumption * dt;
-                Drug.field[ci] -= normalCells.pops[ci] * normalCells.DrugConsumption * dt;
-                if (Drug.field[ci] < 0) {
-                    Drug.field[ci] = 0.0;
+                if(DRUG_ACTIVE) {
+                    Drug.field[ci] -= tumorCells.pops[ci] * tumorCells.DrugConsumption * dt;
+                    Drug.field[ci] -= normalCells.pops[ci] * normalCells.DrugConsumption * dt;
+                    if (Drug.field[ci] < 0) {
+                        Drug.field[ci] = 0.0;
+                    }
                 }
             }
             for (DiffusionField DType : diffuseTypes){
@@ -332,31 +348,31 @@ public class ModelMain {
         //setting normalCells for access by other populations, adding cellpop for iteration
 
         if(NORMAL_CELLS_ACTIVE) {firstModel.normalCells= firstModel.AddCellPop(new NormalCells(firstModel, mainWindow.visNormal));} //index 0
-        else{firstModel.normalCells= firstModel.AddCellPop(null);}
+        else{firstModel.normalCells= null;}
         if(TUMOR_CELLS_ACTIVE) {firstModel.tumorCells= firstModel.AddCellPop(new TumorCellPop(firstModel, mainWindow.visTumor));} //index 1
-        else{firstModel.tumorCells= firstModel.AddCellPop(null);}
-        if(PDL1_CELLS_ACTIVE) {firstModel.PDL1TumorCells= firstModel.AddCellPop(new PDL1TumorCellPop(firstModel, mainWindow.visTumor));} //index 2
-        else{firstModel.PDL1TumorCells= firstModel.AddCellPop(null);}
+        else{firstModel.tumorCells= null;}
+        if(PDL1_CELLS_ACTIVE) {firstModel.PDL1TumorCells= firstModel.AddCellPop(new PDL1TumorCellPop(firstModel, mainWindow.visPDL1));} //index 2
+        else{firstModel.PDL1TumorCells= null;}
         if(ACIDIC_CELLS_ACTIVE) {firstModel.acidTumorCells= firstModel.AddCellPop(new acidProducingTumorCellPop(firstModel, mainWindow.visTumor));} //index 3
-        else{firstModel.acidTumorCells= firstModel.AddCellPop(null);}
+        else{firstModel.acidTumorCells= null;}
         if(NECRO_CELLS_ACTIVE) {firstModel.necroCells= firstModel.AddCellPop(new NecroticCells(firstModel,mainWindow.visNecro));} //index 4
-        else{firstModel.necroCells= firstModel.AddCellPop(null);}
+        else{firstModel.necroCells= null;}
         if(T_CELLS_ACTIVE) {firstModel.tCells= firstModel.AddCellPop(new TCells(firstModel,mainWindow.visTcells));} //index 5
-        else{firstModel.tCells= firstModel.AddCellPop(null);}
+        else{firstModel.tCells= null;}
 
         //The vessels
         if(VESSELS_ACTIVE) {firstModel.vessels= firstModel.AddCellPop(new Vessels(firstModel, mainWindow.visVessels));} //index 6
-        else{firstModel.vessels= firstModel.AddCellPop(null);}
+        else{firstModel.vessels= null;}
         
         //The diffusibles
         if(OXYGEN_ACTIVE) {firstModel.Oxygen= firstModel.AddDiffusible(new DiffusionField(firstModel.xDim, firstModel.yDim, OXYGEN_DIFFUSION_RATE, mainWindow.visO2));}
-        else{firstModel.Oxygen= firstModel.AddDiffusible(null);}
+        else{firstModel.Oxygen= null;}
         if(GLUCOSE_ACTIVE) {firstModel.Glucose= firstModel.AddDiffusible(new DiffusionField(firstModel.xDim, firstModel.yDim, GLUCOSE_DIFFUSION_RATE, mainWindow.visGL));}
-        else{firstModel.Glucose= firstModel.AddDiffusible(null);}
+        else{firstModel.Glucose= null;}
         if(ACID_ACTIVE) {firstModel.Acid= firstModel.AddDiffusible(new DiffusionField(firstModel.xDim, firstModel.yDim, ACID_DIFFUSION_RATE, mainWindow.visPH));}
-        else{firstModel.Acid= firstModel.AddDiffusible(null);}
+        else{firstModel.Acid= null;}
         if(DRUG_ACTIVE) {firstModel.Drug= firstModel.AddDiffusible(new DiffusionField(firstModel.xDim, firstModel.yDim, DRUG_DIFFUSION_RATE, mainWindow.visDR));}
-        else{firstModel.Drug= firstModel.AddDiffusible(null);}
+        else{firstModel.Drug= null;}
 
         firstModel.InitPops();
         while (true) {
