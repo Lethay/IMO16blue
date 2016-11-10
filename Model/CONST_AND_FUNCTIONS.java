@@ -38,7 +38,7 @@ public class CONST_AND_FUNCTIONS {
     static final double IMMUNE_KILL_RATE=5*TIME_STEP;
     static final double NORMAL_HYPOXIC_THRESHOLD=0.2;
     static final double MAX_HYPOXIC_DEATH_RATE=0.5;
-    static final double VESSELS_TO_TCELLS=.1*TIME_STEP;
+    static final double VESSELS_TO_TCELLS=.01*TIME_STEP;
     static final double TCELL_MOVE_RATE=0.5*TIME_STEP;
     static final double TCELL_DEATH_RATE=0.02*TIME_STEP;
 
@@ -63,7 +63,6 @@ public class CONST_AND_FUNCTIONS {
 
     static final double OXYGEN_PRODUCTION_RATE=0.003; //per dt, per unit density
     static final double GLUCOSE_PRODUCTION_RATE=0.003; //per dt, per unit density
-    static final double DRUG_PRODUCTION_RATE = 0.02;
     static final double ACID_PRODUCTION_RATE=1.0; //per dt, per unit density
 
     //Govern gluc/oxy on
