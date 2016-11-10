@@ -1,5 +1,8 @@
 package AgentGridMin;
 
+import Model.CONST_AND_FUNCTIONS;
+import Model.CONST_AND_FUNCTIONS.*;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
@@ -64,6 +67,27 @@ public class Visualizer extends JPanel{
             }
             Set(x, y, r, g, b);
         }
+    }
+
+
+    public void MultipleDensitiesSet(int x,int y, double d1, double d2, double d3){
+        double val = 0;
+        float b = 1;
+        float r = 1;
+        float g = 1;
+        if (d3 > 0) {
+            r = (float) (d3 / CONST_AND_FUNCTIONS.MAX_POP);
+            g = 0;
+        } else if (d2 > 0)
+        {
+            g = (float) (d2 / CONST_AND_FUNCTIONS.MAX_POP);
+        }
+        else if (d1 > 0)
+        {
+            b = (float) (d1 / CONST_AND_FUNCTIONS.MAX_POP);
+            g = 0;
+        }
+        Set(x,y,r,g,b);
     }
 
     public void Set(int x,int y,float r,float g,float b){

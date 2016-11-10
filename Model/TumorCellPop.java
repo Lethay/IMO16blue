@@ -16,6 +16,8 @@ public class TumorCellPop extends CellPop {
     final public double GlucoseConsumption = 0.003;
     final public double DrugConsumption = 0.03;
 
+    final Visualizer visFull;
+
     public boolean SeedMe = false;
 
     private SqList VN_Hood = Utils.GenMooreNeighborhood();
@@ -23,7 +25,14 @@ public class TumorCellPop extends CellPop {
 
     TumorCellPop(TumorModel model, Visualizer vis) {
         super(model, vis);
+        this.visFull = null;
     }
+
+    TumorCellPop(TumorModel model, Visualizer vis, Visualizer visFULL) {
+        super(model, vis);
+        this.visFull = visFULL;
+    }
+
 
 
     static private double Death(double cellPop, double immunePop, double acidNumber, double deathRate, double killRate){
@@ -57,11 +66,12 @@ public class TumorCellPop extends CellPop {
     public void Step() {
 
         if (SeedMe) {
-            for(int x=(int)(xDim*1.0/4);x<xDim*3.0/4;x++) {
-                for(int y=(int)(yDim*1.0/4);y<yDim*3.0/4;y++) {
-                    pops[I(x,y)] += MAX_POP / 500.;
-                }
-            }
+//            for(int x=(int)(xDim*1.0/4);x<xDim*3.0/4;x++) {
+//                for(int y=(int)(yDim*1.0/4);y<yDim*3.0/4;y++) {
+//                    pops[I(x,y)] += MAX_POP / 500.;
+//                }
+//            }
+            pops[I(xDim/2,yDim/2)] += MAX_POP / 500.;
             this.SeedMe = false;
         }
 
@@ -96,12 +106,24 @@ public class TumorCellPop extends CellPop {
 
     //called once every tick
     public void Draw() {
+        double nrmRho;
+        double resRho;
+        double necRho;
         for (int x = 0; x < xDim; x++) {
             for (int y = 0; y < yDim; y++) {
                 if(myVis!=null&&pops[I(x,y)]>1) {
                     myVis.SetHeat(x, y, pops[I(x, y)] / MAX_POP);
                 }
                 myVis.SetHeat(x, y, 30*pops[I(x, y)] / MAX_POP);
+
+                if (visFull != null)
+                {
+                    nrmRho = pops[I(x,y)];
+                    resRho = myModel.PDL1TumorCells.pops[I(x,y)];
+                    necRho = myModel.necroCells.pops[I(x,y)];
+                    visFull.MultipleDensitiesSet(x,y,nrmRho, resRho, necRho);
+                }
+
             }
         }
     }

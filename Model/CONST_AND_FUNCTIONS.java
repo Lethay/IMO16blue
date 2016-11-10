@@ -10,12 +10,13 @@ import java.util.Arrays;
 public class CONST_AND_FUNCTIONS {
 
     static final int SEED_TIME = 200;
+    static final int IMMUNE_TIME = 400;
 
     static final double DIFFUSE_TIME_LENGTH = 1.0;
     static final double DIFFUSE_DT = 0.01;
 
     //cell constants
-    static final double MAX_POP=10000;
+    static final public double MAX_POP=10000;
     static final double TIME_STEP=0.2; //days
     static final double NECROTIC_DECAY_RATE=0.01*TIME_STEP;
     static final double NORMAL_PROLIF_RATE=0.02*TIME_STEP;
@@ -34,7 +35,7 @@ public class CONST_AND_FUNCTIONS {
     static final double NORMAL_HYPOXIC_THRESHOLD=0.2;
     static final double MAX_HYPOXIC_DEATH_RATE=0.5;
     static final double VESSELS_TO_TCELLS=.01*TIME_STEP;
-    static final double TCELLS_VS_TUMORCELLS=0.05;
+    static final double TCELLS_VS_TUMORCELLS=0.2;
     static final double TCELL_MOVE_RATE=0.5*TIME_STEP;
     static final double TCELL_DEATH_RATE=0.02*TIME_STEP;
 

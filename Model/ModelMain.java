@@ -1,5 +1,6 @@
 package Model;
 import AgentGridMin.*;
+import sun.awt.X11.Visual;
 
 import javax.swing.*;
 import java.io.IOException;
@@ -65,6 +66,9 @@ class ModelVis{
     Visualizer visPH;
     Visualizer visGL;
     Visualizer visDR;
+
+    Visualizer visFULL;
+
     GuiWindow win;
 
     void AddVis(Visualizer vis,int x,int y,String title){
@@ -89,6 +93,8 @@ class ModelVis{
         visGL = new Visualizer(model.xDim,model.yDim,visScale);
         visDR = new Visualizer(model.xDim,model.yDim,visScale);
 
+        //The full viz
+        visFULL = new Visualizer(model.xDim,model.yDim,visScale);
 
         win=new GuiWindow("LungVis",model.xDim*visScale,model.yDim*visScale,3,6);
         //first layer
@@ -216,6 +222,10 @@ class TumorModel {
         {
             tumorCells.SeedMe = true;
         }
+        if (tick == IMMUNE_TIME)
+        {
+            tCells.active = true;
+        }
         System.err.println("Day: "+tick*TIME_STEP); //TODO: put this information onto the GUI.
     }
 
@@ -331,6 +341,7 @@ public class ModelMain {
         TumorModel firstModel = new TumorModel(110, 110);
         ModelVis mainWindow = new ModelVis(firstModel);
         //setting normalCells for access by other populations, adding cellpop for iteration
+
         if(NORMAL_CELLS_ACTIVE) {firstModel.normalCells= firstModel.AddCellPop(new NormalCells(firstModel, mainWindow.visNormal));} //index 0
         else{firstModel.normalCells= firstModel.AddCellPop(null);}
         if(TUMOR_CELLS_ACTIVE) {firstModel.tumorCells= firstModel.AddCellPop(new TumorCellPop(firstModel, mainWindow.visTumor));} //index 1
@@ -343,7 +354,7 @@ public class ModelMain {
         else{firstModel.necroCells= firstModel.AddCellPop(null);}
         if(T_CELLS_ACTIVE) {firstModel.tCells= firstModel.AddCellPop(new TCells(firstModel,mainWindow.visTcells));} //index 5
         else{firstModel.tCells= firstModel.AddCellPop(null);}
-        
+
         //The vessels
         if(VESSELS_ACTIVE) {firstModel.vessels= firstModel.AddCellPop(new Vessels(firstModel, mainWindow.visVessels));} //index 6
         else{firstModel.vessels= firstModel.AddCellPop(null);}
