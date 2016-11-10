@@ -19,11 +19,13 @@ abstract class CellPop {
     double[]swap;
     final int xDim;
     final int yDim;
+    double cellSize;
     CellPop(TumorModel myModel,Visualizer myVis) {
         this.myVis=myVis;
         this.myModel=myModel;
         xDim=myModel.xDim;
         yDim=myModel.yDim;
+        this.cellSize=1;
         pops=new double[xDim*yDim];
         swap=new double[xDim*yDim];
     }
@@ -47,6 +49,7 @@ class ModelVis{
     Visualizer visNecro;
     Visualizer visNormal;
     Visualizer visTumor;
+    Visualizer visTcells;
     GuiWindow win;
     ModelVis(TumorModel model){
         myModel=model;
@@ -56,12 +59,14 @@ class ModelVis{
         visNormal=new Visualizer(model.xDim,model.yDim,visScale);
         visNecro=new Visualizer(model.xDim,model.yDim,visScale);
         visO2=new Visualizer(model.xDim,model.yDim,visScale);
+        visTcells=new Visualizer(model.xDim,model.yDim,visScale);
         win=new GuiWindow("LungVis",model.xDim*visScale,model.yDim*visScale,3,2);
         win.AddComponent(visNormal,0,0,1,1);
         win.AddComponent(visNecro,1,0,1,1);
         win.AddComponent(visTumor,2,0,1,1);
         win.AddComponent(visVessels,0,1,1,1);
         win.AddComponent(visO2,1,1,1,1);
+        win.AddComponent(visTcells,2,1,1,1);
     }
 }
 
@@ -73,6 +78,7 @@ class TumorModel {
     NormalCells normalCells;
     NecroticCells necroCells;
     TumorCellPop tumorCells;
+    TCells tCells;
     resistantTumorCellPop resistantTumorCells;
     Vessels vessels;
     DiffusionField Oxygen;
@@ -118,8 +124,9 @@ class TumorModel {
         Arrays.fill(totalPops,0);
         for(int iPop=0;iPop<cellPops.size();iPop++) {
             CellPop currPop=cellPops.get(iPop);
+            double sizeScale=currPop.cellSize;
             for (int i = 0; i < currPop.pops.length; i++) {
-                totalPops[i] += currPop.pops[i];
+                totalPops[i] += currPop.pops[i]*sizeScale;
             }
         }
         //clear cellpop swap grids
@@ -213,6 +220,7 @@ public class ModelMain {
         firstModel.resistantTumorCells=firstModel.AddCellPop(new resistantTumorCellPop(firstModel, mainWindow.visTumor));//3
         firstModel.vessels = firstModel.AddCellPop(new Vessels(firstModel, mainWindow.visVessels));//4
         firstModel.Oxygen = firstModel.AddDiffusible(new DiffusionField(firstModel.xDim, firstModel.yDim, mainWindow.visO2));
+        firstModel.tCells = firstModel.AddCellPop(new TCells(firstModel,mainWindow.visTcells));
         firstModel.InitPops();
         while (true) {
             firstModel.RunCellStep();
