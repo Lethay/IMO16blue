@@ -15,7 +15,7 @@ public class CONST_AND_FUNCTIONS {
     static final double DIFFUSE_DT = 0.01;
 
     //cell constants
-    static final double MAX_POP=10000;
+    static final public double MAX_POP=10000;
     static final double TIME_STEP=0.2; //days
     static final double NECROTIC_DECAY_RATE=0.01*TIME_STEP;
     static final double NORMAL_PROLIF_RATE=0.02*TIME_STEP;

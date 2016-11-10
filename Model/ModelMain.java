@@ -1,5 +1,6 @@
 package Model;
 import AgentGridMin.*;
+import sun.awt.X11.Visual;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -55,6 +56,9 @@ class ModelVis{
     Visualizer visPH;
     Visualizer visGL;
     Visualizer visDR;
+
+    Visualizer visFULL;
+
     GuiWindow win;
 
     ModelVis(TumorModel model){
@@ -74,6 +78,9 @@ class ModelVis{
         visGL = new Visualizer(model.xDim,model.yDim,visScale);
         visDR = new Visualizer(model.xDim,model.yDim,visScale);
 
+        //The full viz
+        visFULL = new Visualizer(model.xDim,model.yDim,visScale);
+
 
         win=new GuiWindow("LungVis",model.xDim*visScale,model.yDim*visScale,3,2);
         win.AddComponent(visNormal,0,0,1,1);
@@ -87,6 +94,8 @@ class ModelVis{
         win.AddComponent(visPH,1,1,1,1);
         win.AddComponent(visGL,2,1,1,1);
         win.AddComponent(visDR,3,1,1,1);
+
+        win.AddComponent(visFULL,5,1,1,1);
 
 //
 //        win.addWindowListener(new WindowAdapter() {
@@ -286,7 +295,7 @@ public class ModelMain {
         ModelVis mainWindow = new ModelVis(firstModel);
         //setting normalCells for access by other populations, adding cellpop for iteration
         firstModel.normalCells = firstModel.AddCellPop(new NormalCells(firstModel, mainWindow.visNormal)); //index 0
-        firstModel.tumorCells=firstModel.AddCellPop(new TumorCellPop(firstModel, mainWindow.visTumor));//index 1
+        firstModel.tumorCells=firstModel.AddCellPop(new TumorCellPop(firstModel, mainWindow.visTumor, mainWindow.visFULL));//index 1
         firstModel.PDL1TumorCells=firstModel.AddCellPop(new PDL1TumorCellPop(firstModel, mainWindow.visTumor));//index 2
         firstModel.acidTumorCells=firstModel.AddCellPop(new acidProducingTumorCellPop(firstModel, mainWindow.visTumor));//index 3
         firstModel.necroCells=firstModel.AddCellPop(new NecroticCells(firstModel,mainWindow.visNecro));//index 4
