@@ -2,6 +2,7 @@ package Model;
 import AgentGridMin.*;
 import sun.awt.X11.Visual;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
@@ -34,6 +35,12 @@ abstract class CellPop {
     int I(int x,int y) {
         return x*yDim+y;
     }
+    boolean WithinGrid(int x,int y) {
+        if(x>=0&&x<xDim&&y>=0&&y<yDim) {
+            return true;
+        }
+        return false;
+    }
     //runs once at the begining of the model to initialize cell pops
     abstract void InitPop();
     //called once every tick
@@ -61,6 +68,11 @@ class ModelVis{
 
     GuiWindow win;
 
+    void AddVis(Visualizer vis,int x,int y,String title){
+       win.AddComponent(new JLabel(title),x,y*2,1,1);
+        win.AddComponent(vis,x,y*2+1,1,1);
+    }
+
     ModelVis(TumorModel model){
         myModel=model;
 
@@ -81,30 +93,26 @@ class ModelVis{
         //The full viz
         visFULL = new Visualizer(model.xDim,model.yDim,visScale);
 
+        win=new GuiWindow("LungVis",model.xDim*visScale,model.yDim*visScale,3,6);
+        //first layer
+        AddVis(visNormal,0,0,"Normal");
+        AddVis(visNecro,1,0,"Necro");
+        AddVis(visTumor,2,0,"Tumor");
+        //second layer
+        AddVis(visVessels,0,1,"Vessel");
+        AddVis(visTcells,1,1,"TCells");
+        AddVis(visO2,2,1,"O2");
+        //third layer
+        AddVis(visPH,0,2,"Ph");
+        AddVis(visGL,1,2,"Gluc");
+        AddVis(visDR,2,2,"Drug");
 
-        win=new GuiWindow("LungVis",model.xDim*visScale,model.yDim*visScale,3,2);
-        win.AddComponent(visNormal,0,0,1,1);
-        win.AddComponent(visNecro,1,0,1,1);
-        win.AddComponent(visTumor,2,0,1,1);
-        win.AddComponent(visVessels,0,1,1,1);
-        win.AddComponent(visO2,1,1,1,1);
-        win.AddComponent(visTcells,4,1,1,1);
-        win.AddComponent(visVessels,3,0,1,1);
-        win.AddComponent(visO2,0,1,1,1);
-        win.AddComponent(visPH,1,1,1,1);
-        win.AddComponent(visGL,2,1,1,1);
-        win.AddComponent(visDR,3,1,1,1);
-
-        win.AddComponent(visFULL,5,1,1,1);
-
-//
-//        win.addWindowListener(new WindowAdapter() {
-//            public void windowClosing(WindowEvent e) {
-//                myModel.printCellPops();
-//            }
-//        });
-
-
+        win.addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent e) {
+                boolean print_stuff=false;
+                if(print_stuff) {myModel.printCellPops();}
+            }
+        });
     }
 }
 
@@ -160,6 +168,7 @@ class TumorModel {
 
     void InitPops(){
         for(int iPop=0;iPop<cellPops.size();iPop++) {
+            if (cellPops.get(iPop)==null) continue;
             cellPops.get(iPop).InitPop();
         }
 
@@ -169,6 +178,7 @@ class TumorModel {
         //clear and fill total pop grid
         Arrays.fill(totalPops,0);
         for(int iPop=0;iPop<cellPops.size();iPop++) {
+            if (cellPops.get(iPop)==null) continue;
             CellPop currPop=cellPops.get(iPop);
             double sizeScale=currPop.cellSize;
             for (int i = 0; i < currPop.pops.length; i++) {
@@ -177,15 +187,18 @@ class TumorModel {
         }
         //clear cellpop swap grids
         for(int iPop=0;iPop<cellPops.size();iPop++) {
+            if (cellPops.get(iPop)==null) continue;
             Arrays.fill(cellPops.get(iPop).swap,0);
         }
         //run steps of each cellpop
         for(int iPop=0;iPop<cellPops.size();iPop++) {
+            if (cellPops.get(iPop)==null) continue;
             cellPops.get(iPop).Step();
         }
-        //(PDE step here)
+
         //switch pops and swaps in preparation for next time step
         for(int iPop=0;iPop<cellPops.size();iPop++){
+            if (cellPops.get(iPop)==null) continue;
             CellPop currPop = cellPops.get(iPop);
             double[] temp=currPop.pops;
             currPop.pops=currPop.swap;
@@ -193,6 +206,7 @@ class TumorModel {
         }
         //draw each cellpop, if they have a visualizer
         for(int iPop=0;iPop<cellPops.size();iPop++) {
+            if (cellPops.get(iPop)==null) continue;
             CellPop currPop = cellPops.get(iPop);
             if (currPop.myVis != null) {
                 currPop.Draw();
@@ -204,6 +218,10 @@ class TumorModel {
         if (tick == SEED_TIME)
         {
             tumorCells.SeedMe = true;
+        }
+        if (tick == IMMUNE_TIME)
+        {
+            tCells.active = true;
         }
         System.err.println("Day: "+tick*TIME_STEP); //TODO: put this information onto the GUI.
     }
@@ -291,24 +309,49 @@ class TumorModel {
 
 public class ModelMain {
     public static void main(String[] args) {
+
+        boolean NORMAL_CELLS_ACTIVE=true;
+        boolean TUMOR_CELLS_ACTIVE=true;
+        boolean PDL1_CELLS_ACTIVE=true;
+        boolean ACIDIC_CELLS_ACTIVE=true;
+        boolean NECRO_CELLS_ACTIVE=true;
+        boolean VESSELS_ACTIVE=true;
+        boolean T_CELLS_ACTIVE=true;
+        boolean OXYGEN_ACTIVE=true;
+        boolean GLUCOSE_ACTIVE=true;
+        boolean ACID_ACTIVE=true;
+        boolean DRUG_ACTIVE=true;
+
         TumorModel firstModel = new TumorModel(110, 110);
         ModelVis mainWindow = new ModelVis(firstModel);
         //setting normalCells for access by other populations, adding cellpop for iteration
-        firstModel.normalCells = firstModel.AddCellPop(new NormalCells(firstModel, mainWindow.visNormal)); //index 0
-        firstModel.tumorCells=firstModel.AddCellPop(new TumorCellPop(firstModel, mainWindow.visTumor, mainWindow.visFULL));//index 1
-        firstModel.PDL1TumorCells=firstModel.AddCellPop(new PDL1TumorCellPop(firstModel, mainWindow.visTumor));//index 2
-        firstModel.acidTumorCells=firstModel.AddCellPop(new acidProducingTumorCellPop(firstModel, mainWindow.visTumor));//index 3
-        firstModel.necroCells=firstModel.AddCellPop(new NecroticCells(firstModel,mainWindow.visNecro));//index 4
+
+        if(NORMAL_CELLS_ACTIVE) {firstModel.normalCells= firstModel.AddCellPop(new NormalCells(firstModel, mainWindow.visNormal));} //index 0
+        else{firstModel.normalCells= firstModel.AddCellPop(null);}
+        if(TUMOR_CELLS_ACTIVE) {firstModel.tumorCells= firstModel.AddCellPop(new TumorCellPop(firstModel, mainWindow.visTumor));} //index 1
+        else{firstModel.tumorCells= firstModel.AddCellPop(null);}
+        if(PDL1_CELLS_ACTIVE) {firstModel.PDL1TumorCells= firstModel.AddCellPop(new PDL1TumorCellPop(firstModel, mainWindow.visTumor));} //index 2
+        else{firstModel.PDL1TumorCells= firstModel.AddCellPop(null);}
+        if(ACIDIC_CELLS_ACTIVE) {firstModel.acidTumorCells= firstModel.AddCellPop(new acidProducingTumorCellPop(firstModel, mainWindow.visTumor));} //index 3
+        else{firstModel.acidTumorCells= firstModel.AddCellPop(null);}
+        if(NECRO_CELLS_ACTIVE) {firstModel.necroCells= firstModel.AddCellPop(new NecroticCells(firstModel,mainWindow.visNecro));} //index 4
+        else{firstModel.necroCells= firstModel.AddCellPop(null);}
+        if(T_CELLS_ACTIVE) {firstModel.tCells= firstModel.AddCellPop(new TCells(firstModel,mainWindow.visTcells));} //index 5
+        else{firstModel.tCells= firstModel.AddCellPop(null);}
 
         //The vessels
-        firstModel.vessels = firstModel.AddCellPop(new Vessels(firstModel, mainWindow.visVessels));//4
-        firstModel.tCells = firstModel.AddCellPop(new TCells(firstModel,mainWindow.visTcells));
-
+        if(VESSELS_ACTIVE) {firstModel.vessels= firstModel.AddCellPop(new Vessels(firstModel, mainWindow.visVessels));} //index 6
+        else{firstModel.vessels= firstModel.AddCellPop(null);}
+        
         //The diffusibles
-        firstModel.Oxygen = firstModel.AddDiffusible(new DiffusionField(firstModel.xDim, firstModel.yDim, OXYGEN_DIFFUSION_RATE, mainWindow.visO2));
-        firstModel.Glucose = firstModel.AddDiffusible(new DiffusionField(firstModel.xDim, firstModel.yDim, GLUCOSE_DIFFUSION_RATE, mainWindow.visGL));
-        firstModel.Acid= firstModel.AddDiffusible(new DiffusionField(firstModel.xDim, firstModel.yDim, ACID_DIFFUSION_RATE, mainWindow.visPH));
-        firstModel.Drug= firstModel.AddDiffusible(new DiffusionField(firstModel.xDim, firstModel.yDim, DRUG_DIFFUSION_RATE, mainWindow.visDR));
+        if(OXYGEN_ACTIVE) {firstModel.Oxygen= firstModel.AddDiffusible(new DiffusionField(firstModel.xDim, firstModel.yDim, OXYGEN_DIFFUSION_RATE, mainWindow.visO2));}
+        else{firstModel.Oxygen= firstModel.AddDiffusible(null);}
+        if(GLUCOSE_ACTIVE) {firstModel.Glucose= firstModel.AddDiffusible(new DiffusionField(firstModel.xDim, firstModel.yDim, GLUCOSE_DIFFUSION_RATE, mainWindow.visGL));}
+        else{firstModel.Glucose= firstModel.AddDiffusible(null);}
+        if(ACID_ACTIVE) {firstModel.Acid= firstModel.AddDiffusible(new DiffusionField(firstModel.xDim, firstModel.yDim, ACID_DIFFUSION_RATE, mainWindow.visPH));}
+        else{firstModel.Acid= firstModel.AddDiffusible(null);}
+        if(DRUG_ACTIVE) {firstModel.Drug= firstModel.AddDiffusible(new DiffusionField(firstModel.xDim, firstModel.yDim, DRUG_DIFFUSION_RATE, mainWindow.visDR));}
+        else{firstModel.Drug= firstModel.AddDiffusible(null);}
 
         firstModel.InitPops();
         while (true) {
