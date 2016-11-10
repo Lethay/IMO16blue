@@ -63,6 +63,7 @@ public class CONST_AND_FUNCTIONS {
 
     static final double OXYGEN_PRODUCTION_RATE=0.003; //per dt, per unit density
     static final double GLUCOSE_PRODUCTION_RATE=0.003; //per dt, per unit density
+    static final double DRUG_PRODUCTION_RATE = 0.002;
     static final double ACID_PRODUCTION_RATE=1.0; //per dt, per unit density
 
     //Govern gluc/oxy on
