@@ -249,18 +249,18 @@ class TumorModel {
                     Oxygen.field[ci] = 0.0;
                 }
                 Acid.field[ci] -= normalCells.pops[ci] * 0.0 * normalCells.OxygenConsumption * dt;
-                if (Oxygen.field[ci] < 0) {
-                    Oxygen.field[ci] = 0.0;
+                if (Acid.field[ci] < 0) {
+                    Acid.field[ci] = 0.0;
                 }
                 Glucose.field[ci] -= tumorCells.pops[ci] * tumorCells.GlucoseConsumption * dt;
                 Glucose.field[ci] -= normalCells.pops[ci] * normalCells.GlucoseConsumption * dt;
-                if (Oxygen.field[ci] < 0) {
-                    Oxygen.field[ci] = 0.0;
+                if (Glucose.field[ci] < 0) {
+                    Glucose.field[ci] = 0.0;
                 }
                 Drug.field[ci] -= tumorCells.pops[ci] * tumorCells.DrugConsumption * dt;
                 Drug.field[ci] -= normalCells.pops[ci] * normalCells.DrugConsumption * dt;
-                if (Oxygen.field[ci] < 0) {
-                    Oxygen.field[ci] = 0.0;
+                if (Drug.field[ci] < 0) {
+                    Drug.field[ci] = 0.0;
                 }
             }
             for (DiffusionField DType : diffuseTypes){
