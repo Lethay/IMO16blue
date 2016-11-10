@@ -24,7 +24,10 @@ public class PDL1TumorCellPop extends CellPop {
     }
 
     static private double Death(double cellPop, double immunePop, double drugConc, double acidNumber, double hypoxicKillingReduction, double drugEfficacy, double deathRate, double killRate){
-        return deathRate*cellPop + cellPop*immunePop/(IMMUNE_KILL_RATE_SHAPE_FACTOR+cellPop)*killRate  *drugEfficacy*drugConc/(1+drugEfficacy*drugConc) / (1+acidNumber) *hypoxicKillingReduction;
+        double baseDeathRate=deathRate*cellPop; //base death rate
+        double tCellKillRate=cellPop*immunePop/(IMMUNE_KILL_RATE_SHAPE_FACTOR+cellPop)*killRate / (1+acidNumber) *hypoxicKillingReduction;
+        tCellKillRate *=drugEfficacy*drugConc/(1+drugEfficacy*drugConc); //Reduction term specific for PD-L1 presenting cells
+        return baseDeathRate+tCellKillRate;
     }
 
     static private double HypoxicDeath(double cellPop, double oxygen, double gluc, double acid)
@@ -59,7 +62,6 @@ public class PDL1TumorCellPop extends CellPop {
                 double pop = pops[i];
                 double immunePop=myModel.tCells.pops[i];
                 double drugConc=0; //TODO Correct this too
-                double acidNumber=0*cellSize; //TODO correct this - the "0" needs to be acidConc
                 double totalPop = myModel.totalPops[i];
                 if (pop < 1) {
                     swap[i] += pop;
