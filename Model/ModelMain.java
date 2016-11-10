@@ -326,17 +326,6 @@ class TumorModel {
 public class ModelMain {
     public static void main(String[] args) {
 
-        boolean NORMAL_CELLS_ACTIVE=true;
-        boolean TUMOR_CELLS_ACTIVE=true;
-        boolean PDL1_CELLS_ACTIVE=true;
-        boolean ACIDIC_CELLS_ACTIVE=true;
-        boolean NECRO_CELLS_ACTIVE=true;
-        boolean VESSELS_ACTIVE=true;
-        boolean T_CELLS_ACTIVE=true;
-        boolean OXYGEN_ACTIVE=true;
-        boolean GLUCOSE_ACTIVE=true;
-        boolean ACID_ACTIVE=true;
-        boolean DRUG_ACTIVE=true;
 
         TumorModel firstModel = new TumorModel(110, 110);
         ModelVis mainWindow = new ModelVis(firstModel);

@@ -37,6 +37,18 @@ public class CONST_AND_FUNCTIONS {
     static final double TCELL_MOVE_RATE=0.5*TIME_STEP;
     static final double TCELL_DEATH_RATE=0.02*TIME_STEP;
 
+    static final boolean NORMAL_CELLS_ACTIVE=true;
+    static final boolean TUMOR_CELLS_ACTIVE=true;
+    static final boolean PDL1_CELLS_ACTIVE=true;
+    static final boolean ACIDIC_CELLS_ACTIVE=false;
+    static final boolean NECRO_CELLS_ACTIVE=false;
+    static final boolean VESSELS_ACTIVE=true;
+    static final boolean T_CELLS_ACTIVE=true;
+    static final boolean OXYGEN_ACTIVE=false;
+    static final boolean GLUCOSE_ACTIVE=false;
+    static final boolean ACID_ACTIVE=false;
+    static final boolean DRUG_ACTIVE=true;
+
 
     //diffusible constants
     static final double OXYGEN_DIFFUSION_RATE = 0.1;
