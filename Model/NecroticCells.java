@@ -16,7 +16,7 @@ public class NecroticCells extends CellPop {
     }
 
     //initializes the grid with a starting population, called once
-    void InitPop() {}
+    void InitPop() { return; }
 
     //runs one step of the model
     void Step() {
@@ -39,7 +39,7 @@ public class NecroticCells extends CellPop {
     void Draw() {
         for(int x=0;x<xDim;x++){
             for(int y=0;y<yDim;y++) {
-                myVis.SetHeat(x,y,pops[I(x,y)]/MAX_POP);
+                myVis.SetHeatCold(x,y,30*pops[I(x,y)]/MAX_POP);
             }
         }
     }

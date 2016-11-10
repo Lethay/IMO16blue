@@ -18,9 +18,10 @@ public class Vessels extends CellPop {
     void InitPop() {
         for (int x = 0; x < xDim; x++) {
             for (int y = 0; y < yDim; y++) {
-               if (rand.nextFloat() < 0.01)
+               if (rand.nextFloat() < 0.023)
                 {
-                    pops[I(x, y)] = MAX_POP / 5.;
+                    double vesDensity = 3*rand.nextGaussian()+3;
+                    pops[I(x, y)] = MAX_POP / (vesDensity);
                 }
 
             }
@@ -28,9 +29,26 @@ public class Vessels extends CellPop {
 
     }
 
+    private static double rhoThresh = 0.55;
+    static private double Death(double cellPop, double totalPop) {
+        if (totalPop > rhoThresh * MAX_POP) {
+            return cellPop;//cellPop * (totalPop - (rhoThresh * MAX_POP)) * (1. / (rhoThresh * MAX_POP));
+        } else {
+            return 0.0;
+        }
+
+    }
+
     void Step() {
-        for (int i=0; i < xDim*yDim; i++) {
-            swap[i] = pops[i];
+        for (int x=0; x < xDim; x++) {
+            for(int y=0; y<yDim; y++) {
+                double deathDelta = Death(pops[I(x,y)],  myModel.totalPops[I(x,y)]);
+                swap[I(x,y)] = pops[I(x,y)] - deathDelta;
+                if (swap[I(x,y)] < 1)
+                {
+                    swap[I(x,y)] = 0;
+                }
+            }
         }
     }
 
@@ -38,9 +56,7 @@ public class Vessels extends CellPop {
     void Draw() {
         for (int x = 0; x < xDim; x++) {
             for (int y = 0; y < yDim; y++) {
-                if (pops[I(x,y)] > 0) {
-                    myVis.Set(x, y, 1, 0, 0);
-                }
+                myVis.SetHeat(x,y, pops[I(x,y)]/MAX_POP);
             }
         }
     }

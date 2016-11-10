@@ -9,12 +9,25 @@ import java.util.Arrays;
  */
 public class CONST_AND_FUNCTIONS {
 
+    static final int SEED_TIME = 200;
+
+    static final double DIFFUSE_TIME_LENGTH = 1.0;
+    static final double DIFFUSE_DT = 0.01;
+
     //cell constants
     static final double MAX_POP=10000;
     static final double TIME_STEP=0.2; //days
-    static final double NECROTIC_DECAY_RATE=0.07*TIME_STEP;
+    static final double NECROTIC_DECAY_RATE=0.01*TIME_STEP;
     static final double NORMAL_PROLIF_RATE=0.02*TIME_STEP;
     static final double NORMAL_DEATH_RATE=0.02*TIME_STEP;
+
+    static final double TUMOR_PROLIF_RATE = 0.4 * TIME_STEP;
+    static final double TUMOR_DEATH_RATE = 0.02*TIME_STEP;
+
+    static final double TUMOUR_LOW_OXYGEN_DEATH_THRESHOLD = 0.01;
+    static final double TUMOUR_HIGH_ACID_DEATH_THRESHOLD = 0.1;
+
+
     static final double TUMOUR_SWITCH_RATE=0.01*TIME_STEP;
     static final double DRUG_INHIBITION_RATE=0.03*TIME_STEP;
     static final double IMMUNE_KILL_RATE=0.08*TIME_STEP;
@@ -31,7 +44,65 @@ public class CONST_AND_FUNCTIONS {
 
 
     //diffusible constants
-    static final double OXYGEN_PRODUCTION_RATE=0.03;
+    static final double OXYGEN_DIFFUSION_RATE = 0.1;
+    static final double GLUCOSE_DIFFUSION_RATE = 0.1;
+    static final double ACID_DIFFUSION_RATE = 0.1;
+    static final double DRUG_DIFFUSION_RATE = 0.02;
+
+    static final double OXYGEN_PRODUCTION_RATE=0.003; //per dt, per unit density
+    static final double GLUCOSE_PRODUCTION_RATE=0.003; //per dt, per unit density
+    static final double DRUG_PRODUCTION_RATE = 0.02;
+    static final double ACID_PRODUCTION_RATE=1.0; //per dt, per unit density
+
+    //Govern gluc/oxy on
+    static final double GLUCOSE_THRESHOLD = 0.05;
+    static final double OXYGEN_THRESHOLD = 0.05;
+
+    static final double OXYGEN_USAGE_NORMAL=2; //number of oxygen needed for a single birth (for normal cells)
+    static final double GLUCOSE_USAGE_NORMAL=2; // number of glucose needed for a single birth (for normal cells)
+    static final double ACID_RATE_NORMAL=.1; // amount of acid produced per glycolysis (for normal cells)
+    static double modifiedBirthRate(double birthRate, double oxy, double gluc) {
+        double oxyPenalty = 1.0;
+        double glucPenalty = 1.0;
+        if (gluc < GLUCOSE_THRESHOLD)
+        {
+            glucPenalty = 0.1;
+        }
+        if (oxy < OXYGEN_THRESHOLD)
+        {
+            oxyPenalty = 0.1;
+        }
+        return birthRate * glucPenalty * oxyPenalty;
+    }
+
+    //returns number of births from metabolic birth rate
+    static double MetabolicBirth(double cellPop, double totalPop, double maxProlifRate, double oxygen, double glucose, double glucoseIn, double oxygenIn, double acidRate) {
+        // determine cells that legally proliferate with oxygen and glucose (=perfect proliferation)
+        double legals_1 = 0;
+        double legals_2 = 0;
+        //double hypoxics = 0;
+        //double acid = 0;
+        if (oxygenIn * cellPop < oxygen && glucoseIn * cellPop < glucose) { // all cells can proliferate perfectly
+            legals_1 = cellPop;
+        }
+        else if (oxygenIn * cellPop > oxygen && glucoseIn * cellPop > glucose) { //only some cells proliferate perfectly
+            legals_1 = Math.min(oxygen / oxygenIn, glucose / glucoseIn);
+        }
+        // update oxygen, glucose and cellPop values
+        oxygen =+ -oxygenIn*legals_1;
+        glucose =+ -glucoseIn*legals_1;
+        cellPop =+ - legals_1;
+        //determine cells that legally proliferate with only glucose(acidic proliferation)
+        if (cellPop < glucose/glucoseIn) {
+            legals_2 = cellPop;
+        }
+        else if (cellPop > glucose/glucoseIn) {
+            legals_2 = glucose/glucoseIn;
+        }
+        //acid = acidRate*legals_2;
+        return (legals_1+legals_2) * maxProlifRate * (1 - totalPop / MAX_POP);
+    }
+
 
     //returns pop to be born
     static double Birth(double cellPop,double totalPop,double maxProlifRate) {
@@ -41,6 +112,8 @@ public class CONST_AND_FUNCTIONS {
     static double Death(double cellPop,double deathRate){
         return cellPop*deathRate;
     }
+
+    //add hypoxic death to Death function
 
     static void NecroDeath(double[] NecroSwap,int i,double deadCellPop){
         NecroSwap[i]+=deadCellPop;

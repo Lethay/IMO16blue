@@ -4,6 +4,8 @@ import AgentGridMin.SqList;
 import AgentGridMin.Utils;
 import AgentGridMin.Visualizer;
 
+import java.util.Random;
+
 import static Model.CONST_AND_FUNCTIONS.*;
 
 /**
@@ -12,6 +14,12 @@ import static Model.CONST_AND_FUNCTIONS.*;
 public class NormalCells extends CellPop {
     private SqList VN_Hood = Utils.GenVonNeumannNeighborhood();
     double[] migrantPops = new double[4];
+    Random rand = new Random();
+
+    final public double OxygenConsumption = 0.00004;
+    final public double GlucoseConsumption = 0.00003;
+    final public double DrugConsumption = 0.0015;
+
 
     NormalCells(TumorModel model,Visualizer vis) {
         super(model,vis);
@@ -21,7 +29,13 @@ public class NormalCells extends CellPop {
     void InitPop() {
         for (int x = 0; x < xDim; x++) {
             for (int y = 0; y < yDim; y++) {
-                pops[I(x, y)] = MAX_POP / 3.;
+                double tisDensity = 10. + (rand.nextGaussian());
+                if (tisDensity < 7. || tisDensity > 13.)
+                {
+                    tisDensity = 10.;
+                }
+//                double tisDensity = 10.;
+                pops[I(x, y)] = MAX_POP / (tisDensity);
             }
         }
     }
@@ -38,11 +52,12 @@ public class NormalCells extends CellPop {
                     continue;
                 }
                 double birthDelta = Birth(pop, totalPop, NORMAL_PROLIF_RATE);
+//                double birthDelta = MetabolicBirth(pop, totalPop, NORMAL_PROLIF_RATE, myModel.Oxygen.Get(x,y),myModel.Glucose.Get(x,y),GLUCOSE_USAGE_NORMAL,OXYGEN_USAGE_NORMAL, ACID_RATE_NORMAL);
                 double deathDelta = Death(pop, NORMAL_DEATH_RATE);
-                NecroDeath(myModel.necroCells.swap,i,deathDelta);
+                //NecroDeath(myModel.necroCells.swap,i,deathDelta);
                 double migrantDelta = Migrate(myModel, swap, x, y, MigrantPop(totalPop, birthDelta), VN_Hood, migrantPops);
                 swap[i] += pop + birthDelta - deathDelta - migrantDelta;
-                NecroDeath(myModel.necroCells.swap,i,deathDelta);
+                //NecroDeath(myModel.necroCells.swap,i,deathDelta);
             }
 
         }

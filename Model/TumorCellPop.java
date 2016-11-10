@@ -11,32 +11,57 @@ import static Model.CONST_AND_FUNCTIONS.*;
  */
 public class TumorCellPop extends CellPop {
 
-    private SqList VN_Hood = Utils.GenVonNeumannNeighborhood();
-    double[] migrantPops = new double[4];
+    final public double OxygenConsumption = 0.0025;
+    final public double GlucoseConsumption = 0.003;
+    final public double DrugConsumption = 0.03;
 
-    static final private double TUMOR_PROLIF_RATE = 0.4 * CONST_AND_FUNCTIONS.TIME_STEP;
-    static final double TUMOR_DEATH_RATE = 0.02 * CONST_AND_FUNCTIONS.TIME_STEP;
+    public boolean SeedMe = false;
 
+    private SqList VN_Hood = Utils.GenMooreNeighborhood();
+    double[] migrantPops = new double[8];
 
     TumorCellPop(TumorModel model, Visualizer vis) {
-        super(model,vis);
+        super(model, vis);
     }
 
-    static private double Death(double cellPop, double immunePop, double deathRate, double PDSwitchRate, double killRate){
-        return cellPop*deathRate +  PDSwitchRate*cellPop + killRate*cellPop*immunePop;
+
+    static private double Death(double cellPop, double immunePop, double deathRate, double PDSwitchRate, double killRate) {
+        return cellPop * deathRate + PDSwitchRate * cellPop + killRate * cellPop * immunePop;
     }
 
-    static private double Birth(double cellPop, double resistantPop, double drugConc, double totalPop, double birthRate, double PDSwitchRate, double inhibitionRate) {
-        return cellPop * (birthRate * (1 - totalPop / MAX_POP)) + PDSwitchRate * resistantPop + inhibitionRate * resistantPop * drugConc;
+    static private double HypoxicDeath(double cellPop, double oxygen, double gluc, double acid)
+    {
+        double hypDeath = 0.0;
+        if (oxygen < TUMOUR_LOW_OXYGEN_DEATH_THRESHOLD)
+        {
+            hypDeath += 0.3;
+        }
+        if (acid > TUMOUR_HIGH_ACID_DEATH_THRESHOLD)
+        {
+            hypDeath += 0.2;
+        }
+        return hypDeath * cellPop;
+    }
+
+    static private double Birth(double cellPop, double resistantPop, double drugConc, double totalPop, double birthRate, double PDSwitchRate, double inhibitionRate, double gluc, double oxy)
+    {
+        double modifiedBirthRate = modifiedBirthRate(birthRate, gluc, oxy);
+        return cellPop * (modifiedBirthRate * (1 - totalPop / MAX_POP)) + PDSwitchRate * resistantPop + inhibitionRate * resistantPop * drugConc;
     }
 
     //runs once at the begining of the model to initialize cell pops
     public void InitPop() {
-        pops[I(xDim / 2, yDim / 2)] = MAX_POP / 10.;
+        return ;
     }
 
     //called once every tick
     public void Step() {
+
+        if (SeedMe) {
+            pops[I(xDim / 2, yDim / 2)] += MAX_POP / 500.;
+            this.SeedMe = false;
+        }
+
         for (int x = 0; x < xDim; x++) {
             for (int y = 0; y < yDim; y++) {
                 int i = I(x, y);
@@ -49,10 +74,21 @@ public class TumorCellPop extends CellPop {
                     swap[i] += Math.max(pop,0);
                     continue;
                 }
-                double birthDelta = Birth(pop, resistantPop, drugConcentration, totalPop, TUMOR_PROLIF_RATE, TUMOUR_SWITCH_RATE, DRUG_INHIBITION_RATE);
+
                 double deathDelta = Death(pop, immunePop, TUMOR_DEATH_RATE, TUMOUR_SWITCH_RATE, IMMUNE_KILL_RATE);
+
+                double oxy = myModel.Oxygen.field[I(x,y)];
+                double gluc = myModel.Glucose.field[I(x,y)];
+                double acid = myModel.Acid.field[I(x,y)];
+
+                double hypoxicDeathDelta = HypoxicDeath(pop, oxy, gluc, acid);
+                double birthDelta = Birth(pop, resistantPop, drugConcentration, totalPop, TUMOR_PROLIF_RATE, TUMOUR_SWITCH_RATE, DRUG_INHIBITION_RATE, gluc, oxy);
                 double migrantDelta = Migrate(myModel, swap, x, y, MigrantPop(totalPop, birthDelta), VN_Hood, migrantPops);
-                swap[i] += pop + birthDelta - deathDelta - migrantDelta;
+                swap[i] += pop + birthDelta - deathDelta - hypoxicDeathDelta - migrantDelta;
+                myModel.necroCells.swap[i] += hypoxicDeathDelta;
+                if (swap[i] < 0.0){
+                    swap[i]=0.0;
+                }
 
             }
         }
@@ -62,9 +98,10 @@ public class TumorCellPop extends CellPop {
     public void Draw() {
         for (int x = 0; x < xDim; x++) {
             for (int y = 0; y < yDim; y++) {
-                if(pops[I(x,y)]>1) {
+                if(myVis!=null&&pops[I(x,y)]>1) {
                     myVis.SetHeat(x, y, pops[I(x, y)] / MAX_POP);
                 }
+                myVis.SetHeat(x, y, 30*pops[I(x, y)] / MAX_POP);
             }
         }
     }
