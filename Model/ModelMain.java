@@ -285,8 +285,8 @@ class TumorModel {
                     }
                 }
                 if(DRUG_ACTIVE) {
-                    Drug.field[ci] -= tumorCells.pops[ci] * tumorCells.DrugConsumption * dt;
-                    Drug.field[ci] -= normalCells.pops[ci] * normalCells.DrugConsumption * dt;
+                    Drug.field[ci] -= PDL1TumorCells.pops[ci] * PDL1TumorCells.DrugConsumption * dt;
+                    //Drug.field[ci] -= normalCells.pops[ci] * normalCells.DrugConsumption * dt;
                     if (Drug.field[ci] < 0) {
                         Drug.field[ci] = 0.0;
                     }

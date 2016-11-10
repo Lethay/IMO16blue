@@ -15,6 +15,7 @@ public class PDL1TumorCellPop extends CellPop {
 
     static final private double TUMOR_PROLIF_RATE=0.04*CONST_AND_FUNCTIONS.TIME_STEP;
     static final double TUMOR_DEATH_RATE=0.02*CONST_AND_FUNCTIONS.TIME_STEP;
+    final public double DrugConsumption = 0.03;
 
     private SqList VN_Hood = Utils.GenMooreNeighborhood();
     double[] migrantPops = new double[8];

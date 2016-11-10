@@ -14,7 +14,7 @@ public class TumorCellPop extends CellPop {
 
     final public double OxygenConsumption = 0.0025;
     final public double GlucoseConsumption = 0.003;
-    final public double DrugConsumption = 0.03;
+    // final public double DrugConsumption = 0.03;
 
     final Visualizer visFull;
 
