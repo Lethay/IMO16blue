@@ -76,11 +76,11 @@ class ModelVis{
         win.AddComponent(visPH,1,1,1,1);
         win.AddComponent(visGL,2,1,1,1);
 
-        win.addWindowListener(new WindowAdapter() {
-            public void windowClosing(WindowEvent e) {
-                myModel.printCellPops();
-            }
-        });
+//        win.addWindowListener(new WindowAdapter() {
+//            public void windowClosing(WindowEvent e) {
+//                myModel.printCellPops();
+//            }
+//        });
 
     }
 }
@@ -178,7 +178,7 @@ class TumorModel {
 
     void RunDiffuseStep(double discreteTimeStep) {
         double t = 0.0;
-        double dt = 0.001;
+        double dt = 0.01;
 
         int[] ProdIndices = new int[xDim * yDim];
         int k = 0;
@@ -202,6 +202,7 @@ class TumorModel {
         while (t < discreteTimeStep) {
             //Cell-type specific consumption
             for (int ci = 0; ci < xDim * yDim; ci++) {
+                Oxygen.field[ci] -= tumorCells.pops[ci] * tumorCells.OxygenConsumption * dt;
                 Oxygen.field[ci] -= normalCells.pops[ci] * normalCells.OxygenConsumption * dt;
                 if (Oxygen.field[ci] < 0) {
                     Oxygen.field[ci] = 0.0;
@@ -210,6 +211,7 @@ class TumorModel {
                 if (Oxygen.field[ci] < 0) {
                     Oxygen.field[ci] = 0.0;
                 }
+                Glucose.field[ci] -= tumorCells.pops[ci] * tumorCells.GlucoseConsumption * dt;
                 Glucose.field[ci] -= normalCells.pops[ci] * normalCells.GlucoseConsumption * dt;
                 if (Oxygen.field[ci] < 0) {
                     Oxygen.field[ci] = 0.0;
@@ -221,7 +223,6 @@ class TumorModel {
 
             t = t + dt;
         }
-
 
         for (DiffusionField DType : diffuseTypes){
             DType.DrawField();
@@ -271,7 +272,7 @@ public class ModelMain {
         firstModel.InitPops();
         while (true) {
             firstModel.RunCellStep();
-            firstModel.RunDiffuseStep(0.1);
+            firstModel.RunDiffuseStep(DIFFUSE_TIME_LENGTH);
         }
     }
 }
