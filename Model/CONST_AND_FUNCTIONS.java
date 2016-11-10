@@ -18,11 +18,12 @@ public class CONST_AND_FUNCTIONS {
     //cell constants
     static final public double MAX_POP=10000;
     static final double TIME_STEP=0.2; //days
+    static final double TUMOR_PROLIF_RATE=0.1*TIME_STEP;
     static final double NECROTIC_DECAY_RATE=0.01*TIME_STEP;
     static final double NORMAL_PROLIF_RATE=0.02*TIME_STEP;
     static final double NORMAL_DEATH_RATE=0.02*TIME_STEP;
 
-    static final double TUMOR_PROLIF_RATE = 0.4 * TIME_STEP;
+//    static final double TUMOR_PROLIF_RATE = 0.4 * TIME_STEP;
     static final double TUMOR_DEATH_RATE = 0.02*TIME_STEP;
 
     static final double TUMOUR_LOW_OXYGEN_DEATH_THRESHOLD = 0.01;
@@ -30,10 +31,10 @@ public class CONST_AND_FUNCTIONS {
 
     static final double DRUG_EFFICACY=0.01; //DRUG_EFFICACY*DRUG_CONC represents the modification to the immune kill rate. 1% of drug is useful, and the other factor represents reduction due to PD-L1.
     static final double IMMUNE_KILL_RATE_SHAPE_FACTOR=100;
-    static final double IMMUNE_KILL_RATE=0.08*TIME_STEP;
+    static final double IMMUNE_KILL_RATE=5*TIME_STEP;
     static final double NORMAL_HYPOXIC_THRESHOLD=0.2;
     static final double MAX_HYPOXIC_DEATH_RATE=0.5;
-    static final double VESSELS_TO_TCELLS=.02*TIME_STEP;
+    static final double VESSELS_TO_TCELLS=.1*TIME_STEP;
     static final double TCELL_MOVE_RATE=0.5*TIME_STEP;
     static final double TCELL_DEATH_RATE=0.02*TIME_STEP;
 

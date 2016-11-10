@@ -62,7 +62,7 @@ public class PDL1TumorCellPop extends CellPop {
         for (int x = 0; x < xDim; x++) {
             for (int y = 0; y < yDim; y++) {
                 if (pops[I(x,y)] != 0) {
-                    //myVis.Set(x, y, 0, 0, 1);
+                    myVis.SetHeat(x, y,pops[I(x,y)]);
                 }
             }
         }
