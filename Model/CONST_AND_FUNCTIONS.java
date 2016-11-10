@@ -9,6 +9,8 @@ import java.util.Arrays;
  */
 public class CONST_AND_FUNCTIONS {
 
+    static final double DIFFUSE_TIME_LENGTH = 1.0;
+
     //cell constants
     static final double MAX_POP=10000;
     static final double TIME_STEP=0.2; //days
@@ -26,7 +28,32 @@ public class CONST_AND_FUNCTIONS {
 
 
     //diffusible constants
-    static final double OXYGEN_PRODUCTION_RATE=0.03;
+    static final double OXYGEN_DIFFUSION_RATE = 0.1;
+    static final double GLUCOSE_DIFFUSION_RATE = 0.1;
+    static final double ACID_DIFFUSION_RATE = 0.1;
+
+    static final double OXYGEN_PRODUCTION_RATE=0.3; //per dt, per unit density
+    static final double GLUCOSE_PRODUCTION_RATE=0.3; //per dt, per unit density
+    static final double ACID_PRODUCTION_RATE=1.0; //per dt, per unit density
+
+    //Govern gluc/oxy on
+    static final double GLUCOSE_THRESHOLD = 0.05;
+    static final double OXYGEN_THRESHOLD = 0.05;
+    static  double modifiedBirthRate(double birthRate, double oxy, double gluc) {
+        double oxyPenalty = 1.0;
+        double glucPenalty = 1.0;
+        if (gluc < GLUCOSE_THRESHOLD)
+        {
+            glucPenalty = 0.1;
+        }
+        if (oxy < OXYGEN_THRESHOLD)
+        {
+            oxyPenalty = 0.1;
+        }
+        return birthRate * glucPenalty * oxyPenalty;
+
+    }
+
 
     //returns pop to be born
     static double Birth(double cellPop,double totalPop,double maxProlifRate) {

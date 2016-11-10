@@ -13,6 +13,10 @@ public class NormalCells extends CellPop {
     private SqList VN_Hood = Utils.GenVonNeumannNeighborhood();
     double[] migrantPops = new double[4];
 
+    final public double OxygenConsumption = 0.0000003;
+    final public double GlucoseConsumption = 0.0000003;
+
+
     NormalCells(TumorModel model,Visualizer vis) {
         super(model,vis);
     }
@@ -39,10 +43,10 @@ public class NormalCells extends CellPop {
                 }
                 double birthDelta = Birth(pop, totalPop, NORMAL_PROLIF_RATE);
                 double deathDelta = Death(pop, NORMAL_DEATH_RATE);
-                NecroDeath(myModel.necroCells.swap,i,deathDelta);
+                //NecroDeath(myModel.necroCells.swap,i,deathDelta);
                 double migrantDelta = Migrate(myModel, swap, x, y, MigrantPop(totalPop, birthDelta), VN_Hood, migrantPops);
                 swap[i] += pop + birthDelta - deathDelta - migrantDelta;
-                NecroDeath(myModel.necroCells.swap,i,deathDelta);
+                //NecroDeath(myModel.necroCells.swap,i,deathDelta);
             }
 
         }

@@ -11,6 +11,10 @@ import static Model.CONST_AND_FUNCTIONS.*;
  */
 public class TumorCellPop extends CellPop {
 
+    final public double OxygenConsumption = 0.00003;
+    final public double GlucoseConsumption = 0.00003;
+
+
     private SqList VN_Hood = Utils.GenVonNeumannNeighborhood();
     double[] migrantPops = new double[4];
 
@@ -19,15 +23,22 @@ public class TumorCellPop extends CellPop {
 
 
     TumorCellPop(TumorModel model, Visualizer vis) {
-        super(model,vis);
+        super(model, vis);
     }
 
-    static private double Death(double cellPop, double immunePop, double deathRate, double PDSwitchRate, double killRate){
-        return cellPop*deathRate  +  PDSwitchRate*cellPop + killRate*cellPop*immunePop;
+    static private double Death(double cellPop, double immunePop, double deathRate, double PDSwitchRate, double killRate) {
+        return cellPop * deathRate + PDSwitchRate * cellPop + killRate * cellPop * immunePop;
     }
 
-    static private double Birth(double cellPop, double resistantPop, double drugConc, double totalPop, double birthRate, double PDSwitchRate, double inhibitionRate) {
-        return cellPop * (birthRate * (1 - totalPop / MAX_POP)) + PDSwitchRate * resistantPop + inhibitionRate * resistantPop * drugConc;
+    static private double HypoxicDeath(double cellPop, double oxygen, double gluc, double acid)
+    {
+        return 0.0;
+    }
+
+    static private double Birth(double cellPop, double resistantPop, double drugConc, double totalPop, double birthRate, double PDSwitchRate, double inhibitionRate, double gluc, double oxy)
+    {
+        double modifiedBirthRate = modifiedBirthRate(birthRate, gluc, oxy);
+        return cellPop * (modifiedBirthRate * (1 - totalPop / MAX_POP)) + PDSwitchRate * resistantPop + inhibitionRate * resistantPop * drugConc;
     }
 
     //runs once at the begining of the model to initialize cell pops
@@ -50,10 +61,20 @@ public class TumorCellPop extends CellPop {
                     continue;
                 }
 
-                double birthDelta = Birth(pop, resistantPop, drugConcentration, totalPop, TUMOR_PROLIF_RATE, TUMOUR_SWITCH_RATE, DRUG_INHIBITION_RATE);
                 double deathDelta = Death(pop, immunePop, TUMOR_DEATH_RATE, TUMOUR_SWITCH_RATE, IMMUNE_KILL_RATE);
+
+                double oxy = myModel.Oxygen.field[I(x,y)];
+                double gluc = myModel.Glucose.field[I(x,y)];
+                double acid = myModel.Acid.field[I(x,y)];
+
+                double hypoxicDeathDelta = HypoxicDeath(pop, oxy, gluc, acid);
+                double birthDelta = Birth(pop, resistantPop, drugConcentration, totalPop, TUMOR_PROLIF_RATE, TUMOUR_SWITCH_RATE, DRUG_INHIBITION_RATE, gluc, oxy);
+
                 double migrantDelta = Migrate(myModel, swap, x, y, MigrantPop(totalPop, birthDelta), VN_Hood, migrantPops);
-                swap[i] += pop + birthDelta - deathDelta - migrantDelta;
+                swap[i] += pop + birthDelta - deathDelta - hypoxicDeathDelta - migrantDelta;
+                if (swap[i] < 1.0){
+                    swap[i]=0.0;
+                }
 
             }
         }
