@@ -131,7 +131,7 @@ public class CONST_AND_FUNCTIONS {
             int checkY = neighborhood.Ysq(i) + y;
             if (myModel.WithinGrid(checkX, checkY)) {
                 double neighborDelta = myTotal-myModel.totalPops[myModel.I(checkX, checkY)];
-                if(neighborDelta>0) {
+                if(neighborDelta>=0) {
                     storePops[i] = neighborDelta;
                     surroundingDiff += neighborDelta;
                 }
