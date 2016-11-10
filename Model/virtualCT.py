@@ -30,7 +30,7 @@ def read_CA_output(filename,noiseAmp):
 	densities+=0.5*noiseAmp*np.random.randn(*densities.shape)
 	return densities
 
-def fileOutputTest(infilename,PLOT=False):
+def fileOutput(infilename,PLOT=False):
 	noiseAmp=150#units are "HA". See file in slack.
 	cellLocations=read_CA_output(infilename,noiseAmp)
 	outfilename=datetime.now().strftime("%y-%m-%d-%H%M.dcm")
@@ -51,9 +51,6 @@ def fileOutputTest(infilename,PLOT=False):
 	#Set the data that we copied from another dicom file
 	setAttributes(ds)
 
-	#Steal existing dicom file
-	# ds=dicom.read_file("/mnt/c/Users/liamb/Desktop/ImagesFromCharlie/fromJamie.dcm")#  "IM-0001-0001.dcm")
-
 	# Set the image's data equal to that from our CA output
 	ds.Rows = cellLocations.shape[0]
 	ds.Columns = cellLocations.shape[1]
@@ -67,5 +64,5 @@ def fileOutputTest(infilename,PLOT=False):
 	if(PLOT):
 		plt.imshow(ds.pixel_array,cmap=plt.cm.bone); plt.show()
 
-if len(argv)>1: fileOutputTest(argv[1],PLOT=True)
+if len(argv)>1: fileOutput(argv[1],PLOT=True)
 else: print "Please provide a filename."

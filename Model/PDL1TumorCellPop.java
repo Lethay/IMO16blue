@@ -40,7 +40,7 @@ public class PDL1TumorCellPop extends CellPop {
             for(int y=0; y<yDim; y++){
                 int i = I(x,y);
                 double pop = pops[i];
-                double immunePop=0; //myModel.cellPops.get(IMMUNE_POP_INDEX).pops[i]; //TODO correct this variable
+                double immunePop=myModel.tCells.pops[i];
                 double drugConc=0; //TODO Correct this too
                 double acidNumber=0*cellSize; //TODO correct this - the "0" needs to be acidConc
                 double totalPop = myModel.totalPops[i];

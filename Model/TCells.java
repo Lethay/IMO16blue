@@ -17,6 +17,7 @@ public class TCells extends CellPop{
     double[] popList=new double[5];
     double[] MovePops;
     double[] diffConsts;
+    public boolean active = false;
     TCells(TumorModel myModel, Visualizer myVis){
         super(myModel,myVis);
         this.cellSize=0.25;
@@ -24,13 +25,14 @@ public class TCells extends CellPop{
         this.diffConsts=new double[xDim*yDim];
     }
     double Interact(int i,double interactPop){
-        double tVsC=interactPop-myModel.tumorCells.pops[i];
-        if(tVsC>0){
-            myModel.tumorCells.swap[i]-=interactPop*TCELLS_VS_TUMORCELLS;
-            return interactPop-interactPop;
-        }
-        myModel.tumorCells.swap[i]-=myModel.tumorCells.pops[i]*TCELLS_VS_TUMORCELLS;
         return 0;
+//        double tVsC=interactPop-myModel.tumorCells.pops[i];
+//        if(tVsC>0){
+// //           myModel.tumorCells.swap[i]-=interactPop*TCELLS_VS_TUMORCELLS;
+//            return interactPop-interactPop;
+//        }
+//        //       myModel.tumorCells.swap[i]-=myModel.tumorCells.pops[i]*TCELLS_VS_TUMORCELLS;
+//        return 0;
     }
     void InitPop() {
     }
@@ -40,7 +42,7 @@ public class TCells extends CellPop{
                 int i=I(x,y);
                 //IMMUNE CELLS ENTER THROUGH VESSELS
                 double VesselPop = myModel.vessels.pops[i];
-                if (VesselPop > 1) {
+                if (active&&VesselPop > 1) {
                     swap[i] += Birth(VesselPop,myModel.totalPops[i],VESSELS_TO_TCELLS);
                 }
                 diffConsts[i]=Math.min(Math.max(1-myModel.totalPops[i]/MAX_POP,0),1);
