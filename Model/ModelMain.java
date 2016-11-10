@@ -51,12 +51,13 @@ class ModelVis{
     Visualizer visTumor;
     Visualizer visPH;
     Visualizer visGL;
+    Visualizer visDR;
     GuiWindow win;
 
     ModelVis(TumorModel model){
         myModel=model;
 
-        int visScale=3;
+        int visScale=2;
         visVessels=new Visualizer(model.xDim,model.yDim,visScale);
         visTumor=new Visualizer(model.xDim,model.yDim,visScale);
         visNormal=new Visualizer(model.xDim,model.yDim,visScale);
@@ -66,6 +67,8 @@ class ModelVis{
         visO2 = new Visualizer(model.xDim,model.yDim,visScale);
         visPH = new Visualizer(model.xDim,model.yDim,visScale);
         visGL = new Visualizer(model.xDim,model.yDim,visScale);
+        visDR = new Visualizer(model.xDim,model.yDim,visScale);
+
 
         win=new GuiWindow("LungVis",model.xDim*visScale,model.yDim*visScale,3,2);
         win.AddComponent(visNormal,0,0,1,1);
@@ -75,6 +78,8 @@ class ModelVis{
         win.AddComponent(visO2,0,1,1,1);
         win.AddComponent(visPH,1,1,1,1);
         win.AddComponent(visGL,2,1,1,1);
+        win.AddComponent(visDR,3,1,1,1);
+
 
 //        win.addWindowListener(new WindowAdapter() {
 //            public void windowClosing(WindowEvent e) {
@@ -103,6 +108,8 @@ class TumorModel {
     DiffusionField Oxygen;
     DiffusionField Glucose;
     DiffusionField Acid;
+    DiffusionField Drug;
+
 
     double[] totalPops;
     int xDim;
@@ -173,6 +180,10 @@ class TumorModel {
 
         //print how much time has passed
         tick++;
+        if (tick == SEED_TIME)
+        {
+            tumorCells.SeedMe = true;
+        }
         System.err.println("Day: "+tick*TIME_STEP); //TODO: put this information onto the GUI.
     }
 
@@ -197,6 +208,7 @@ class TumorModel {
             //Vessel production (fixed conc)
             Oxygen.field[ProdIndices[vi]] = vessels.pops[ProdIndices[vi]] * OXYGEN_PRODUCTION_RATE;
             Glucose.field[ProdIndices[vi]] = vessels.pops[ProdIndices[vi]] * GLUCOSE_PRODUCTION_RATE;
+            Drug.field[ProdIndices[vi]] = vessels.pops[ProdIndices[vi]] * DRUG_PRODUCTION_RATE;
         }
 
         while (t < discreteTimeStep) {
@@ -213,6 +225,11 @@ class TumorModel {
                 }
                 Glucose.field[ci] -= tumorCells.pops[ci] * tumorCells.GlucoseConsumption * dt;
                 Glucose.field[ci] -= normalCells.pops[ci] * normalCells.GlucoseConsumption * dt;
+                if (Oxygen.field[ci] < 0) {
+                    Oxygen.field[ci] = 0.0;
+                }
+                Drug.field[ci] -= tumorCells.pops[ci] * tumorCells.DrugConsumption * dt;
+                Drug.field[ci] -= normalCells.pops[ci] * normalCells.DrugConsumption * dt;
                 if (Oxygen.field[ci] < 0) {
                     Oxygen.field[ci] = 0.0;
                 }
@@ -253,7 +270,7 @@ class TumorModel {
 
 public class ModelMain {
     public static void main(String[] args) {
-        TumorModel firstModel = new TumorModel(100, 100);
+        TumorModel firstModel = new TumorModel(110, 110);
         ModelVis mainWindow = new ModelVis(firstModel);
         //setting normalCells for access by other populations, adding cellpop for iteration
         firstModel.normalCells = firstModel.AddCellPop(new NormalCells(firstModel, mainWindow.visNormal)); //0
@@ -268,6 +285,8 @@ public class ModelMain {
         firstModel.Oxygen = firstModel.AddDiffusible(new DiffusionField(firstModel.xDim, firstModel.yDim, OXYGEN_DIFFUSION_RATE, mainWindow.visO2));
         firstModel.Glucose = firstModel.AddDiffusible(new DiffusionField(firstModel.xDim, firstModel.yDim, GLUCOSE_DIFFUSION_RATE, mainWindow.visGL));
         firstModel.Acid= firstModel.AddDiffusible(new DiffusionField(firstModel.xDim, firstModel.yDim, ACID_DIFFUSION_RATE, mainWindow.visPH));
+        firstModel.Drug= firstModel.AddDiffusible(new DiffusionField(firstModel.xDim, firstModel.yDim, DRUG_DIFFUSION_RATE, mainWindow.visDR));
+
 
         firstModel.InitPops();
         while (true) {

@@ -39,7 +39,7 @@ public class NecroticCells extends CellPop {
     void Draw() {
         for(int x=0;x<xDim;x++){
             for(int y=0;y<yDim;y++) {
-                myVis.SetHeatCold(x,y,pops[I(x,y)]/MAX_POP);
+                myVis.SetHeatCold(x,y,30*pops[I(x,y)]/MAX_POP);
             }
         }
     }

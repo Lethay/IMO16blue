@@ -9,6 +9,8 @@ import java.util.Arrays;
  */
 public class CONST_AND_FUNCTIONS {
 
+    static final int SEED_TIME = 200;
+
     static final double DIFFUSE_TIME_LENGTH = 1.0;
     static final double DIFFUSE_DT = 0.01;
 
@@ -21,6 +23,10 @@ public class CONST_AND_FUNCTIONS {
 
     static final double TUMOR_PROLIF_RATE = 0.4 * TIME_STEP;
     static final double TUMOR_DEATH_RATE = 0.02*TIME_STEP;
+
+    static final double TUMOUR_LOW_OXYGEN_DEATH_THRESHOLD = 0.01;
+    static final double TUMOUR_HIGH_ACID_DEATH_THRESHOLD = 0.1;
+
 
     static final double TUMOUR_SWITCH_RATE=0.01*TIME_STEP;
     static final double DRUG_INHIBITION_RATE=0.03*TIME_STEP;
@@ -36,9 +42,11 @@ public class CONST_AND_FUNCTIONS {
     static final double OXYGEN_DIFFUSION_RATE = 0.1;
     static final double GLUCOSE_DIFFUSION_RATE = 0.1;
     static final double ACID_DIFFUSION_RATE = 0.1;
+    static final double DRUG_DIFFUSION_RATE = 0.02;
 
     static final double OXYGEN_PRODUCTION_RATE=0.003; //per dt, per unit density
     static final double GLUCOSE_PRODUCTION_RATE=0.003; //per dt, per unit density
+    static final double DRUG_PRODUCTION_RATE = 0.02;
     static final double ACID_PRODUCTION_RATE=1.0; //per dt, per unit density
 
     //Govern gluc/oxy on
