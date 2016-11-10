@@ -8,6 +8,7 @@ import static Model.CONST_AND_FUNCTIONS.*;
 
 /**
  * Created by dannichol on 09/11/2016.
+ * TODO: These cells need to interact w/ acid and immune cells.
  */
 public class TumorCellPop extends CellPop {
 
@@ -25,8 +26,8 @@ public class TumorCellPop extends CellPop {
     }
 
 
-    static private double Death(double cellPop, double immunePop, double deathRate, double PDSwitchRate, double killRate) {
-        return cellPop * deathRate + PDSwitchRate * cellPop + killRate * cellPop * immunePop;
+    static private double Death(double cellPop, double immunePop, double acidNumber, double deathRate, double killRate){
+        return deathRate*cellPop + cellPop*immunePop/(IMMUNE_KILL_RATE_SHAPE_FACTOR+cellPop)*killRate / (1+acidNumber);
     }
 
     static private double HypoxicDeath(double cellPop, double oxygen, double gluc, double acid)
@@ -43,10 +44,8 @@ public class TumorCellPop extends CellPop {
         return hypDeath * cellPop;
     }
 
-    static private double Birth(double cellPop, double resistantPop, double drugConc, double totalPop, double birthRate, double PDSwitchRate, double inhibitionRate, double gluc, double oxy)
-    {
-        double modifiedBirthRate = modifiedBirthRate(birthRate, gluc, oxy);
-        return cellPop * (modifiedBirthRate * (1 - totalPop / MAX_POP)) + PDSwitchRate * resistantPop + inhibitionRate * resistantPop * drugConc;
+    static private double Birth(double cellPop, double totalPop, double birthRate){
+        return birthRate*cellPop*(1 - totalPop/MAX_POP);
     }
 
     //runs once at the begining of the model to initialize cell pops
@@ -66,30 +65,27 @@ public class TumorCellPop extends CellPop {
             for (int y = 0; y < yDim; y++) {
                 int i = I(x, y);
                 double pop = pops[i];
-                double resistantPop=myModel.cellPops.get(RESIST_TMR_POP_INDEX).pops[i];
                 double immunePop=0; //myModel.cellPops.get(IMMUNE_POP_INDEX)[i]; //TODO Correct this variable
-                double drugConcentration=0; //TODO Correct this variable
+                double acidNumber=0*cellSize; //TODO correct this - the "0" needs to be acidConc
                 double totalPop = myModel.totalPops[i];
                 if (pop < 1) {
                     swap[i] += Math.max(pop,0);
                     continue;
                 }
 
-                double deathDelta = Death(pop, immunePop, TUMOR_DEATH_RATE, TUMOUR_SWITCH_RATE, IMMUNE_KILL_RATE);
-
                 double oxy = myModel.Oxygen.field[I(x,y)];
                 double gluc = myModel.Glucose.field[I(x,y)];
                 double acid = myModel.Acid.field[I(x,y)];
 
                 double hypoxicDeathDelta = HypoxicDeath(pop, oxy, gluc, acid);
-                double birthDelta = Birth(pop, resistantPop, drugConcentration, totalPop, TUMOR_PROLIF_RATE, TUMOUR_SWITCH_RATE, DRUG_INHIBITION_RATE, gluc, oxy);
+                double birthDelta = Birth(pop,totalPop, TUMOR_PROLIF_RATE);
+                double deathDelta = Death(pop, immunePop, acidNumber, TUMOR_DEATH_RATE, IMMUNE_KILL_RATE);
                 double migrantDelta = Migrate(myModel, swap, x, y, MigrantPop(totalPop, birthDelta), VN_Hood, migrantPops);
                 swap[i] += pop + birthDelta - deathDelta - hypoxicDeathDelta - migrantDelta;
                 myModel.necroCells.swap[i] += hypoxicDeathDelta;
                 if (swap[i] < 0.0){
                     swap[i]=0.0;
                 }
-
             }
         }
     }

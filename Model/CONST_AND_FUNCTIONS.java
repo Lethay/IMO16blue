@@ -27,12 +27,9 @@ public class CONST_AND_FUNCTIONS {
     static final double TUMOUR_LOW_OXYGEN_DEATH_THRESHOLD = 0.01;
     static final double TUMOUR_HIGH_ACID_DEATH_THRESHOLD = 0.1;
 
-
-    static final double TUMOUR_SWITCH_RATE=0.01*TIME_STEP;
-    static final double DRUG_INHIBITION_RATE=0.03*TIME_STEP;
+    static final double DRUG_EFFICACY=0.01; //DRUG_EFFICACY*DRUG_CONC represents the modification to the immune kill rate. 1% of drug is useful, and the other factor represents reduction due to PD-L1.
+    static final double IMMUNE_KILL_RATE_SHAPE_FACTOR=100;
     static final double IMMUNE_KILL_RATE=0.08*TIME_STEP;
-    static final int TMR_POP_INDEX=2;
-    static final int RESIST_TMR_POP_INDEX=3;
     static final int IMMUNE_POP_INDEX=-1; //TODO give a value for this
     static final double NORMAL_HYPOXIC_THRESHOLD=0.2;
     static final double MAX_HYPOXIC_DEATH_RATE=0.5;
