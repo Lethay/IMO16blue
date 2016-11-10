@@ -91,11 +91,10 @@ class ModelVis{
 
         win.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
-                myModel.printCellPops();
+                boolean print_stuff=true;
+                if(print_stuff) {myModel.printCellPops();}
             }
         });
-
-
     }
 }
 
@@ -292,8 +291,8 @@ public class ModelMain {
         firstModel.necroCells=firstModel.AddCellPop(new NecroticCells(firstModel,mainWindow.visNecro));//index 4
 
         //The vessels
-        firstModel.vessels = firstModel.AddCellPop(new Vessels(firstModel, mainWindow.visVessels));//4
-        firstModel.tCells = firstModel.AddCellPop(new TCells(firstModel,mainWindow.visTcells));
+        firstModel.vessels = firstModel.AddCellPop(new Vessels(firstModel, mainWindow.visVessels));//index 5
+        //firstModel.tCells = firstModel.AddCellPop(new TCells(firstModel,mainWindow.visTcells));//index 6
 
         //The diffusibles
         firstModel.Oxygen = firstModel.AddDiffusible(new DiffusionField(firstModel.xDim, firstModel.yDim, OXYGEN_DIFFUSION_RATE, mainWindow.visO2));
