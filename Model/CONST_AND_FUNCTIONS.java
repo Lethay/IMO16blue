@@ -45,7 +45,10 @@ public class CONST_AND_FUNCTIONS {
     static final double GLUCOSE_THRESHOLD = 0.05;
     static final double OXYGEN_THRESHOLD = 0.05;
 
-    static  double modifiedBirthRate(double birthRate, double oxy, double gluc) {
+    static final double OXYGEN_USAGE_NORMAL=2; //number of oxygen needed for a single birth (for normal cells)
+    static final double GLUCOSE_USAGE_NORMAL=2; // number of glucose needed for a single birth (for normal cells)
+    static final double ACID_RATE_NORMAL=.1; // amount of acid produced per glycolysis (for normal cells)
+    static double modifiedBirthRate(double birthRate, double oxy, double gluc) {
         double oxyPenalty = 1.0;
         double glucPenalty = 1.0;
         if (gluc < GLUCOSE_THRESHOLD)
@@ -59,6 +62,35 @@ public class CONST_AND_FUNCTIONS {
         return birthRate * glucPenalty * oxyPenalty;
     }
 
+    //returns number of births from metabolic birth rate
+    static double MetabolicBirth(double cellPop, double totalPop, double maxProlifRate, double oxygen, double glucose, double glucoseIn, double oxygenIn, double acidRate) {
+        // determine cells that legally proliferate with oxygen and glucose (=perfect proliferation)
+        double legals_1 = 0;
+        double legals_2 = 0;
+        //double hypoxics = 0;
+        //double acid = 0;
+        if (oxygenIn * cellPop < oxygen && glucoseIn * cellPop < glucose) { // all cells can proliferate perfectly
+            legals_1 = cellPop;
+        }
+        else if (oxygenIn * cellPop > oxygen && glucoseIn * cellPop > glucose) { //only some cells proliferate perfectly
+            legals_1 = Math.min(oxygen / oxygenIn, glucose / glucoseIn);
+        }
+        // update oxygen, glucose and cellPop values
+        oxygen =+ -oxygenIn*legals_1;
+        glucose =+ -glucoseIn*legals_1;
+        cellPop =+ - legals_1;
+        //determine cells that legally proliferate with only glucose(acidic proliferation)
+        if (cellPop < glucose/glucoseIn) {
+            legals_2 = cellPop;
+        }
+        else if (cellPop > glucose/glucoseIn) {
+            legals_2 = glucose/glucoseIn;
+        }
+        //acid = acidRate*legals_2;
+        return (legals_1+legals_2) * maxProlifRate * (1 - totalPop / MAX_POP);
+    }
+
+
     //returns pop to be born
     static double Birth(double cellPop,double totalPop,double maxProlifRate) {
         return cellPop*(maxProlifRate * (1 - totalPop / MAX_POP));
@@ -67,6 +99,8 @@ public class CONST_AND_FUNCTIONS {
     static double Death(double cellPop,double deathRate){
         return cellPop*deathRate;
     }
+
+    //add hypoxic death to Death function
 
     static void NecroDeath(double[] NecroSwap,int i,double deadCellPop){
         NecroSwap[i]+=deadCellPop;

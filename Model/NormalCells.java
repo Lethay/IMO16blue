@@ -50,7 +50,8 @@ public class NormalCells extends CellPop {
                     swap[i] += pop;
                     continue;
                 }
-                double birthDelta = Birth(pop, totalPop, NORMAL_PROLIF_RATE);
+                //double birthDelta = Birth(pop, totalPop, NORMAL_PROLIF_RATE);
+                double birthDelta = MetabolicBirth(pop, totalPop, NORMAL_PROLIF_RATE, myModel.Oxygen.Get(x,y),myModel.Glucose.Get(x,y),GLUCOSE_USAGE_NORMAL,OXYGEN_USAGE_NORMAL, ACID_RATE_NORMAL);
                 double deathDelta = Death(pop, NORMAL_DEATH_RATE);
                 //NecroDeath(myModel.necroCells.swap,i,deathDelta);
                 double migrantDelta = Migrate(myModel, swap, x, y, MigrantPop(totalPop, birthDelta), VN_Hood, migrantPops);

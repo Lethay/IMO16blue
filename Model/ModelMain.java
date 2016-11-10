@@ -261,7 +261,6 @@ public class ModelMain {
         firstModel.resistantTumorCells=firstModel.AddCellPop(new resistantTumorCellPop(firstModel, mainWindow.visTumor));//3
         firstModel.necroCells=firstModel.AddCellPop(new NecroticCells(firstModel,mainWindow.visNecro));//1
 
-
         //The vessels
         firstModel.vessels = firstModel.AddCellPop(new Vessels(firstModel, mainWindow.visVessels));//4
 
