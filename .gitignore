@@ -1,5 +1,5 @@
 out/*
 commons-math3-3.6.1/*
 .idea/*
-Framework.iml
+*.iml
 *.pyc

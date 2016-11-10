@@ -2,12 +2,15 @@ package Model;
 import AgentGridMin.*;
 
 import javax.swing.*;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-
+import java.io.PrintStream;
+import java.io.FileOutputStream;
+import static AgentGridMin.Utils.TimeStamp;
 import static Model.CONST_AND_FUNCTIONS.*;
 
 /**
@@ -103,8 +106,8 @@ class ModelVis{
 
         win.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
-                boolean print_stuff=false;
-                if(print_stuff) {myModel.printCellPops();}
+                String loc="file"; //options: "terminal", "file" or "none"
+                myModel.printCellPops(loc);
             }
         });
     }
@@ -287,12 +290,25 @@ class TumorModel {
     }
 
     //Print data out
-    void printCellPops(){
+    void printCellPops(String loc){
+        PrintStream ps;
+        if(loc.equals("file")){
+            String filename="cellDensities_"+TimeStamp()+".txt";
+            try {ps = new PrintStream(new FileOutputStream(filename, true));} catch(IOException e){
+                e.printStackTrace();
+                return;
+            }
+        }
+        else if(loc.equals("terminal")) {ps= new PrintStream(System.out);}
+        else{return;}
         for(int x=0; x<xDim; x++){
             for(int y=0; y<yDim; y++){
-                System.out.printf("%g ",totalPops[I(x, y)]);
+                ps.printf("%g ",totalPops[I(x, y)]);
             }
-            System.out.print("\n");
+            ps.print("\n");
+        }
+        if(loc.equals("file")){
+            ps.close();
         }
     }
 }
