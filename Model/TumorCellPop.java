@@ -57,7 +57,11 @@ public class TumorCellPop extends CellPop {
     public void Step() {
 
         if (SeedMe) {
-            pops[I(xDim / 2, yDim / 2)] += MAX_POP / 500.;
+            for(int x=(int)(xDim*1.0/4);x<xDim*3.0/4;x++) {
+                for(int y=(int)(yDim*1.0/4);y<yDim*3.0/4;y++) {
+                    pops[I(x,y)] += MAX_POP / 500.;
+                }
+            }
             this.SeedMe = false;
         }
 
