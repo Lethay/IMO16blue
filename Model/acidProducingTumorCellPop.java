@@ -26,8 +26,8 @@ public class acidProducingTumorCellPop extends CellPop {
     }
 
 
-    static private double Death(double cellPop, double immunePop, double acidNumber, double deathRate, double killRate){
-        return deathRate*cellPop + cellPop*immunePop/(IMMUNE_KILL_RATE_SHAPE_FACTOR+cellPop)*killRate / (1+acidNumber);
+    static private double Death(double cellPop, double immunePop, double acidNumber, double hypoxicKillingReduction, double deathRate, double killRate){
+        return deathRate*cellPop + cellPop*immunePop/(IMMUNE_KILL_RATE_SHAPE_FACTOR+cellPop)*killRate / (1+acidNumber)*hypoxicKillingReduction;
     }
 
     static private double HypoxicDeath(double cellPop, double oxygen, double gluc, double acid)
@@ -77,9 +77,13 @@ public class acidProducingTumorCellPop extends CellPop {
                 double gluc = myModel.Glucose.field[I(x,y)];
                 double acid = myModel.Acid.field[I(x,y)];
 
+                double hypoxicKillingReduction=oxy*BIN_VOLUME/(1+oxy*BIN_VOLUME);
+                if(hypoxicKillingReduction<IMMUNE_CELL_MAX_HYPOXIC_KILL_RATE_REDUCTION){
+                    hypoxicKillingReduction=IMMUNE_CELL_MAX_HYPOXIC_KILL_RATE_REDUCTION;
+                }
                 double hypoxicDeathDelta = HypoxicDeath(pop, oxy, gluc, acid);
                 double birthDelta = Birth(pop,totalPop, TUMOR_PROLIF_RATE);
-                double deathDelta = Death(pop, immunePop, acidNumber, TUMOR_DEATH_RATE, IMMUNE_KILL_RATE);
+                double deathDelta = Death(pop, immunePop, acidNumber, hypoxicKillingReduction, TUMOR_DEATH_RATE, IMMUNE_KILL_RATE);
                 double migrantDelta = Migrate(myModel, swap, x, y, MigrantPop(totalPop, birthDelta), VN_Hood, migrantPops);
                 swap[i] += pop + birthDelta - deathDelta - hypoxicDeathDelta - migrantDelta;
                 myModel.necroCells.swap[i] += hypoxicDeathDelta;
