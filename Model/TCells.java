@@ -15,9 +15,13 @@ public class TCells extends CellPop{
     SqList VNHoodwOrigin=GenVonNeumannNeighborhoodWithOrigin();
     SqList VNHood=GenVonNeumannNeighborhood();
     double[] popList=new double[5];
+    double[] MovePops;
+    double[] diffConsts;
     TCells(TumorModel myModel, Visualizer myVis){
         super(myModel,myVis);
         this.cellSize=0.25;
+        this.MovePops=new double[xDim*yDim];
+        this.diffConsts=new double[xDim*yDim];
     }
     double Interact(int i,double interactPop){
         double tVsC=interactPop-myModel.tumorCells.pops[i];
@@ -40,6 +44,7 @@ public class TCells extends CellPop{
                     swap[i] += Birth(VesselPop,myModel.totalPops[i],VESSELS_TO_TCELLS);
                 }
                 //Skip pops less than 1
+                diffConsts[i]=1-myModel.totalPops[i]/MAX_POP;
                 if(pops[i]<1){
                     swap[i]+=pops[i];
                     continue;
@@ -68,8 +73,51 @@ public class TCells extends CellPop{
                     }
                 }
                 popsToInteract-=interacted;
+                MovePops[i]=popsToInteract;
                 //cell migration
-                MigrateTCells(myModel,swap,x,y,popsToInteract*TCELL_MOVE_RATE,VNHoodwOrigin,popList,cellSize);
+            }
+        }
+        for(int x=0;x<xDim;x++){
+            for(int y=0;y<yDim;y++) {
+                int midI=I(x,y);
+                double diffMiddle=diffConsts[midI];
+                double middleMovers=MovePops[midI];
+                double diffSum=0;
+                int countSq=0;
+                double influxSum=0;
+                if(WithinGrid(x+1,y)) {
+                    int i = I(x + 1, y);
+                    double influxPop = MovePops[i];
+                    double diffRate = diffConsts[i];
+                    diffSum += influxPop * (diffRate + diffMiddle);
+                    countSq += 1;
+                    influxSum += diffRate;
+                }
+                if(WithinGrid(x-1,y)) {
+                    int i = I(x - 1, y);
+                    double influxPop = MovePops[i];
+                    double diffRate = diffConsts[i];
+                    diffSum += influxPop * (diffRate + diffMiddle);
+                    countSq += 1;
+                    influxSum += diffRate;
+                }
+                if(WithinGrid(x,y+1)) {
+                    int i = I(x, y+1);
+                    double influxPop = MovePops[i];
+                    double diffRate = diffConsts[i];
+                    diffSum += influxPop * (diffRate + diffMiddle);
+                    countSq += 1;
+                    influxSum += diffRate;
+                }
+                if(WithinGrid(x,y-1)) {
+                    int i = I(x, y-1);
+                    double influxPop = MovePops[i];
+                    double diffRate = diffConsts[i];
+                    diffSum += influxPop * (diffRate + diffMiddle);
+                    countSq += 1;
+                    influxSum += diffRate;
+                }
+                swap[midI]+=pops[midI]+TCELL_MOVE_RATE*(diffSum-(influxSum+4*diffMiddle)*MovePops[midI]);
             }
         }
     }

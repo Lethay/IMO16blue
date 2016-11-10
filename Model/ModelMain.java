@@ -1,6 +1,7 @@
 package Model;
 import AgentGridMin.*;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
@@ -33,6 +34,12 @@ abstract class CellPop {
     int I(int x,int y) {
         return x*yDim+y;
     }
+    boolean WithinGrid(int x,int y) {
+        if(x>=0&&x<xDim&&y>=0&&y<yDim) {
+            return true;
+        }
+        return false;
+    }
     //runs once at the begining of the model to initialize cell pops
     abstract void InitPop();
     //called once every tick
@@ -57,6 +64,11 @@ class ModelVis{
     Visualizer visDR;
     GuiWindow win;
 
+    void AddVis(Visualizer vis,int x,int y,String title){
+       win.AddComponent(new JLabel(title),x,y*2,1,1);
+        win.AddComponent(vis,x,y*2+1,1,1);
+    }
+
     ModelVis(TumorModel model){
         myModel=model;
 
@@ -75,18 +87,19 @@ class ModelVis{
         visDR = new Visualizer(model.xDim,model.yDim,visScale);
 
 
-        win=new GuiWindow("LungVis",model.xDim*visScale,model.yDim*visScale,3,2);
-        win.AddComponent(visNormal,0,0,1,1);
-        win.AddComponent(visNecro,1,0,1,1);
-        win.AddComponent(visTumor,2,0,1,1);
-        win.AddComponent(visVessels,0,1,1,1);
-        win.AddComponent(visO2,1,1,1,1);
-        win.AddComponent(visTcells,2,1,1,1);
-        win.AddComponent(visVessels,3,0,1,1);
-        win.AddComponent(visO2,0,1,1,1);
-        win.AddComponent(visPH,1,1,1,1);
-        win.AddComponent(visGL,2,1,1,1);
-        win.AddComponent(visDR,3,1,1,1);
+        win=new GuiWindow("LungVis",model.xDim*visScale,model.yDim*visScale,3,6);
+        //first layer
+        AddVis(visNormal,0,0,"Normal");
+        AddVis(visNecro,1,0,"Necro");
+        AddVis(visTumor,2,0,"Tumor");
+        //second layer
+        AddVis(visVessels,0,1,"Vessel");
+        AddVis(visTcells,1,1,"TCells");
+        AddVis(visO2,2,1,"O2");
+        //third layer
+        AddVis(visPH,0,2,"Ph");
+        AddVis(visGL,1,2,"Gluc");
+        AddVis(visDR,2,2,"Drug");
 
 
 

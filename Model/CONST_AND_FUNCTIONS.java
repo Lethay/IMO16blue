@@ -36,9 +36,9 @@ public class CONST_AND_FUNCTIONS {
     static final int IMMUNE_POP_INDEX=-1; //TODO give a value for this
     static final double NORMAL_HYPOXIC_THRESHOLD=0.2;
     static final double MAX_HYPOXIC_DEATH_RATE=0.5;
-    static final double VESSELS_TO_TCELLS=10*TIME_STEP;
-    static final double TCELLS_VS_TUMORCELLS=0.03;
-    static final double TCELL_MOVE_RATE=0.95;
+    static final double VESSELS_TO_TCELLS=5*TIME_STEP;
+    static final double TCELLS_VS_TUMORCELLS=0.001;
+    static final double TCELL_MOVE_RATE=0.5*TIME_STEP;
     static final double TCELL_DEATH_RATE=0.02*TIME_STEP;
     //static final double TCELL_MOVE_RATE=0.75*TIME_STEP;
 
