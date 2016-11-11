@@ -11,7 +11,7 @@ import static Model.CONST_AND_FUNCTIONS.*;
  * TODO: These cells need to interact w/ acid and immune cells.
  */
 public class PDL1TumorCellPop extends TumorCellPop {
-    final public double DrugConsumption = 0.03;
+    final public double DrugConsumption = PDL1_DRUG_CONSUMPTION;
 
     PDL1TumorCellPop(TumorModel model, Visualizer vis) {
         super(model,vis);

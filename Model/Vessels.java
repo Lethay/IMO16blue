@@ -22,7 +22,7 @@ public class Vessels extends CellPop {
             for (int y = 0; y < yDim; y++) {
                if (rand.nextFloat() < 0.015)
                 {
-                    double vesDensity = 3*rand.nextGaussian()+3;
+                    double vesDensity = 50*rand.nextGaussian()+3;
                     pops[I(x, y)] = MAX_POP / (vesDensity);
                 }
 
@@ -34,7 +34,7 @@ public class Vessels extends CellPop {
     private static double rhoThresh = 0.6;
     static private double Death(double cellPop, double totalPop, double neighbourTumorPop) {
         if (totalPop > rhoThresh * MAX_POP) {
-            return cellPop;//cellPop * (totalPop - (rhoThresh * MAX_POP)) * (1. / (rhoThresh * MAX_POP));
+            return cellPop * (totalPop - (rhoThresh * MAX_POP)) * (1. / (rhoThresh * MAX_POP));
         } else if (neighbourTumorPop > MAX_POP / 10.){
             return cellPop;
         } else {

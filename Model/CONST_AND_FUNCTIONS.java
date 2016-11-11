@@ -13,7 +13,7 @@ public class CONST_AND_FUNCTIONS {
     static final boolean TUMOR_CELLS_ACTIVE=true;
     static final boolean PDL1_CELLS_ACTIVE=true;
     static final boolean ACIDIC_CELLS_ACTIVE=true;
-    static final boolean NECRO_CELLS_ACTIVE=true;
+    static final boolean NECRO_CELLS_ACTIVE=false;
     static final boolean VESSELS_ACTIVE=true;
     static final boolean T_CELLS_ACTIVE=true;
     static final boolean OXYGEN_ACTIVE=true;
@@ -76,6 +76,7 @@ public class CONST_AND_FUNCTIONS {
     static final double NORMAL_OXYGEN_CONSUMPTION = 0.0004*CONSUMPTION_SCALE;
     static final double NORMAL_GLUCOSE_CONSUMPTION = 0.0004*CONSUMPTION_SCALE;
     static final double NORMAL_DRUG_CONSUMPTION = 0.0015*CONSUMPTION_SCALE;
+    static final double PDL1_DRUG_CONSUMPTION = 0.0015*CONSUMPTION_SCALE;
 
     static final double OXYGEN_USAGE_NORMAL=2; //number of oxygen needed for a single birth (for normal cells)
     static final double GLUCOSE_USAGE_NORMAL=2; // number of glucose needed for a single birth (for normal cells)
