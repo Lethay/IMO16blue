@@ -14,7 +14,7 @@ public class AcidProducingTumorCellPop extends TumorCellPop {
 
     AcidProducingTumorCellPop(TumorModel model, Visualizer vis) {
             super(model,vis);
-            birthRate=0.10*TIME_STEP;
+            birthRate=0.20*TIME_STEP;
         }
 
 }
