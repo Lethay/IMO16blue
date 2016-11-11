@@ -46,13 +46,13 @@ public class TumorCellPop extends CellPop {
         double hypDeath = 0.0;
         if (oxygen < TUMOUR_LOW_OXYGEN_DEATH_THRESHOLD)
         {
-            hypDeath += 0.1;
+            hypDeath += (oxygen/TUMOUR_LOW_OXYGEN_DEATH_THRESHOLD);
         }
         if (acid > TUMOUR_HIGH_ACID_DEATH_THRESHOLD)
         {
             hypDeath += 0.0;
         }
-        return hypDeath * cellPop;
+        return  cellPop*hypDeath;
     }
 
     static private double Birth(double cellPop, double totalPop, double birthRate){

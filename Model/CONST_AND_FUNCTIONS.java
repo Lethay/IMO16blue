@@ -12,13 +12,13 @@ public class CONST_AND_FUNCTIONS {
     static final boolean NORMAL_CELLS_ACTIVE=true;
     static final boolean TUMOR_CELLS_ACTIVE=true;
     static final boolean PDL1_CELLS_ACTIVE=true;
-    static final boolean ACIDIC_CELLS_ACTIVE=false;
+    static final boolean ACIDIC_CELLS_ACTIVE=true;
     static final boolean NECRO_CELLS_ACTIVE=true;
     static final boolean VESSELS_ACTIVE=true;
     static final boolean T_CELLS_ACTIVE=true;
     static final boolean OXYGEN_ACTIVE=true;
     static final boolean GLUCOSE_ACTIVE=true;
-    static final boolean ACID_ACTIVE=false;
+    static final boolean ACID_ACTIVE=true;
     static final boolean DRUG_ACTIVE=true;
 
     static final int SEED_TIME = 200;
@@ -30,7 +30,7 @@ public class CONST_AND_FUNCTIONS {
     static final double BIN_VOLUME = BIN_LENGTH*BIN_LENGTH; //n.b. 2D
     static final int NUM_BINS_1D = 100;
     static final double DIFFUSE_TIME_LENGTH = 1.0;
-    static final double DIFFUSE_DT = 0.01;
+    static final double DIFFUSE_DT = 0.010;
 
     //cell constants
     static final public double MAX_POP=BIN_LENGTH*BIN_LENGTH*NUM_BINS_1D*NUM_BINS_1D;
@@ -59,7 +59,7 @@ public class CONST_AND_FUNCTIONS {
     //diffusible constants
     static final double OXYGEN_DIFFUSION_RATE = 0.1;
     static final double GLUCOSE_DIFFUSION_RATE = 0.1;
-    static final double ACID_DIFFUSION_RATE = 0.1;
+    static final double ACID_DIFFUSION_RATE = 0.01;
     static final double DRUG_DIFFUSION_RATE = 0.02;
 
     static final double OXYGEN_PRODUCTION_RATE=0.02; //per dt, per unit density
