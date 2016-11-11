@@ -34,7 +34,7 @@ public class TumorCellPop extends CellPop {
 
     static private double Death(double cellPop, double immunePop, double drugConc, double acidNumber, double hypoxicKillingReduction, double drugEfficacy, double deathRate, double killRate){
         double baseDeathRate=deathRate*cellPop; //base death rate
-        double tCellKillRate=cellPop*immunePop/(IMMUNE_KILL_RATE_SHAPE_FACTOR+cellPop)*killRate / (1+acidNumber) *hypoxicKillingReduction;
+        double tCellKillRate=cellPop*immunePop/(IMMUNE_KILL_RATE_SHAPE_FACTOR+cellPop)*killRate / (1+acidNumber); //*hypoxicKillingReduction;
         return baseDeathRate+tCellKillRate;
     }
 
