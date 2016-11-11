@@ -21,11 +21,6 @@ public class AcidProducingTumorCellPop extends TumorCellPop {
     public void addAcid(int x, int y, double acidProductionRate){
     	myModel.Acid.field[I(x,y)] += acidProductionRate;
     }
-    double Death(double cellPop, double immunePop, double drugConc, double acidNumber, double hypoxicKillingReduction, double drugEfficacy, double deathRate, double killRate) {
-        double baseDeathRate = deathRate * cellPop; //base death rate
-        double tCellKillRate = cellPop * immunePop / (IMMUNE_KILL_RATE_SHAPE_FACTOR + cellPop) * killRate * hypoxicKillingReduction;
-        return baseDeathRate + tCellKillRate;
-    }
 }
 
 
