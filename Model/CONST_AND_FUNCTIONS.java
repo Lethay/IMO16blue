@@ -12,7 +12,7 @@ public class CONST_AND_FUNCTIONS {
     static final boolean NORMAL_CELLS_ACTIVE=true;
     static final boolean TUMOR_CELLS_ACTIVE=true;
     static final boolean PDL1_CELLS_ACTIVE=true;
-    static final boolean ACIDIC_CELLS_ACTIVE=true;
+    static final boolean ACIDIC_CELLS_ACTIVE=false;
     static final boolean NECRO_CELLS_ACTIVE=false;
     static final boolean VESSELS_ACTIVE=true;
     static final boolean T_CELLS_ACTIVE=true;
@@ -24,7 +24,7 @@ public class CONST_AND_FUNCTIONS {
     static final int SEED_TIME = 200;
     static final int IMMUNE_TIME = 1000;
     static final int DRUG_TIME = 1300;
-    static final int STOP_MODEL_TIME=200000;
+    static final int STOP_MODEL_TIME=2000;
 
     static final double BIN_LENGTH = 10.0; //microns
     static final double BIN_VOLUME = BIN_LENGTH*BIN_LENGTH; //n.b. 2D
