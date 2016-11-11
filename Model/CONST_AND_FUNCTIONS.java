@@ -9,8 +9,20 @@ import java.util.Arrays;
  */
 public class CONST_AND_FUNCTIONS {
 
+    static final boolean NORMAL_CELLS_ACTIVE=true;
+    static final boolean TUMOR_CELLS_ACTIVE=true;
+    static final boolean PDL1_CELLS_ACTIVE=true;
+    static final boolean ACIDIC_CELLS_ACTIVE=false;
+    static final boolean NECRO_CELLS_ACTIVE=false;
+    static final boolean VESSELS_ACTIVE=true;
+    static final boolean T_CELLS_ACTIVE=true;
+    static final boolean OXYGEN_ACTIVE=false;
+    static final boolean GLUCOSE_ACTIVE=false;
+    static final boolean ACID_ACTIVE=false;
+    static final boolean DRUG_ACTIVE=true;
+
     static final int SEED_TIME = 200;
-    static final int IMMUNE_TIME = 400;
+    static final int IMMUNE_TIME = 2000;
 
     static final double BIN_LENGTH = 10.0; //microns
     static final double BIN_VOLUME = BIN_LENGTH*BIN_LENGTH; //n.b. 2D
@@ -37,22 +49,9 @@ public class CONST_AND_FUNCTIONS {
     static final double IMMUNE_KILL_RATE=5*TIME_STEP;
     static final double NORMAL_HYPOXIC_THRESHOLD=0.2;
     static final double MAX_HYPOXIC_DEATH_RATE=0.5;
-    static final double VESSELS_TO_TCELLS=.01*TIME_STEP;
-    static final double TCELL_MOVE_RATE=0.5*TIME_STEP;
+    static final double VESSELS_TO_TCELLS=2*TIME_STEP;
+    static final double TCELL_MOVE_RATE=0.6*TIME_STEP;
     static final double TCELL_DEATH_RATE=0.02*TIME_STEP;
-
-    static final boolean NORMAL_CELLS_ACTIVE=true;
-    static final boolean TUMOR_CELLS_ACTIVE=true;
-    static final boolean PDL1_CELLS_ACTIVE=true;
-    static final boolean ACIDIC_CELLS_ACTIVE=true;
-    static final boolean NECRO_CELLS_ACTIVE=false;
-    static final boolean VESSELS_ACTIVE=true;
-    static final boolean T_CELLS_ACTIVE=true;
-    static final boolean OXYGEN_ACTIVE=false;
-    static final boolean GLUCOSE_ACTIVE=false;
-    static final boolean ACID_ACTIVE=false;
-    static final boolean DRUG_ACTIVE=false;
-
 
     //diffusible constants
     static final double OXYGEN_DIFFUSION_RATE = 0.1;
