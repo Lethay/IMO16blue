@@ -12,13 +12,13 @@ public class CONST_AND_FUNCTIONS {
     static final boolean NORMAL_CELLS_ACTIVE=true;
     static final boolean TUMOR_CELLS_ACTIVE=true;
     static final boolean PDL1_CELLS_ACTIVE=true;
-    static final boolean ACIDIC_CELLS_ACTIVE=true;
-    static final boolean NECRO_CELLS_ACTIVE=true;
+    static final boolean ACIDIC_CELLS_ACTIVE=false;
+    static final boolean NECRO_CELLS_ACTIVE=false;
     static final boolean VESSELS_ACTIVE=true;
     static final boolean T_CELLS_ACTIVE=true;
-    static final boolean OXYGEN_ACTIVE=true;
-    static final boolean GLUCOSE_ACTIVE=true;
-    static final boolean ACID_ACTIVE=true;
+    static final boolean OXYGEN_ACTIVE=false;
+    static final boolean GLUCOSE_ACTIVE=false;
+    static final boolean ACID_ACTIVE=false;
     static final boolean DRUG_ACTIVE=true;
 
     static final int SEED_TIME = 200;
@@ -47,7 +47,7 @@ public class CONST_AND_FUNCTIONS {
     static final double TUMOUR_HIGH_ACID_DEATH_THRESHOLD = 0.1;
     static final double IMMUNE_CELL_MAX_HYPOXIC_KILL_RATE_REDUCTION = 0.1;
 
-    static final double DRUG_EFFICACY=0.01; //DRUG_EFFICACY*DRUG_CONC represents the modification to the immune kill rate. 1% of drug is useful, and the other factor represents reduction due to PD-L1.
+    static final double DRUG_EFFICACY=0.2; //DRUG_EFFICACY*DRUG_CONC represents the modification to the immune kill rate. 1% of drug is useful, and the other factor represents reduction due to PD-L1.
     static final double IMMUNE_KILL_RATE_SHAPE_FACTOR=100;
     static final double IMMUNE_KILL_RATE=5*TIME_STEP;
     static final double NORMAL_HYPOXIC_THRESHOLD=0.2;
