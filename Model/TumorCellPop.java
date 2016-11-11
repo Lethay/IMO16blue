@@ -35,7 +35,7 @@ public class TumorCellPop extends CellPop {
 
     double Death(double cellPop, double immunePop, double drugConc, double acidNumber, double hypoxicKillingReduction, double drugEfficacy, double deathRate, double killRate){
         double baseDeathRate=deathRate*cellPop; //base death rate
-        double tCellKillRate=cellPop*immunePop/(IMMUNE_KILL_RATE_SHAPE_FACTOR+cellPop)*killRate / (1+acidNumber)*hypoxicKillingReduction;
+        double tCellKillRate=cellPop*immunePop/(IMMUNE_KILL_RATE_SHAPE_FACTOR+cellPop)*killRate / (1+acidNumber) * hypoxicKillingReduction;
         return baseDeathRate+tCellKillRate;
     }
 
@@ -120,37 +120,37 @@ public class TumorCellPop extends CellPop {
     }
 
     //called once every tick
-//    public void Draw() {
-//        double nrmRho;
-//        double resRho;
-//        double necRho;
-//        for (int x = 0; x < xDim; x++) {
-//            for (int y = 0; y < yDim; y++) {
-//                if(myVis!=null&&pops[I(x,y)]>1) {
-//                    myVis.SetHeat(x, y, pops[I(x, y)] / MAX_POP);
-//                }
-//                myVis.SetHeat(x, y, 30*pops[I(x, y)] / MAX_POP);
-//
-//                if (visFull != null)
-//                {
-//                    nrmRho = pops[I(x,y)];
-//                    resRho = myModel.PDL1TumorCells.pops[I(x,y)];
-//                    necRho = myModel.necroCells.pops[I(x,y)];
-//                    visFull.MultipleDensitiesSet(x,y,nrmRho, resRho, necRho);
-//                }
-//
-//            }
-//        }
-//    }
-     public void Draw() {
-         for (int x = 0; x < xDim; x++) {
-             for (int y = 0; y < yDim; y++) {
-                 if (pops[I(x,y)] != 0) {
-                     myVis.SetHeat(x, y,pops[I(x,y)]);
-                 }
-             }
-         }
-     }
+   public void Draw() {
+       double nrmRho;
+       double resRho;
+       double necRho;
+       for (int x = 0; x < xDim; x++) {
+           for (int y = 0; y < yDim; y++) {
+               if(myVis!=null&&pops[I(x,y)]>1) {
+                   myVis.SetHeat(x, y, pops[I(x, y)] / MAX_POP);
+               }
+               myVis.SetHeat(x, y, 30*pops[I(x, y)] / MAX_POP);
+
+               if (visFull != null)
+               {
+                   nrmRho = pops[I(x,y)];
+                   resRho = myModel.PDL1TumorCells.pops[I(x,y)];
+                   necRho = myModel.necroCells.pops[I(x,y)];
+                   visFull.MultipleDensitiesSet(x,y,nrmRho, resRho, necRho);
+               }
+
+           }
+       }
+   }
+     // public void Draw() {
+     //     for (int x = 0; x < xDim; x++) {
+     //         for (int y = 0; y < yDim; y++) {
+     //             if (pops[I(x,y)] != 0) {
+     //                 myVis.SetHeat(x, y,pops[I(x,y)]);
+     //             }
+     //         }
+     //     }
+     // }
 }
 
 
