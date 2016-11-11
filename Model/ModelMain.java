@@ -223,6 +223,8 @@ class TumorModel {
         if (tick == SEED_TIME)
         {
             tumorCells.SeedMe = true;
+            PDL1TumorCells.SeedMe = true;
+            acidTumorCells.SeedMe = true;
         }
         if (tick == IMMUNE_TIME)
         {

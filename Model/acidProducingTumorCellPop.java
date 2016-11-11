@@ -10,6 +10,7 @@ import static Model.CONST_AND_FUNCTIONS.*;
  * Created by liam on 09/11/2016.
  * //TODO: These cells produce acid. Currently no difference between these files.
  */
+<<<<<<< HEAD
 public class AcidProducingTumorCellPop extends CellPop {
 
     final public double OxygenConsumption = 0.0025;
@@ -30,6 +31,12 @@ public class AcidProducingTumorCellPop extends CellPop {
     AcidProducingTumorCellPop(TumorModel model, Visualizer vis, Visualizer visFULL) {
         super(model, vis);
         this.visFull = visFULL;
+=======
+public class acidProducingTumorCellPop extends TumorCellPop {
+    acidProducingTumorCellPop(TumorModel model, Visualizer vis) {
+        super(model,vis);
+        birthRate=0.10*TIME_STEP;
+>>>>>>> origin/master
     }
 
     static private double Death(double cellPop, double immunePop, double drugConc, double acidNumber, double hypoxicKillingReduction, double drugEfficacy, double deathRate, double killRate){

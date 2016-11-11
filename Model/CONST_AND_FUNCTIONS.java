@@ -21,7 +21,10 @@ public class CONST_AND_FUNCTIONS {
     //cell constants
     static final public double MAX_POP=BIN_LENGTH*BIN_LENGTH*NUM_BINS_1D*NUM_BINS_1D;
     static final double TIME_STEP=0.2; //days
+<<<<<<< HEAD
     static final double TUMOR_PROLIF_RATE=0.2*TIME_STEP;
+=======
+>>>>>>> origin/master
     static final double NECROTIC_DECAY_RATE=0.01*TIME_STEP;
     static final double NORMAL_PROLIF_RATE=0.02*TIME_STEP;
     static final double NORMAL_DEATH_RATE=0.02*TIME_STEP;
@@ -44,7 +47,11 @@ public class CONST_AND_FUNCTIONS {
 
     static final boolean NORMAL_CELLS_ACTIVE=true;
     static final boolean TUMOR_CELLS_ACTIVE=true;
+<<<<<<< HEAD
     static final boolean PDL1_CELLS_ACTIVE=false;
+=======
+    static final boolean PDL1_CELLS_ACTIVE=true;
+>>>>>>> origin/master
     static final boolean ACIDIC_CELLS_ACTIVE=true;
     static final boolean NECRO_CELLS_ACTIVE=false;
     static final boolean VESSELS_ACTIVE=true;
