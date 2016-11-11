@@ -83,14 +83,12 @@ public class TumorCellPop extends CellPop {
                 }
 
                 double hypoxicDeathDelta = 0, acidAmnt=0, oxy=0,gluc=0,acid=0,drugConc=0, hypoxicKillingReduction=1;
-                if (OXYGEN_ACTIVE && GLUCOSE_ACTIVE && ACID_ACTIVE) {
-                    oxy = myModel.Oxygen.field[I(x, y)];
-                    gluc = myModel.Glucose.field[I(x, y)];
-                    acid = myModel.Acid.field[I(x, y)];
+                if (OXYGEN_ACTIVE) oxy = myModel.Oxygen.field[I(x, y)];
+                if (GLUCOSE_ACTIVE) gluc = myModel.Glucose.field[I(x, y)];
+                if (ACID_ACTIVE) acid = myModel.Acid.field[I(x, y)];
+                hypoxicDeathDelta = HypoxicDeath(pop, oxy, gluc, acid);
+                acidAmnt=acid*BIN_VOLUME;
 
-                    hypoxicDeathDelta = HypoxicDeath(pop, oxy, gluc, acid);
-                    acidAmnt=acid*BIN_VOLUME;
-                }
                 if(OXYGEN_ACTIVE){
                     hypoxicKillingReduction=oxy*BIN_VOLUME/(1+oxy*BIN_VOLUME);
                     if(hypoxicKillingReduction<IMMUNE_CELL_MAX_HYPOXIC_KILL_RATE_REDUCTION){
