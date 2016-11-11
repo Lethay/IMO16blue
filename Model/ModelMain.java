@@ -63,7 +63,8 @@ class ModelVis{
     Visualizer visNormal;
     Visualizer visTumor;
     Visualizer visTcells;
-    Visualizer visPDL1;
+    Visualizer visPDL1Res;
+    Visualizer visAcidRes;
     Visualizer visPH;
     Visualizer visGL;
     Visualizer visDR;
@@ -87,7 +88,8 @@ class ModelVis{
         visNecro=new Visualizer(model.xDim,model.yDim,visScale);
         visO2=new Visualizer(model.xDim,model.yDim,visScale);
         visTcells=new Visualizer(model.xDim,model.yDim,visScale);
-        visPDL1=new Visualizer(model.xDim,model.yDim,visScale);
+        visPDL1Res=new Visualizer(model.xDim,model.yDim,visScale);
+        visAcidRes=new Visualizer(model.xDim,model.yDim,visScale);
 
         //Diffusible
         visO2 = new Visualizer(model.xDim,model.yDim,visScale);
@@ -104,13 +106,15 @@ class ModelVis{
         AddVis(visNecro,1,0,"Necro");
         AddVis(visTumor,2,0,"Tumor");
         AddVis(visVessels,3,0,"Vessel");
+        //second layer
         AddVis(visTcells,0,1,"TCells");
-        AddVis(visO2,1,1,"O2");
+        AddVis(visPDL1Res,1,1,"PDL1_Res");
+        AddVis(visAcidRes,2,1,"Acid_Res");
+        AddVis(visDR,3,1,"Drug");
         //third layer
-        AddVis(visPH,2,1,"Ph");
-        AddVis(visGL,3,1,"Gluc");
-        AddVis(visDR,0,2,"Drug");
-        AddVis(visPDL1,1,2,"PDL1");
+        AddVis(visO2,0,2,"O2");
+        AddVis(visPH,1,2,"Ph");
+        AddVis(visGL,2,2,"Gluc");
 
         win.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
@@ -359,9 +363,9 @@ public class ModelMain {
         else{firstModel.normalCells= null;}
         if(TUMOR_CELLS_ACTIVE) {firstModel.tumorCells= firstModel.AddCellPop(new TumorCellPop(firstModel, mainWindow.visTumor));} //index 1
         else{firstModel.tumorCells= null;}
-        if(PDL1_CELLS_ACTIVE) {firstModel.PDL1TumorCells= firstModel.AddCellPop(new PDL1TumorCellPop(firstModel, mainWindow.visPDL1));} //index 2
+        if(PDL1_CELLS_ACTIVE) {firstModel.PDL1TumorCells= firstModel.AddCellPop(new PDL1TumorCellPop(firstModel, mainWindow.visPDL1Res));} //index 2
         else{firstModel.PDL1TumorCells= null;}
-        if(ACIDIC_CELLS_ACTIVE) {firstModel.AcidTumorCells= firstModel.AddCellPop(new AcidProducingTumorCellPop(firstModel, mainWindow.visTumor));} //index 3
+        if(ACIDIC_CELLS_ACTIVE) {firstModel.AcidTumorCells= firstModel.AddCellPop(new AcidProducingTumorCellPop(firstModel, mainWindow.visAcidRes));} //index 3
         else{firstModel.AcidTumorCells= null;}
         if(NECRO_CELLS_ACTIVE) {firstModel.necroCells= firstModel.AddCellPop(new NecroticCells(firstModel,mainWindow.visNecro));} //index 4
         else{firstModel.necroCells= null;}
