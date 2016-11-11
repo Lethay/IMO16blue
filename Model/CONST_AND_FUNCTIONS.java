@@ -47,7 +47,7 @@ public class CONST_AND_FUNCTIONS {
     static final double TUMOUR_HIGH_ACID_DEATH_THRESHOLD = 0.1;
     static final double IMMUNE_CELL_MAX_HYPOXIC_KILL_RATE_REDUCTION = 0.1;
 
-    static final double DRUG_EFFICACY=0.01; //DRUG_EFFICACY*DRUG_CONC represents the modification to the immune kill rate. 1% of drug is useful, and the other factor represents reduction due to PD-L1.
+    static final double DRUG_EFFICACY=1000; //DRUG_EFFICACY*DRUG_CONC represents the modification to the immune kill rate. 1% of drug is useful, and the other factor represents reduction due to PD-L1.
     static final double IMMUNE_KILL_RATE_SHAPE_FACTOR=100;
     static final double IMMUNE_KILL_RATE=5*TIME_STEP;
     static final double NORMAL_HYPOXIC_THRESHOLD=0.2;
