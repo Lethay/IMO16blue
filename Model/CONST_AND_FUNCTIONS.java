@@ -33,6 +33,7 @@ public class CONST_AND_FUNCTIONS {
     //cell constants
     static final public double MAX_POP=BIN_LENGTH*BIN_LENGTH*NUM_BINS_1D*NUM_BINS_1D;
     static final double TIME_STEP=0.2; //days
+    static final double TUMOR_PROLIF_RATE=0.2*TIME_STEP;
     static final double NECROTIC_DECAY_RATE=0.01*TIME_STEP;
     static final double NORMAL_PROLIF_RATE=0.02*TIME_STEP;
     static final double NORMAL_DEATH_RATE=0.02*TIME_STEP;
