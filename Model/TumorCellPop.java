@@ -14,6 +14,7 @@ public class TumorCellPop extends CellPop {
 
     final public double OxygenConsumption = 0.0025;
     final public double GlucoseConsumption = 0.003;
+    double birthRate=0.11*TIME_STEP;
 
     final Visualizer visFull;
 
@@ -32,7 +33,7 @@ public class TumorCellPop extends CellPop {
         this.visFull = visFULL;
     }
 
-    static private double Death(double cellPop, double immunePop, double drugConc, double acidNumber, double hypoxicKillingReduction, double drugEfficacy, double deathRate, double killRate){
+    double Death(double cellPop, double immunePop, double drugConc, double acidNumber, double hypoxicKillingReduction, double drugEfficacy, double deathRate, double killRate){
         double baseDeathRate=deathRate*cellPop; //base death rate
         double tCellKillRate=cellPop*immunePop/(IMMUNE_KILL_RATE_SHAPE_FACTOR+cellPop)*killRate / (1+acidNumber) *hypoxicKillingReduction;
         return baseDeathRate+tCellKillRate;
@@ -96,7 +97,7 @@ public class TumorCellPop extends CellPop {
                     drugConc=myModel.Drug.field[I(x,y)];
                 }
 
-                double birthDelta = Birth(pop, totalPop, TUMOR_PROLIF_RATE);
+                double birthDelta = Birth(pop, totalPop, birthRate);
                 double deathDelta = Death(pop, immunePop, drugConc, acidAmnt, hypoxicKillingReduction, DRUG_EFFICACY, TUMOR_DEATH_RATE, IMMUNE_KILL_RATE);
                 double migrantDelta = Migrate(myModel, swap, x, y, MigrantPop(totalPop, birthDelta), VN_Hood, migrantPops);
 
