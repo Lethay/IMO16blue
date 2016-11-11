@@ -57,8 +57,8 @@ public class CONST_AND_FUNCTIONS {
     static final double TCELL_DEATH_RATE=0.02*TIME_STEP;
 
     //diffusible constants
-    static final double OXYGEN_DIFFUSION_RATE = 0.1;
-    static final double GLUCOSE_DIFFUSION_RATE = 0.1;
+    static final double OXYGEN_DIFFUSION_RATE = 0.001;
+    static final double GLUCOSE_DIFFUSION_RATE = 0.001;
     static final double ACID_DIFFUSION_RATE = 0.01;
     static final double DRUG_DIFFUSION_RATE = 0.02;
 
