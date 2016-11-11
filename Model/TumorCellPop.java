@@ -35,7 +35,7 @@ public class TumorCellPop extends CellPop {
 
     double Death(double cellPop, double immunePop, double drugConc, double acidNumber, double hypoxicKillingReduction, double drugEfficacy, double deathRate, double killRate){
         double baseDeathRate=deathRate*cellPop; //base death rate
-        double tCellKillRate=cellPop*immunePop/(IMMUNE_KILL_RATE_SHAPE_FACTOR+cellPop)*killRate / (1+acidNumber); //*hypoxicKillingReduction;
+        double tCellKillRate=cellPop*immunePop/(IMMUNE_KILL_RATE_SHAPE_FACTOR+cellPop)*killRate / (1+acidNumber)*hypoxicKillingReduction;
         return baseDeathRate+tCellKillRate;
     }
 
@@ -80,7 +80,7 @@ public class TumorCellPop extends CellPop {
                     continue;
                 }
 
-                double hypoxicDeathDelta = 0, acidAmnt=0, oxy=0,gluc=0,acid=0,drugConc=0;
+                double hypoxicDeathDelta = 0, acidAmnt=0, oxy=0,gluc=0,acid=0,drugConc=0, hypoxicKillingReduction=1;
                 if (OXYGEN_ACTIVE && GLUCOSE_ACTIVE && ACID_ACTIVE) {
                     oxy = myModel.Oxygen.field[I(x, y)];
                     gluc = myModel.Glucose.field[I(x, y)];
@@ -89,9 +89,11 @@ public class TumorCellPop extends CellPop {
                     hypoxicDeathDelta = HypoxicDeath(pop, oxy, gluc, acid);
                     acidAmnt=acid*BIN_VOLUME;
                 }
-                double hypoxicKillingReduction=oxy*BIN_VOLUME/(1+oxy*BIN_VOLUME);
-                if(hypoxicKillingReduction<IMMUNE_CELL_MAX_HYPOXIC_KILL_RATE_REDUCTION){
-                    hypoxicKillingReduction=IMMUNE_CELL_MAX_HYPOXIC_KILL_RATE_REDUCTION;
+                if(OXYGEN_ACTIVE){
+                    hypoxicKillingReduction=oxy*BIN_VOLUME/(1+oxy*BIN_VOLUME);
+                    if(hypoxicKillingReduction<IMMUNE_CELL_MAX_HYPOXIC_KILL_RATE_REDUCTION){
+                        hypoxicKillingReduction=IMMUNE_CELL_MAX_HYPOXIC_KILL_RATE_REDUCTION;
+                    }
                 }
                 if(DRUG_ACTIVE){
                     drugConc=myModel.Drug.field[I(x,y)];
