@@ -32,11 +32,14 @@ public class TCells extends CellPop{
         double totalTumor=tumorNormal+tumorPDL1;
         double interactPopNormal=tumorNormal/(totalTumor);
         double interactPopPDL1=tumorPDL1/(totalTumor);
+        double wouldDie=myModel.PDL1TumorCells.swap[i] -= tumorPDL1 * interactPopPDL1 / (IMMUNE_KILL_RATE_SHAPE_FACTOR + tumorPDL1);// * IMMUNE_KILL_RATE * DRUG_EFFICACY * myModel.Drug.field[i] / (1 + DRUG_EFFICACY * myModel.Drug.field[i]);// / (1+acidNumber) *hypoxicKillingReduction;
+        double willDie= myModel.PDL1TumorCells.swap[i] -= tumorPDL1 * interactPopPDL1 / (IMMUNE_KILL_RATE_SHAPE_FACTOR + tumorPDL1) * IMMUNE_KILL_RATE * DRUG_EFFICACY * myModel.Drug.field[i] / (1 + DRUG_EFFICACY * myModel.Drug.field[i]);// / (1+acidNumber) *hypoxicKillingReduction;
+        double savedProp=willDie/wouldDie;
         //normal cells
-        myModel.tumorCells.swap[i]-=tumorNormal*interactPopNormal/(IMMUNE_KILL_RATE_SHAPE_FACTOR+tumorNormal)*IMMUNE_KILL_RATE; ///(1+acidNumber)*hypoxicKillingReduction;
+        myModel.tumorCells.swap[i]-=tumorNormal*interactPopNormal/(IMMUNE_KILL_RATE_SHAPE_FACTOR+tumorNormal)*IMMUNE_KILL_RATE*savedProp; ///(1+acidNumber)*hypoxicKillingReduction;
         //pdl1 cells
         if(PDL1_CELLS_ACTIVE) {
-            myModel.PDL1TumorCells.swap[i] -= tumorPDL1 * interactPopPDL1 / (IMMUNE_KILL_RATE_SHAPE_FACTOR + tumorPDL1) * IMMUNE_KILL_RATE * DRUG_EFFICACY * myModel.Drug.field[i] / (1 + DRUG_EFFICACY * myModel.Drug.field[i]);// / (1+acidNumber) *hypoxicKillingReduction;
+            myModel.PDL1TumorCells.swap[i] -= willDie;
         }
             double leftoverCells = interactPop - totalTumor;
             return leftoverCells > 0 ? leftoverCells : 0;
