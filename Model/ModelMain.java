@@ -100,17 +100,17 @@ class ModelVis{
 
         win=new GuiWindow("LungVis",model.xDim*visScale,model.yDim*visScale,4,6);
         //first layer
-        AddVis(visNormal,0,0,"Normal");
-        AddVis(visNecro,1,0,"Necro");
-        AddVis(visTumor,2,0,"Tumor");
-        AddVis(visVessels,3,0,"Vessel");
-        AddVis(visTcells,0,1,"TCells");
-        AddVis(visO2,1,1,"O2");
+        AddVis(visNormal,2,0,"Normal");
+        //AddVis(visNecro,1,0,"Necro");
+        AddVis(visTumor,0,0,"Tumor");
+        AddVis(visPDL1,1,0,"PDL1");
+        AddVis(visVessels,0,1,"Vessel");
+        AddVis(visTcells,1,1,"TCells");
+        //AddVis(visO2,1,1,"O2");
         //third layer
-        AddVis(visPH,2,1,"Ph");
-        AddVis(visGL,3,1,"Gluc");
-        AddVis(visDR,0,2,"Drug");
-        AddVis(visPDL1,1,2,"PDL1");
+        //AddVis(visPH,2,1,"Ph");
+        //AddVis(visGL,3,1,"Gluc");
+        AddVis(visDR,2,1,"Drug");
 
         win.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
@@ -266,7 +266,7 @@ class TumorModel {
             if(GLUCOSE_ACTIVE) {
                 Glucose.field[ProdIndices[vi]] = vessels.pops[ProdIndices[vi]] * GLUCOSE_PRODUCTION_RATE;
             }
-            if(DRUG_ACTIVE) {
+            if(DRUG_ACTIVE&&tick>DRUG_TIME) {
                 Drug.field[ProdIndices[vi]] = vessels.pops[ProdIndices[vi]] * DRUG_PRODUCTION_RATE;
             }
         }
@@ -386,6 +386,9 @@ public class ModelMain {
         while (true) {
             firstModel.RunCellStep();
             firstModel.RunDiffuseStep(DIFFUSE_TIME_LENGTH);
+            if(firstModel.tick==STOP_MODEL_TIME){
+                break;
+            }
         }
     }
 }

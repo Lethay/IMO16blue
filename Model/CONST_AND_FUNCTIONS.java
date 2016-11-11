@@ -22,11 +22,13 @@ public class CONST_AND_FUNCTIONS {
     static final boolean DRUG_ACTIVE=true;
 
     static final int SEED_TIME = 200;
-    static final int IMMUNE_TIME = 2000;
+    static final int IMMUNE_TIME = 1000;
+    static final int DRUG_TIME = 1300;
+    static final int STOP_MODEL_TIME=200000;
 
     static final double BIN_LENGTH = 10.0; //microns
     static final double BIN_VOLUME = BIN_LENGTH*BIN_LENGTH; //n.b. 2D
-    static final int NUM_BINS_1D = 110;
+    static final int NUM_BINS_1D = 100;
     static final double DIFFUSE_TIME_LENGTH = 1.0;
     static final double DIFFUSE_DT = 0.01;
 
@@ -36,7 +38,7 @@ public class CONST_AND_FUNCTIONS {
     static final double TUMOR_PROLIF_RATE=0.2*TIME_STEP;
     static final double NECROTIC_DECAY_RATE=0.01*TIME_STEP;
     static final double NORMAL_PROLIF_RATE=0.02*TIME_STEP;
-    static final double NORMAL_DEATH_RATE=0.02*TIME_STEP;
+    static final double NORMAL_DEATH_RATE=0.01*TIME_STEP;
 
 //    static final double TUMOR_PROLIF_RATE = 0.4 * TIME_STEP;
     static final double TUMOR_DEATH_RATE = 0.02*TIME_STEP;
@@ -62,7 +64,7 @@ public class CONST_AND_FUNCTIONS {
 
     static final double OXYGEN_PRODUCTION_RATE=0.003; //per dt, per unit density
     static final double GLUCOSE_PRODUCTION_RATE=0.003; //per dt, per unit density
-    static final double DRUG_PRODUCTION_RATE = 0.002;
+    static final double DRUG_PRODUCTION_RATE = 0.1;
     static final double ACID_PRODUCTION_RATE=1.0; //per dt, per unit density
 
     //Govern gluc/oxy on

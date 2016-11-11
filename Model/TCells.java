@@ -134,7 +134,7 @@ public class TCells extends CellPop{
     void Draw() {
         for (int x = 0; x < xDim; x++) {
             for (int y = 0; y < yDim; y++) {
-                myVis.SetHeat(x, y, (pops[I(x, y)]*cellSize) / MAX_POP);
+                myVis.SetHeat(x, y, (pops[I(x, y)]*10) / MAX_POP);
             }
         }
     }
