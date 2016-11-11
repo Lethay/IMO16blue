@@ -12,7 +12,7 @@ import static Model.CONST_AND_FUNCTIONS.*;
  */
 public class AcidProducingTumorCellPop extends TumorCellPop {
 
-    PDL1TumorCellPop(TumorModel model, Visualizer vis) {
+    AcidProducingTumorCellPop(TumorModel model, Visualizer vis) {
         super(model,vis);
         birthRate=0.10*TIME_STEP;
     }
