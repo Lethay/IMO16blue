@@ -27,7 +27,8 @@ public class TCells extends CellPop{
     }
     double Interact(int i,double interactPop){
         double tumorNormal=myModel.tumorCells.pops[i];
-        double tumorPDL1=myModel.PDL1TumorCells.pops[i];
+        double tumorPDL1=0;
+        if(PDL1_CELLS_ACTIVE) tumorPDL1=myModel.PDL1TumorCells.pops[i];
         double totalTumor=tumorNormal+tumorPDL1;
         double interactPopNormal=tumorNormal/(totalTumor);
         double interactPopPDL1=tumorPDL1/(totalTumor);
