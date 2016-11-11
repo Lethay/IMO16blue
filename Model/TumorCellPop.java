@@ -39,6 +39,8 @@ public class TumorCellPop extends CellPop {
         return baseDeathRate+tCellKillRate;
     }
 
+    void addAcid(int x, int y, double acidProductionRate){};
+
     static private double HypoxicDeath(double cellPop, double oxygen, double gluc, double acid)
     {
         double hypDeath = 0.0;
@@ -107,6 +109,9 @@ public class TumorCellPop extends CellPop {
                 if(NECRO_CELLS_ACTIVE) {
                     myModel.necroCells.swap[i] += hypoxicDeathDelta;
                 }
+                if(ACIDIC_CELLS_ACTIVE){
+                    addAcid(x,y,ACID_PRODUCTION_RATE); //only effectual for the AcidProducing class
+                }
                 if (swap[i] < 0.0) {
                     swap[i] = 0.0;
                 }
@@ -115,37 +120,37 @@ public class TumorCellPop extends CellPop {
     }
 
     //called once every tick
-    public void Draw() {
-        double nrmRho;
-        double resRho;
-        double necRho;
-        for (int x = 0; x < xDim; x++) {
-            for (int y = 0; y < yDim; y++) {
-                if(myVis!=null&&pops[I(x,y)]>1) {
-                    myVis.SetHeat(x, y, pops[I(x, y)] / MAX_POP);
-                }
-                myVis.SetHeat(x, y, 30*pops[I(x, y)] / MAX_POP);
-
-                if (visFull != null)
-                {
-                    nrmRho = pops[I(x,y)];
-                    resRho = myModel.PDL1TumorCells.pops[I(x,y)];
-                    necRho = myModel.necroCells.pops[I(x,y)];
-                    visFull.MultipleDensitiesSet(x,y,nrmRho, resRho, necRho);
-                }
-
-            }
-        }
-    }
-    // public void Draw() {
-    //     for (int x = 0; x < xDim; x++) {
-    //         for (int y = 0; y < yDim; y++) {
-    //             if (pops[I(x,y)] != 0) {
-    //                 myVis.SetHeat(x, y,pops[I(x,y)]);
-    //             }
-    //         }
-    //     }
-    // }
+//    public void Draw() {
+//        double nrmRho;
+//        double resRho;
+//        double necRho;
+//        for (int x = 0; x < xDim; x++) {
+//            for (int y = 0; y < yDim; y++) {
+//                if(myVis!=null&&pops[I(x,y)]>1) {
+//                    myVis.SetHeat(x, y, pops[I(x, y)] / MAX_POP);
+//                }
+//                myVis.SetHeat(x, y, 30*pops[I(x, y)] / MAX_POP);
+//
+//                if (visFull != null)
+//                {
+//                    nrmRho = pops[I(x,y)];
+//                    resRho = myModel.PDL1TumorCells.pops[I(x,y)];
+//                    necRho = myModel.necroCells.pops[I(x,y)];
+//                    visFull.MultipleDensitiesSet(x,y,nrmRho, resRho, necRho);
+//                }
+//
+//            }
+//        }
+//    }
+     public void Draw() {
+         for (int x = 0; x < xDim; x++) {
+             for (int y = 0; y < yDim; y++) {
+                 if (pops[I(x,y)] != 0) {
+                     myVis.SetHeat(x, y,pops[I(x,y)]);
+                 }
+             }
+         }
+     }
 }
 
 
