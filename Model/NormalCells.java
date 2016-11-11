@@ -67,7 +67,7 @@ public class NormalCells extends CellPop {
     void Draw() {
         for(int x=0;x<xDim;x++){
             for(int y=0;y<yDim;y++) {
-                myVis.SetHeat(x,y,(pops[I(x,y)]*1)/MAX_POP); //previously *10
+                myVis.SetHeat(x,y,(pops[I(x,y)])/MAX_POP);
             }
         }
     }

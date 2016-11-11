@@ -34,9 +34,11 @@ public class TCells extends CellPop{
         //normal cells
         myModel.tumorCells.swap[i]-=tumorNormal*interactPopNormal/(IMMUNE_KILL_RATE_SHAPE_FACTOR+tumorNormal)*IMMUNE_KILL_RATE; ///(1+acidNumber)*hypoxicKillingReduction;
         //pdl1 cells
-        myModel.PDL1TumorCells.swap[i]-=tumorPDL1*interactPopPDL1/(IMMUNE_KILL_RATE_SHAPE_FACTOR+tumorPDL1)*IMMUNE_KILL_RATE  *DRUG_EFFICACY*myModel.Drug.field[i]/(1+DRUG_EFFICACY*myModel.Drug.field[i]);// / (1+acidNumber) *hypoxicKillingReduction;
-        double leftoverCells=interactPop-totalTumor;
-        return leftoverCells>0?leftoverCells:0;
+        if(PDL1_CELLS_ACTIVE) {
+            myModel.PDL1TumorCells.swap[i] -= tumorPDL1 * interactPopPDL1 / (IMMUNE_KILL_RATE_SHAPE_FACTOR + tumorPDL1) * IMMUNE_KILL_RATE * DRUG_EFFICACY * myModel.Drug.field[i] / (1 + DRUG_EFFICACY * myModel.Drug.field[i]);// / (1+acidNumber) *hypoxicKillingReduction;
+        }
+            double leftoverCells = interactPop - totalTumor;
+            return leftoverCells > 0 ? leftoverCells : 0;
     }
     void InitPop() {
     }
@@ -134,7 +136,7 @@ public class TCells extends CellPop{
     void Draw() {
         for (int x = 0; x < xDim; x++) {
             for (int y = 0; y < yDim; y++) {
-                myVis.SetHeat(x, y, (pops[I(x, y)]*10) / MAX_POP);
+                myVis.SetHeat(x, y, (pops[I(x, y)]*5) / MAX_POP);
             }
         }
     }
