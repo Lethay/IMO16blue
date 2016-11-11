@@ -14,7 +14,7 @@ public class TumorCellPop extends CellPop {
 
     final public double OxygenConsumption = 0.0025;
     final public double GlucoseConsumption = 0.003;
-    final public double DrugConsumption = 0.03;
+    double birthRate=0.11*TIME_STEP;
 
     final Visualizer visFull;
 
@@ -33,16 +33,10 @@ public class TumorCellPop extends CellPop {
         this.visFull = visFULL;
     }
 
- /*
-
- normalDeathRate
- cellPop*immunePop/(IMMUNE_KILL_RATE_SHAPE_FACTOR+cellPop)*killRate / (1+acidNumber)*hypoxicKillingReduction;
-
- normal death rate
- */
-
-    static private double Death(double cellPop, double immunePop, double acidNumber, double hypoxicKillingReduction, double deathRate, double killRate){
-        return deathRate*cellPop + cellPop*immunePop/(IMMUNE_KILL_RATE_SHAPE_FACTOR+cellPop)*killRate / (1+acidNumber)*hypoxicKillingReduction;
+    double Death(double cellPop, double immunePop, double drugConc, double acidNumber, double hypoxicKillingReduction, double drugEfficacy, double deathRate, double killRate){
+        double baseDeathRate=deathRate*cellPop; //base death rate
+        double tCellKillRate=cellPop*immunePop/(IMMUNE_KILL_RATE_SHAPE_FACTOR+cellPop)*killRate / (1+acidNumber); //*hypoxicKillingReduction;
+        return baseDeathRate+tCellKillRate;
     }
 
     static private double HypoxicDeath(double cellPop, double oxygen, double gluc, double acid)
@@ -70,13 +64,7 @@ public class TumorCellPop extends CellPop {
 
     //called once every tick
     public void Step() {
-
         if (SeedMe) {
-//            for(int x=(int)(xDim*1.0/4);x<xDim*3.0/4;x++) {
-//                for(int y=(int)(yDim*1.0/4);y<yDim*3.0/4;y++) {
-//                    pops[I(x,y)] += MAX_POP / 500.;
-//                }
-//            }
             pops[I(xDim/2,yDim/2)] += MAX_POP / 500.;
             this.SeedMe = false;
         }
@@ -92,7 +80,7 @@ public class TumorCellPop extends CellPop {
                     continue;
                 }
 
-                double hypoxicDeathDelta = 0, acidAmnt=0, oxy=0,gluc=0,acid=0;
+                double hypoxicDeathDelta = 0, acidAmnt=0, oxy=0,gluc=0,acid=0,drugConc=0;
                 if (OXYGEN_ACTIVE && GLUCOSE_ACTIVE && ACID_ACTIVE) {
                     oxy = myModel.Oxygen.field[I(x, y)];
                     gluc = myModel.Glucose.field[I(x, y)];
@@ -105,10 +93,14 @@ public class TumorCellPop extends CellPop {
                 if(hypoxicKillingReduction<IMMUNE_CELL_MAX_HYPOXIC_KILL_RATE_REDUCTION){
                     hypoxicKillingReduction=IMMUNE_CELL_MAX_HYPOXIC_KILL_RATE_REDUCTION;
                 }
+                if(DRUG_ACTIVE){
+                    drugConc=myModel.Drug.field[I(x,y)];
+                }
 
-                double birthDelta = Birth(pop, totalPop, TUMOR_PROLIF_RATE);
-                double deathDelta = Death(pop, immunePop, acidAmnt, hypoxicKillingReduction, TUMOR_DEATH_RATE, IMMUNE_KILL_RATE);
+                double birthDelta = Birth(pop, totalPop, birthRate);
+                double deathDelta = Death(pop, immunePop, drugConc, acidAmnt, hypoxicKillingReduction, DRUG_EFFICACY, TUMOR_DEATH_RATE, IMMUNE_KILL_RATE);
                 double migrantDelta = Migrate(myModel, swap, x, y, MigrantPop(totalPop, birthDelta), VN_Hood, migrantPops);
+
                 swap[i] += pop + birthDelta - deathDelta - hypoxicDeathDelta - migrantDelta;
                 if(NECRO_CELLS_ACTIVE) {
                     myModel.necroCells.swap[i] += hypoxicDeathDelta;
@@ -143,6 +135,15 @@ public class TumorCellPop extends CellPop {
             }
         }
     }
+    // public void Draw() {
+    //     for (int x = 0; x < xDim; x++) {
+    //         for (int y = 0; y < yDim; y++) {
+    //             if (pops[I(x,y)] != 0) {
+    //                 myVis.SetHeat(x, y,pops[I(x,y)]);
+    //             }
+    //         }
+    //     }
+    // }
 }
 
 

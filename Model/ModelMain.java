@@ -133,7 +133,7 @@ class TumorModel {
     NecroticCells necroCells;
     TumorCellPop tumorCells;
     PDL1TumorCellPop PDL1TumorCells;
-    acidProducingTumorCellPop acidTumorCells;
+    AcidProducingTumorCellPop acidTumorCells;
     TCells tCells;
     Vessels vessels;
 
@@ -223,6 +223,8 @@ class TumorModel {
         if (tick == SEED_TIME)
         {
             tumorCells.SeedMe = true;
+            PDL1TumorCells.SeedMe = true;
+            acidTumorCells.SeedMe = true;
         }
         if (tick == IMMUNE_TIME)
         {
@@ -285,7 +287,7 @@ class TumorModel {
                     }
                 }
                 if(DRUG_ACTIVE) {
-                    Drug.field[ci] -= tumorCells.pops[ci] * tumorCells.DrugConsumption * dt;
+                    Drug.field[ci] -= PDL1TumorCells.pops[ci] * PDL1TumorCells.DrugConsumption * dt;
                     //Drug.field[ci] -= normalCells.pops[ci] * normalCells.DrugConsumption * dt;
                     if (Drug.field[ci] < 0) {
                         Drug.field[ci] = 0.0;
@@ -353,7 +355,7 @@ public class ModelMain {
         else{firstModel.tumorCells= null;}
         if(PDL1_CELLS_ACTIVE) {firstModel.PDL1TumorCells= firstModel.AddCellPop(new PDL1TumorCellPop(firstModel, mainWindow.visPDL1));} //index 2
         else{firstModel.PDL1TumorCells= null;}
-        if(ACIDIC_CELLS_ACTIVE) {firstModel.acidTumorCells= firstModel.AddCellPop(new acidProducingTumorCellPop(firstModel, mainWindow.visTumor));} //index 3
+        if(ACIDIC_CELLS_ACTIVE) {firstModel.acidTumorCells= firstModel.AddCellPop(new AcidProducingTumorCellPop(firstModel, mainWindow.visTumor));} //index 3
         else{firstModel.acidTumorCells= null;}
         if(NECRO_CELLS_ACTIVE) {firstModel.necroCells= firstModel.AddCellPop(new NecroticCells(firstModel,mainWindow.visNecro));} //index 4
         else{firstModel.necroCells= null;}
