@@ -33,7 +33,13 @@ public class TumorCellPop extends CellPop {
         this.visFull = visFULL;
     }
 
+ /*
 
+ normalDeathRate
+ cellPop*immunePop/(IMMUNE_KILL_RATE_SHAPE_FACTOR+cellPop)*killRate / (1+acidNumber)*hypoxicKillingReduction;
+
+ normal death rate
+ */
 
     static private double Death(double cellPop, double immunePop, double acidNumber, double hypoxicKillingReduction, double deathRate, double killRate){
         return deathRate*cellPop + cellPop*immunePop/(IMMUNE_KILL_RATE_SHAPE_FACTOR+cellPop)*killRate / (1+acidNumber)*hypoxicKillingReduction;

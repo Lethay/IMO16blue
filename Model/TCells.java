@@ -12,9 +12,10 @@ import static Model.CONST_AND_FUNCTIONS.*;
  * Created by liamb on 09/11/2016.
  */
 public class TCells extends CellPop{
+    SqList MooreHood=GenMooreNeighborhood();
     SqList VNHoodwOrigin=GenVonNeumannNeighborhoodWithOrigin();
     SqList VNHood=GenVonNeumannNeighborhood();
-    double[] popList=new double[5];
+    double[] popList=new double[8];
     double[] MovePops;
     double[] diffConsts;
     public boolean active = false;
@@ -25,14 +26,17 @@ public class TCells extends CellPop{
         this.diffConsts=new double[xDim*yDim];
     }
     double Interact(int i,double interactPop){
-        return 0;
-//        double tVsC=interactPop-myModel.tumorCells.pops[i];
-//        if(tVsC>0){
-// //           myModel.tumorCells.swap[i]-=interactPop*TCELLS_VS_TUMORCELLS;
-//            return interactPop-interactPop;
-//        }
-//        //       myModel.tumorCells.swap[i]-=myModel.tumorCells.pops[i]*TCELLS_VS_TUMORCELLS;
-//        return 0;
+        double tumorNormal=myModel.tumorCells.pops[i];
+        double tumorPDL1=myModel.PDL1TumorCells.pops[i];
+        double totalTumor=tumorNormal+tumorPDL1;
+        double interactPopNormal=tumorNormal/(totalTumor);
+        double interactPopPDL1=tumorPDL1/(totalTumor);
+        //normal cells
+        myModel.tumorCells.swap[i]-=tumorNormal*interactPopNormal/(IMMUNE_KILL_RATE_SHAPE_FACTOR+tumorNormal)*IMMUNE_KILL_RATE; ///(1+acidNumber)*hypoxicKillingReduction;
+        //pdl1 cells
+        myModel.PDL1TumorCells.swap[i]-=tumorPDL1*interactPopPDL1/(IMMUNE_KILL_RATE_SHAPE_FACTOR+tumorPDL1)*IMMUNE_KILL_RATE  *DRUG_EFFICACY*myModel.Drug.field[i]/(1+DRUG_EFFICACY*myModel.Drug.field[i]);// / (1+acidNumber) *hypoxicKillingReduction;
+        double leftoverCells=interactPop-totalTumor;
+        return leftoverCells>0?leftoverCells:0;
     }
     void InitPop() {
     }
@@ -55,15 +59,16 @@ public class TCells extends CellPop{
                 swap[i]+=pops[i];
                 swap[i]-=Death(pops[i],TCELL_DEATH_RATE);
                 //interaction with tumor cells on same square
-                //double popsToInteract=pops[i];
-                //if(myModel.tumorCells.pops[i]>1){
-                //    popsToInteract-=Interact(i,popsToInteract);
-                //}
+                double popsToInteract=pops[i];
+                if(myModel.tumorCells.pops[i]>1){
+                    //popsToInteract-=
+                            Interact(i,popsToInteract);
+                }
                 //double totalPop=0;
                 //Arrays.fill(popList,0);
-                //for(int j=0;j<VNHood.length;j++){
-                //    int lookX=VNHood.Xsq(j)+x;
-                //    int lookY=VNHood.Ysq(j)+y;
+                //for(int j=0;j<MooreHood.length;j++){
+                //    int lookX=MooreHood.Xsq(j)+x;
+                //    int lookY=MooreHood.Ysq(j)+y;
                 //    if(myModel.WithinGrid(lookX,lookY)&&myModel.tumorCells.pops[I(lookX,lookY)]>1){
                 //        popList[j]=myModel.tumorCells.pops[j];
                 //        totalPop+=myModel.totalPops[j];
@@ -71,19 +76,13 @@ public class TCells extends CellPop{
                 //}
                 ////interaction with tumor cells on other squares
                 //double interacted=0;
-                //for(int j=0;j<VNHood.length;j++){
+                //for(int j=0;j<MooreHood.length;j++){
                 //    if(popList[j]>0){
-                //        interacted+=Interact(I(VNHood.Xsq(j)+x,VNHood.Ysq(j)+y),popsToInteract*(popList[j]/totalPop));
+                //        interacted+=Interact(I(MooreHood.Xsq(j)+x,MooreHood.Ysq(j)+y),popsToInteract*(popList[j]/totalPop));
                 //    }
                 //}
                 //popsToInteract-=interacted;
-                //MovePops[i]=popsToInteract;
-                //if(myModel.tumorCells.pops[i]>10||myModel.PDL1TumorCells.pops[i]>10) {
-                //    MovePops[i]=0;
-                //}
-                //else{
-                    MovePops[i] = pops[i];
-                //}
+                MovePops[i]=popsToInteract;
                 //cell migration
             }
         }
@@ -135,7 +134,7 @@ public class TCells extends CellPop{
     void Draw() {
         for (int x = 0; x < xDim; x++) {
             for (int y = 0; y < yDim; y++) {
-                myVis.SetHeat(x, y, ((pops[I(x, y)]*cellSize)*100) / MAX_POP);
+                myVis.SetHeat(x, y, (pops[I(x, y)]*cellSize) / MAX_POP);
             }
         }
     }

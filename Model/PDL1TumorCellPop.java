@@ -11,7 +11,7 @@ import static Model.CONST_AND_FUNCTIONS.*;
  * TODO: These cells need to interact w/ acid and immune cells.
 
  */
-public class PDL1TumorCellPop extends CellPop {
+public class PDL1TumorCellPop extends TumorCellPop {
 
     static final private double TUMOR_PROLIF_RATE=0.04*CONST_AND_FUNCTIONS.TIME_STEP;
     static final double TUMOR_DEATH_RATE=0.02*CONST_AND_FUNCTIONS.TIME_STEP;
@@ -22,6 +22,7 @@ public class PDL1TumorCellPop extends CellPop {
     PDL1TumorCellPop(TumorModel model, Visualizer vis) {
         super(model,vis);
     }
+    //cellPop*immunePop/(IMMUNE_KILL_RATE_SHAPE_FACTOR+cellPop)*killRate  *drugEfficacy*drugConc/(1+drugEfficacy*drugConc) / (1+acidNumber) *hypoxicKillingReduction;
 
     static private double Death(double cellPop, double immunePop, double drugConc, double acidNumber, double hypoxicKillingReduction, double drugEfficacy, double deathRate, double killRate){
         return deathRate*cellPop + cellPop*immunePop/(IMMUNE_KILL_RATE_SHAPE_FACTOR+cellPop)*killRate  *drugEfficacy*drugConc/(1+drugEfficacy*drugConc) / (1+acidNumber) *hypoxicKillingReduction;
