@@ -15,7 +15,7 @@ public class PDL1TumorCellPop extends TumorCellPop {
 
     PDL1TumorCellPop(TumorModel model, Visualizer vis) {
         super(model,vis);
-        birthRate=0.10*TIME_STEP;
+        birthRate=0.20*TIME_STEP;
     }
     //cellPop*immunePop/(IMMUNE_KILL_RATE_SHAPE_FACTOR+cellPop)*killRate  *drugEfficacy*drugConc/(1+drugEfficacy*drugConc) / (1+acidNumber) *hypoxicKillingReduction;
 

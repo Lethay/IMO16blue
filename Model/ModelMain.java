@@ -133,7 +133,7 @@ class TumorModel {
     NecroticCells necroCells;
     TumorCellPop tumorCells;
     PDL1TumorCellPop PDL1TumorCells;
-    AcidProducingTumorCellPop acidTumorCells;
+    AcidProducingTumorCellPop AcidTumorCells;
     TCells tCells;
     Vessels vessels;
 
@@ -222,14 +222,22 @@ class TumorModel {
         tick++;
         if (tick == SEED_TIME)
         {
-            tumorCells.SeedMe = true;
-            PDL1TumorCells.SeedMe = true;
-            acidTumorCells.SeedMe = true;
+            if(TUMOR_CELLS_ACTIVE) tumorCells.SeedMe = true;
+            if(PDL1_CELLS_ACTIVE) PDL1TumorCells.SeedMe = true;
+            if(ACIDIC_CELLS_ACTIVE) AcidTumorCells.SeedMe = true;
         }
         if (tick == IMMUNE_TIME)
         {
             tCells.active = true;
         }
+//        if (tick == IMMUNE_TIME+1)
+//        {
+//            double tmrCells=0, pTmrCells=0, aTmrCells=0;
+//            for(int i=0; i<xDim*yDim; i++){
+//                tmrCells+=tumorCells.pops[i]; pTmrCells+=PDL1TumorCells.pops[i]; aTmrCells+=AcidTumorCells.pops[i];
+//            }
+//            System.out.println(tmrCells+" "+pTmrCells+" "+aTmrCells);
+//        }
         System.err.println("Day: "+tick*TIME_STEP); //TODO: put this information onto the GUI.
     }
 
@@ -343,9 +351,7 @@ class TumorModel {
 
 public class ModelMain {
     public static void main(String[] args) {
-
-
-        TumorModel firstModel = new TumorModel(110, 110);
+        TumorModel firstModel = new TumorModel(NUM_BINS_1D, NUM_BINS_1D);
         ModelVis mainWindow = new ModelVis(firstModel);
         //setting normalCells for access by other populations, adding cellpop for iteration
 
@@ -355,8 +361,8 @@ public class ModelMain {
         else{firstModel.tumorCells= null;}
         if(PDL1_CELLS_ACTIVE) {firstModel.PDL1TumorCells= firstModel.AddCellPop(new PDL1TumorCellPop(firstModel, mainWindow.visPDL1));} //index 2
         else{firstModel.PDL1TumorCells= null;}
-        if(ACIDIC_CELLS_ACTIVE) {firstModel.acidTumorCells= firstModel.AddCellPop(new AcidProducingTumorCellPop(firstModel, mainWindow.visTumor));} //index 3
-        else{firstModel.acidTumorCells= null;}
+        if(ACIDIC_CELLS_ACTIVE) {firstModel.AcidTumorCells= firstModel.AddCellPop(new AcidProducingTumorCellPop(firstModel, mainWindow.visTumor));} //index 3
+        else{firstModel.AcidTumorCells= null;}
         if(NECRO_CELLS_ACTIVE) {firstModel.necroCells= firstModel.AddCellPop(new NecroticCells(firstModel,mainWindow.visNecro));} //index 4
         else{firstModel.necroCells= null;}
         if(T_CELLS_ACTIVE) {firstModel.tCells= firstModel.AddCellPop(new TCells(firstModel,mainWindow.visTcells));} //index 5
