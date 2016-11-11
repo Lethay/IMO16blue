@@ -13,10 +13,14 @@ import static Model.CONST_AND_FUNCTIONS.*;
 public class AcidProducingTumorCellPop extends TumorCellPop {
 
     AcidProducingTumorCellPop(TumorModel model, Visualizer vis) {
-            super(model,vis);
-            birthRate=0.20*TIME_STEP;
-        }
-
+        super(model,vis);
+        birthRate=0.20*TIME_STEP;
+    }
+    
+    @Override
+    public void addAcid(int x, int y, double acidProductionRate){
+    	myModel.Acid.field[I(x,y)] += acidProductionRate;
+    }
 }
 
 

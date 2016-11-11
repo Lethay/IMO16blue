@@ -109,7 +109,7 @@ class ModelVis{
         //second layer
         AddVis(visTcells,0,1,"TCells");
         AddVis(visPDL1Res,1,1,"PDL1_Res");
-        AddVis(visAcidRes,2,1,"Acid_Res");
+        AddVis(visAcidRes,2,1,"Acid_Prod");
         AddVis(visDR,3,1,"Drug");
         //third layer
         AddVis(visO2,0,2,"O2");
@@ -359,6 +359,11 @@ public class ModelMain {
         ModelVis mainWindow = new ModelVis(firstModel);
         //setting normalCells for access by other populations, adding cellpop for iteration
 
+        //Error-checking
+        if(ACIDIC_CELLS_ACTIVE && !ACID_ACTIVE){
+            System.out.println("Cannot activate acidic cells without acid also being active. Returning.");
+            return;
+        }
         if(NORMAL_CELLS_ACTIVE) {firstModel.normalCells= firstModel.AddCellPop(new NormalCells(firstModel, mainWindow.visNormal));} //index 0
         else{firstModel.normalCells= null;}
         if(TUMOR_CELLS_ACTIVE) {firstModel.tumorCells= firstModel.AddCellPop(new TumorCellPop(firstModel, mainWindow.visTumor));} //index 1

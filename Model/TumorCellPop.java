@@ -39,6 +39,8 @@ public class TumorCellPop extends CellPop {
         return baseDeathRate+tCellKillRate;
     }
 
+    void addAcid(int x, int y, double acidProductionRate){};
+
     static private double HypoxicDeath(double cellPop, double oxygen, double gluc, double acid)
     {
         double hypDeath = 0.0;
@@ -106,6 +108,9 @@ public class TumorCellPop extends CellPop {
                 swap[i] += pop + birthDelta - deathDelta - hypoxicDeathDelta - migrantDelta;
                 if(NECRO_CELLS_ACTIVE) {
                     myModel.necroCells.swap[i] += hypoxicDeathDelta;
+                }
+                if(ACIDIC_CELLS_ACTIVE){
+                    addAcid(x,y,ACID_PRODUCTION_RATE); //only effectual for the AcidProducing class
                 }
                 if (swap[i] < 0.0) {
                     swap[i] = 0.0;
