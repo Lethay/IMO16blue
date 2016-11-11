@@ -34,7 +34,7 @@ public class Vessels extends CellPop {
     private static double rhoThresh = 0.6;
     static private double Death(double cellPop, double totalPop, double neighbourTumorPop) {
         if (totalPop > rhoThresh * MAX_POP) {
-            return cellPop * (totalPop - (rhoThresh * MAX_POP)) * (1. / (rhoThresh * MAX_POP));
+            return cellPop; //* (totalPop - (rhoThresh * MAX_POP)) * (1. / (rhoThresh * MAX_POP));
         } else if (neighbourTumorPop > MAX_POP / 10.){
             return cellPop;
         } else {
