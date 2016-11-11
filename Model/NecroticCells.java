@@ -26,7 +26,7 @@ public class NecroticCells extends CellPop {
                 double pop = pops[i];
                 double totalPop = myModel.totalPops[i];
                 if (pop < 1) {
-                    swap[i] += pop;
+                    swap[i] += 0;
                     continue;
                 }
                 double decayDelta = Death(pop, NECROTIC_DECAY_RATE);

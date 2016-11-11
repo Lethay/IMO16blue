@@ -20,10 +20,10 @@ public class Vessels extends CellPop {
     void InitPop() {
         for (int x = 0; x < xDim; x++) {
             for (int y = 0; y < yDim; y++) {
-               if (rand.nextFloat() < 0.015)
+               if (rand.nextFloat() < 0.005)
                 {
-                    double vesDensity = 50*rand.nextGaussian()+3;
-                    pops[I(x, y)] = MAX_POP / (vesDensity);
+                    double nVessels = Math.max(Math.min(2500*rand.nextGaussian(),5000),0)+1000;
+                    pops[I(x, y)] = nVessels;
                 }
 
             }
@@ -47,25 +47,9 @@ public class Vessels extends CellPop {
 
         SqList VN_Hood = Utils.GenMooreNeighborhood();
 
-        for (int x = 0; x < xDim; x++) {
-            for (int y = 0; y < yDim; y++) {
-//                double press = 0.0;
-//                for (int i = 0; i < VN_Hood.length; i++) {
-////                    int checkX = VN_Hood.Xsq(i) + x;
-////                    int checkY = VN_Hood.Ysq(i) + y;
-////                    if (myModel.WithinGrid(checkX, checkY)) {
-////
-////
-////                    }
-
-                double deathDelta = Death(pops[I(x, y)], myModel.totalPops[I(x, y)], myModel.tumorCells.pops[I(x, y)]);
-                swap[I(x, y)] = pops[I(x, y)] - deathDelta;
-
-                if (swap[I(x, y)] <= 0) {
-                    swap[I(x, y)] = 0;
-                }
-
-            }
+        for(int i=0;i<xDim*yDim;i++){
+            //double deathDelta = Death(pops[I(x, y)], myModel.totalPops[I(x, y)], myModel.tumorCells.pops[I(x, y)]);
+            swap[i]+=pops[i];
         }
     }
     //draws the cells on the screen

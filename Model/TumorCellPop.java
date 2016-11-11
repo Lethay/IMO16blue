@@ -2,7 +2,6 @@ package Model;
 import AgentGridMin.Visualizer;
 import AgentGridMin.SqList;
 import AgentGridMin.Utils;
-import AgentGridMin.Visualizer;
 
 import static Model.CONST_AND_FUNCTIONS.*;
 
@@ -14,7 +13,7 @@ public class TumorCellPop extends CellPop {
 
     final public double OxygenConsumption = TUMOR_OXYGEN_CONSUMPTION;
     final public double GlucoseConsumption = TUMOR_GLUCOSE_CONSUMPTION;
-    double birthRate=0.22*TIME_STEP;
+    double birthRate=TUMOR_PROLIF_RATE;
 
     final Visualizer visFull;
 
@@ -33,26 +32,10 @@ public class TumorCellPop extends CellPop {
         this.visFull = visFULL;
     }
 
-    double Death(double cellPop, double immunePop, double drugConc, double acidNumber, double hypoxicKillingReduction, double drugEfficacy, double deathRate, double killRate){
-        double baseDeathRate=deathRate*cellPop; //base death rate
-        double tCellKillRate=cellPop*immunePop/(IMMUNE_KILL_RATE_SHAPE_FACTOR+cellPop)*killRate / (1+acidNumber) * hypoxicKillingReduction;
-        return baseDeathRate+tCellKillRate;
-    }
-
     void addAcid(int x, int y, double acidProductionRate){};
 
-    static private double HypoxicDeath(double cellPop, double oxygen, double gluc, double acid)
-    {
-        double hypDeath = 0.0;
-        if (oxygen < TUMOUR_LOW_OXYGEN_DEATH_THRESHOLD)
-        {
-            hypDeath += (oxygen/TUMOUR_LOW_OXYGEN_DEATH_THRESHOLD);
-        }
-        if (acid > TUMOUR_HIGH_ACID_DEATH_THRESHOLD)
-        {
-            hypDeath += 0.0;
-        }
-        return  cellPop*hypDeath;
+    static private double DiffusibleDeath(double cellPop, double diffusible,double threshold,double scaleConst){
+        return diffusible>threshold?0:cellPop*(1-diffusible/threshold)*scaleConst;
     }
 
     static private double Birth(double cellPop, double totalPop, double birthRate){
@@ -75,7 +58,6 @@ public class TumorCellPop extends CellPop {
             for (int y = 0; y < yDim; y++) {
                 int i = I(x, y);
                 double pop = pops[i];
-                double immunePop = myModel.tCells.pops[i];
                 double totalPop = myModel.totalPops[i];
                 if (pop < 1) {
                     swap[i] += Math.max(pop, 0);
@@ -86,21 +68,22 @@ public class TumorCellPop extends CellPop {
                 if (OXYGEN_ACTIVE) oxy = myModel.Oxygen.field[I(x, y)];
                 if (GLUCOSE_ACTIVE) gluc = myModel.Glucose.field[I(x, y)];
                 if (ACID_ACTIVE) acid = myModel.Acid.field[I(x, y)];
-                hypoxicDeathDelta = HypoxicDeath(pop, oxy, gluc, acid);
+                //hypoxicDeathDelta = HypoxicDeath(pop, oxy, gluc, acid);
                 acidAmnt=acid*BIN_VOLUME;
+                hypoxicDeathDelta=DiffusibleDeath(pops[i],oxy,TUMOR_HYPOXIC_THRESHOLD,NORMAL_HYPOXIC_SCALE_FACTOR);
 
-                if(OXYGEN_ACTIVE){
-                    hypoxicKillingReduction=oxy*BIN_VOLUME/(1+oxy*BIN_VOLUME);
-                    if(hypoxicKillingReduction<IMMUNE_CELL_MAX_HYPOXIC_KILL_RATE_REDUCTION){
-                        hypoxicKillingReduction=IMMUNE_CELL_MAX_HYPOXIC_KILL_RATE_REDUCTION;
-                    }
-                }
+//                if(OXYGEN_ACTIVE){
+//                    hypoxicKillingReduction=oxy*BIN_VOLUME/(1+oxy*BIN_VOLUME);
+//                    if(hypoxicKillingReduction<IMMUNE_CELL_MAX_HYPOXIC_KILL_RATE_REDUCTION){
+//                        hypoxicKillingReduction=IMMUNE_CELL_MAX_HYPOXIC_KILL_RATE_REDUCTION;
+//                    }
+//                }
                 if(DRUG_ACTIVE){
                     drugConc=myModel.Drug.field[I(x,y)];
                 }
 
                 double birthDelta = Birth(pop, totalPop, birthRate);
-                double deathDelta = Death(pop, immunePop, drugConc, acidAmnt, hypoxicKillingReduction, DRUG_EFFICACY, TUMOR_DEATH_RATE, IMMUNE_KILL_RATE);
+                double deathDelta = Death(pop, TUMOR_DEATH_RATE);
                 double migrantDelta = Migrate(myModel, swap, x, y, MigrantPop(totalPop, birthDelta), VN_Hood, migrantPops);
 
                 swap[i] += pop + birthDelta - deathDelta - hypoxicDeathDelta - migrantDelta;
@@ -119,36 +102,12 @@ public class TumorCellPop extends CellPop {
 
     //called once every tick
    public void Draw() {
-       double nrmRho;
-       double resRho;
-       double necRho;
        for (int x = 0; x < xDim; x++) {
            for (int y = 0; y < yDim; y++) {
-//               if(myVis!=null&&pops[I(x,y)]>1) {
-//                   myVis.SetHeat(x, y, pops[I(x, y)] / MAX_POP);
-//               }
                myVis.SetHeat(x, y, pops[I(x, y)] / MAX_POP); //or *30
-
-               if (visFull != null)
-               {
-                   nrmRho = pops[I(x,y)];
-                   resRho = myModel.PDL1TumorCells.pops[I(x,y)];
-                   necRho = myModel.necroCells.pops[I(x,y)];
-                   visFull.MultipleDensitiesSet(x,y,nrmRho, resRho, necRho);
-               }
-
            }
        }
    }
-     // public void Draw() {
-     //     for (int x = 0; x < xDim; x++) {
-     //         for (int y = 0; y < yDim; y++) {
-     //             if (pops[I(x,y)] != 0) {
-     //                 myVis.SetHeat(x, y,pops[I(x,y)]);
-     //             }
-     //         }
-     //     }
-     // }
 }
 
 

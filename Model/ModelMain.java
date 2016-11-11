@@ -1,7 +1,34 @@
+/*TODO:
+(get spiderweb){
+    Get more spiderwebs
+}
+(normal tissue death from o2){
+}
+(fix drug){
+}
+(make videos){
+    show spider web vis
+    show ball vis
+}
+(finish implementation){
+    (add diffusible functionality){
+    }
+    (fix acid cells){
+    }
+    (make completely comment and uncommentable){
+    }
+}
+(add cell resp){
+}
+
+DONE:
+(fix strange homeostasis){}
+(refactor code){}
+*/
+
+
 package Model;
 import AgentGridMin.*;
-//import sun.awt.X11.Visual;
-
 import javax.swing.*;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -81,7 +108,7 @@ class ModelVis{
     ModelVis(TumorModel model){
         myModel=model;
 
-        int visScale=2;
+        int visScale=1;
         visVessels=new Visualizer(model.xDim,model.yDim,visScale);
         visTumor=new Visualizer(model.xDim,model.yDim,visScale);
         visNormal=new Visualizer(model.xDim,model.yDim,visScale);
@@ -100,20 +127,20 @@ class ModelVis{
         //The full viz
         visFULL = new Visualizer(model.xDim,model.yDim,visScale);
 
-        win=new GuiWindow("LungVis",model.xDim*visScale,model.yDim*visScale,4,6);
+        win=new GuiWindow("LungVis",model.xDim*visScale,model.yDim*visScale,3,6);
         //first layer
         AddVis(visNormal,0,0,"Normal");
         AddVis(visNecro,1,0,"Necro");
         AddVis(visTumor,2,0,"Tumor");
-        AddVis(visVessels,3,0,"Vessel");
+        AddVis(visVessels,0,1,"Vessel");
         //second layer
-        AddVis(visTcells,0,1,"TCells");
-        AddVis(visPDL1Res,1,1,"PDL1_Res");
-        AddVis(visAcidRes,2,1,"Acid_Prod");
-        AddVis(visDR,3,1,"Drug");
+        AddVis(visTcells,1,1,"ImmuneCells");
+        AddVis(visPDL1Res,2,1,"PDL1_Res");
+        //AddVis(visAcidRes,1,1,"Acid_Prod");
+        AddVis(visDR,0,2,"Drug");
         //third layer
-        AddVis(visO2,0,2,"O2");
-        AddVis(visPH,1,2,"Ph");
+        AddVis(visO2,1,2,"O2");
+        //AddVis(visPH,1,2,"Ph");
         AddVis(visGL,2,2,"Gluc");
 
         win.addWindowListener(new WindowAdapter() {
@@ -138,7 +165,7 @@ class TumorModel {
     TumorCellPop tumorCells;
     PDL1TumorCellPop PDL1TumorCells;
     AcidProducingTumorCellPop AcidTumorCells;
-    TCells tCells;
+    ImmuneCells tCells;
     Vessels vessels;
 
     //The fields
@@ -234,14 +261,6 @@ class TumorModel {
         {
             tCells.active = true;
         }
-//        if (tick == IMMUNE_TIME+1)
-//        {
-//            double tmrCells=0, pTmrCells=0, aTmrCells=0;
-//            for(int i=0; i<xDim*yDim; i++){
-//                tmrCells+=tumorCells.pops[i]; pTmrCells+=PDL1TumorCells.pops[i]; aTmrCells+=AcidTumorCells.pops[i];
-//            }
-//            System.out.println(tmrCells+" "+pTmrCells+" "+aTmrCells);
-//        }
         System.err.println("Day: "+tick*TIME_STEP); //TODO: put this information onto the GUI.
     }
 
@@ -286,6 +305,7 @@ class TumorModel {
                         Oxygen.field[ci] = 0.0;
                     }
                 }
+                //NEED TO ADD ALL CELL TYPES, ACID SHOULD DIFFUSE OUT OF VESSELS
                 if(ACID_ACTIVE) {
                     Acid.field[ci] -= normalCells.pops[ci] * 0.0 * normalCells.OxygenConsumption * dt;
                     if (Acid.field[ci] < 0) {
@@ -375,7 +395,7 @@ public class ModelMain {
         else{firstModel.AcidTumorCells= null;}
         if(NECRO_CELLS_ACTIVE) {firstModel.necroCells= firstModel.AddCellPop(new NecroticCells(firstModel,mainWindow.visNecro));} //index 4
         else{firstModel.necroCells= null;}
-        if(T_CELLS_ACTIVE) {firstModel.tCells= firstModel.AddCellPop(new TCells(firstModel,mainWindow.visTcells));} //index 5
+        if(T_CELLS_ACTIVE) {firstModel.tCells= firstModel.AddCellPop(new ImmuneCells(firstModel,mainWindow.visTcells));} //index 5
         else{firstModel.tCells= null;}
 
         //The vessels

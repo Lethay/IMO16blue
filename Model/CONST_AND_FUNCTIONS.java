@@ -12,8 +12,8 @@ public class CONST_AND_FUNCTIONS {
     static final boolean NORMAL_CELLS_ACTIVE=true;
     static final boolean TUMOR_CELLS_ACTIVE=true;
     static final boolean PDL1_CELLS_ACTIVE=true;
-    static final boolean ACIDIC_CELLS_ACTIVE=true;
-    static final boolean NECRO_CELLS_ACTIVE=false;
+    static final boolean ACIDIC_CELLS_ACTIVE=false;
+    static final boolean NECRO_CELLS_ACTIVE=true;
     static final boolean VESSELS_ACTIVE=true;
     static final boolean T_CELLS_ACTIVE=true;
     static final boolean OXYGEN_ACTIVE=true;
@@ -21,9 +21,9 @@ public class CONST_AND_FUNCTIONS {
     static final boolean ACID_ACTIVE=true;
     static final boolean DRUG_ACTIVE=true;
 
-    static final int SEED_TIME = 200;
-    static final int IMMUNE_TIME = 500;
-    static final int DRUG_TIME = 1300;
+    static final int SEED_TIME = 500;
+    static final int IMMUNE_TIME = 700;
+    static final int DRUG_TIME = 2000;
     static final int STOP_MODEL_TIME=200000;
 
     static final double BIN_LENGTH = 10.0; //microns
@@ -33,32 +33,32 @@ public class CONST_AND_FUNCTIONS {
     static final double DIFFUSE_DT = 0.010;
 
     //cell constants
-    static final public double MAX_POP=BIN_LENGTH*BIN_LENGTH*NUM_BINS_1D*NUM_BINS_1D;
+    static final public double MAX_POP=BIN_LENGTH*BIN_LENGTH*NUM_BINS_1D;
     static final double TIME_STEP=0.2; //days
-    static final double TUMOR_PROLIF_RATE=0.2*TIME_STEP;
-    static final double NECROTIC_DECAY_RATE=0.01*TIME_STEP;
-    static final double NORMAL_PROLIF_RATE=0.02*TIME_STEP;
-    static final double NORMAL_DEATH_RATE=0.01*TIME_STEP;
+    static final double TUMOR_PROLIF_RATE=0.7*TIME_STEP;
+    static final double PDL1_PROLIF_RATE=TUMOR_PROLIF_RATE*0.995;
+    static final double NECROTIC_DECAY_RATE=0.05*TIME_STEP;
+    static final double NORMAL_PROLIF_RATE=0.4*TIME_STEP;
+    static final double NORMAL_DEATH_RATE=0.35*TIME_STEP;
 
-//    static final double TUMOR_PROLIF_RATE = 0.4 * TIME_STEP;
     static final double TUMOR_DEATH_RATE = 0.02*TIME_STEP;
+    static final double PDL1_WEAKNESS = 0.80; //max = 1, min = 0
 
-    static final double TUMOUR_LOW_OXYGEN_DEATH_THRESHOLD = 0.01;
-    static final double TUMOUR_HIGH_ACID_DEATH_THRESHOLD = 0.1;
-    static final double IMMUNE_CELL_MAX_HYPOXIC_KILL_RATE_REDUCTION = 0.1;
+    static final double TUMOR_LOW_OXYGEN_DEATH_THRESHOLD = 0.1;
+    static final double TUMOR_HIGH_ACID_DEATH_THRESHOLD = 0.1;
+//    static final double IMMUNE_CELL_MAX_HYPOXIC_KILL_RATE_REDUCTION = 0.1;
 
-<<<<<<< HEAD
-    static final double DRUG_EFFICACY=0.1; //DRUG_EFFICACY*DRUG_CONC represents the modification to the immune kill rate. 1% of drug is useful, and the other factor represents reduction due to PD-L1.
-=======
-    static final double DRUG_EFFICACY=1000; //DRUG_EFFICACY*DRUG_CONC represents the modification to the immune kill rate. 1% of drug is useful, and the other factor represents reduction due to PD-L1.
->>>>>>> origin/master
-    static final double IMMUNE_KILL_RATE_SHAPE_FACTOR=100;
-    static final double IMMUNE_KILL_RATE=5*TIME_STEP;
-    static final double NORMAL_HYPOXIC_THRESHOLD=0.2;
+    static final double DRUG_EFFICACY=10000.0; //DRUG_EFFICACY*DRUG_CONC represents the modification to the immune kill rate. 1% of drug is useful, and the other factor represents reduction due to PD-L1.
+    static final double IMMUNE_KILL_RATE_SHAPE_FACTOR=1;
+    static final double IMMUNE_KILL_RATE=5.8*TIME_STEP;
+    static final double NORMAL_HYPOXIC_THRESHOLD=1;
+    static final double NORMAL_HYPOXIC_SCALE_FACTOR=0.01;
+    static final double TUMOR_HYPOXIC_THRESHOLD=NORMAL_HYPOXIC_THRESHOLD*0.8;
     static final double MAX_HYPOXIC_DEATH_RATE=0.5;
-    static final double VESSELS_TO_TCELLS=2*TIME_STEP;
-    static final double TCELL_MOVE_RATE=0.6*TIME_STEP;
-    static final double TCELL_DEATH_RATE=0.02*TIME_STEP;
+    static final double VESSELS_TO_TCELLS=1*TIME_STEP;
+    static final double TCELL_MOVE_RATE=0.4*TIME_STEP;
+    static final double TCELL_DEATH_RATE=0.01*TIME_STEP;
+    static final int TCELL_TURNS= 2;
 
     //diffusible constants
     static final double OXYGEN_DIFFUSION_RATE = 0.1;
@@ -66,25 +66,25 @@ public class CONST_AND_FUNCTIONS {
     static final double ACID_DIFFUSION_RATE = 0.1;
     static final double DRUG_DIFFUSION_RATE = 0.2;
 
-    static final double OXYGEN_PRODUCTION_RATE=0.002; //per dt, per unit density
-    static final double GLUCOSE_PRODUCTION_RATE=0.002; //per dt, per unit density
-    static final double DRUG_PRODUCTION_RATE = 0.002;
+    static final double OXYGEN_PRODUCTION_RATE=0.2; //per dt, per unit density
+    static final double GLUCOSE_PRODUCTION_RATE=0.2; //per dt, per unit density
+    static final double DRUG_PRODUCTION_RATE = 0.2;
     static final double ACID_PRODUCTION_RATE=0.01; //per dt, per unit density
 
     //Govern gluc/oxy on
     static final double GLUCOSE_THRESHOLD = 0.05;
     static final double OXYGEN_THRESHOLD = 0.05;
-    static final double CONSUMPTION_SCALE=0.004;
-    static final double TUMOR_OXYGEN_CONSUMPTION=0.0004*CONSUMPTION_SCALE;
-    static final double TUMOR_GLUCOSE_CONSUMPTION=0.0004*CONSUMPTION_SCALE;
+    static final double CONSUMPTION_SCALE=0.04;
+    static final double TUMOR_OXYGEN_CONSUMPTION=0.0008*CONSUMPTION_SCALE;
+    static final double TUMOR_GLUCOSE_CONSUMPTION=0.0008*CONSUMPTION_SCALE;
     static final double NORMAL_OXYGEN_CONSUMPTION = 0.0004*CONSUMPTION_SCALE;
     static final double NORMAL_GLUCOSE_CONSUMPTION = 0.0004*CONSUMPTION_SCALE;
     static final double NORMAL_DRUG_CONSUMPTION = 0.0015*CONSUMPTION_SCALE;
     static final double PDL1_DRUG_CONSUMPTION = 0;//0.0015*CONSUMPTION_SCALE;
 
-    static final double OXYGEN_USAGE_NORMAL=2; //number of oxygen needed for a single birth (for normal cells)
-    static final double GLUCOSE_USAGE_NORMAL=2; // number of glucose needed for a single birth (for normal cells)
-    static final double ACID_RATE_NORMAL=.1; // amount of acid produced per glycolysis (for normal cells)
+    static double DiffusibleDeath(double cellPop, double diffusible,double threshold,double scaleConst){
+        return diffusible>threshold?0:cellPop*(1-diffusible/threshold)*scaleConst;
+    }
 
     static double modifiedBirthRate(double birthRate, double oxy, double gluc) {
         double oxyPenalty = 1.0;
@@ -174,7 +174,20 @@ public class CONST_AND_FUNCTIONS {
         return surroundingDiff>0?popToMigrate:0;
     }
 
-//    static void TCellDiffusion(TumorModel myModel,TCells tCells, int x,int y,double popToMigrate){
+    static double HypoxicDeath(double cellPop, double oxygen, double gluc, double acid){
+            double hypDeath = 0.0;
+            if (oxygen < TUMOR_LOW_OXYGEN_DEATH_THRESHOLD)
+            {
+                hypDeath += (1-oxygen/ TUMOR_LOW_OXYGEN_DEATH_THRESHOLD)*.01;
+            }
+            if (acid > TUMOR_HIGH_ACID_DEATH_THRESHOLD)
+            {
+                hypDeath += 0.0;
+            }
+            return  cellPop*hypDeath;
+    }
+
+//    static void TCellDiffusion(TumorModel myModel,ImmuneCells tCells, int x,int y,double popToMigrate){
 //
 //    }
 
