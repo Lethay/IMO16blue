@@ -16,9 +16,9 @@ public class NormalCells extends CellPop {
     double[] migrantPops = new double[4];
     Random rand = new Random();
 
-    final public double OxygenConsumption = 0.00004;
-    final public double GlucoseConsumption = 0.00003;
-    final public double DrugConsumption = 0.0015;
+    final public double OxygenConsumption= NORMAL_OXYGEN_CONSUMPTION;
+    final public double GlucoseConsumption=NORMAL_GLUCOSE_CONSUMPTION;
+    final public double DrugConsumption = NORMAL_DRUG_CONSUMPTION ;
 
 
     NormalCells(TumorModel model,Visualizer vis) {

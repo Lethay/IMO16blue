@@ -262,24 +262,25 @@ class TumorModel {
 
         //NOTE: A proper 'framework' centric way to implement this would be split
         //DTypes into vessel-produced and cell-produced
-        for (int vi = 0; vi < k; vi++) {
             //Vessel production (fixed conc)
-            if(OXYGEN_ACTIVE) {
-                Oxygen.field[ProdIndices[vi]] = vessels.pops[ProdIndices[vi]] * OXYGEN_PRODUCTION_RATE;
-            }
-            if(GLUCOSE_ACTIVE) {
-                Glucose.field[ProdIndices[vi]] = vessels.pops[ProdIndices[vi]] * GLUCOSE_PRODUCTION_RATE;
-            }
-            if(DRUG_ACTIVE&&tick>DRUG_TIME) {
-                Drug.field[ProdIndices[vi]] = vessels.pops[ProdIndices[vi]] * DRUG_PRODUCTION_RATE;
-            }
-        }
 
         while (t < discreteTimeStep) {
+            for (int vi = 0; vi < k; vi++) {
+                if(OXYGEN_ACTIVE) {
+                    Oxygen.field[ProdIndices[vi]] = vessels.pops[ProdIndices[vi]] * OXYGEN_PRODUCTION_RATE*dt;
+                }
+                if(GLUCOSE_ACTIVE) {
+                    Glucose.field[ProdIndices[vi]] = vessels.pops[ProdIndices[vi]] * GLUCOSE_PRODUCTION_RATE*dt;
+                }
+                if(DRUG_ACTIVE&&tick>DRUG_TIME) {
+                    Drug.field[ProdIndices[vi]] = vessels.pops[ProdIndices[vi]] * DRUG_PRODUCTION_RATE*dt;
+                }
+            }
             //Cell-type specific consumption
             for (int ci = 0; ci < xDim * yDim; ci++) {
                 if(OXYGEN_ACTIVE) {
                     Oxygen.field[ci] -= tumorCells.pops[ci] * tumorCells.OxygenConsumption * dt;
+                    Oxygen.field[ci] -= PDL1TumorCells.pops[ci] * PDL1TumorCells.OxygenConsumption * dt;
                     Oxygen.field[ci] -= normalCells.pops[ci] * normalCells.OxygenConsumption * dt;
                     if (Oxygen.field[ci] < 0) {
                         Oxygen.field[ci] = 0.0;

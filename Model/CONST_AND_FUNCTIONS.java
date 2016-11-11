@@ -22,14 +22,14 @@ public class CONST_AND_FUNCTIONS {
     static final boolean DRUG_ACTIVE=true;
 
     static final int SEED_TIME = 200;
-    static final int IMMUNE_TIME = 1000;
+    static final int IMMUNE_TIME = 500;
     static final int DRUG_TIME = 1300;
     static final int STOP_MODEL_TIME=200000;
 
     static final double BIN_LENGTH = 10.0; //microns
     static final double BIN_VOLUME = BIN_LENGTH*BIN_LENGTH; //n.b. 2D
-    static final int NUM_BINS_1D = 100;
-    static final double DIFFUSE_TIME_LENGTH = 1.0;
+    static final int NUM_BINS_1D = 200;
+    static final double DIFFUSE_TIME_LENGTH = 0.01;
     static final double DIFFUSE_DT = 0.010;
 
     //cell constants
@@ -59,17 +59,23 @@ public class CONST_AND_FUNCTIONS {
     //diffusible constants
     static final double OXYGEN_DIFFUSION_RATE = 0.1;
     static final double GLUCOSE_DIFFUSION_RATE = 0.1;
-    static final double ACID_DIFFUSION_RATE = 0.01;
-    static final double DRUG_DIFFUSION_RATE = 0.02;
+    static final double ACID_DIFFUSION_RATE = 0.1;
+    static final double DRUG_DIFFUSION_RATE = 0.2;
 
-    static final double OXYGEN_PRODUCTION_RATE=0.02; //per dt, per unit density
-    static final double GLUCOSE_PRODUCTION_RATE=0.02; //per dt, per unit density
+    static final double OXYGEN_PRODUCTION_RATE=0.002; //per dt, per unit density
+    static final double GLUCOSE_PRODUCTION_RATE=0.002; //per dt, per unit density
     static final double DRUG_PRODUCTION_RATE = 0.002;
     static final double ACID_PRODUCTION_RATE=0.01; //per dt, per unit density
 
     //Govern gluc/oxy on
     static final double GLUCOSE_THRESHOLD = 0.05;
     static final double OXYGEN_THRESHOLD = 0.05;
+    static final double CONSUMPTION_SCALE=0.004;
+    static final double TUMOR_OXYGEN_CONSUMPTION=0.0004*CONSUMPTION_SCALE;
+    static final double TUMOR_GLUCOSE_CONSUMPTION=0.0004*CONSUMPTION_SCALE;
+    static final double NORMAL_OXYGEN_CONSUMPTION = 0.0004*CONSUMPTION_SCALE;
+    static final double NORMAL_GLUCOSE_CONSUMPTION = 0.0004*CONSUMPTION_SCALE;
+    static final double NORMAL_DRUG_CONSUMPTION = 0.0015*CONSUMPTION_SCALE;
 
     static final double OXYGEN_USAGE_NORMAL=2; //number of oxygen needed for a single birth (for normal cells)
     static final double GLUCOSE_USAGE_NORMAL=2; // number of glucose needed for a single birth (for normal cells)

@@ -12,8 +12,8 @@ import static Model.CONST_AND_FUNCTIONS.*;
  */
 public class TumorCellPop extends CellPop {
 
-    final public double OxygenConsumption = 0.0025;
-    final public double GlucoseConsumption = 0.003;
+    final public double OxygenConsumption = TUMOR_OXYGEN_CONSUMPTION;
+    final public double GlucoseConsumption = TUMOR_GLUCOSE_CONSUMPTION;
     double birthRate=0.22*TIME_STEP;
 
     final Visualizer visFull;
