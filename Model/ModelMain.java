@@ -230,6 +230,14 @@ class TumorModel {
         {
             tCells.active = true;
         }
+//        if (tick == IMMUNE_TIME+1)
+//        {
+//            double tmrCells=0, pTmrCells=0, aTmrCells=0;
+//            for(int i=0; i<xDim*yDim; i++){
+//                tmrCells+=tumorCells.pops[i]; pTmrCells+=PDL1TumorCells.pops[i]; aTmrCells+=acidTumorCells.pops[i];
+//            }
+//            System.out.println(tmrCells+" "+pTmrCells+" "+aTmrCells);
+//        }
         System.err.println("Day: "+tick*TIME_STEP); //TODO: put this information onto the GUI.
     }
 
@@ -343,9 +351,7 @@ class TumorModel {
 
 public class ModelMain {
     public static void main(String[] args) {
-
-
-        TumorModel firstModel = new TumorModel(110, 110);
+        TumorModel firstModel = new TumorModel(NUM_BINS_1D, NUM_BINS_1D);
         ModelVis mainWindow = new ModelVis(firstModel);
         //setting normalCells for access by other populations, adding cellpop for iteration
 
