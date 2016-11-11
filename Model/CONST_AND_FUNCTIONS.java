@@ -12,13 +12,13 @@ public class CONST_AND_FUNCTIONS {
     static final boolean NORMAL_CELLS_ACTIVE=true;
     static final boolean TUMOR_CELLS_ACTIVE=true;
     static final boolean PDL1_CELLS_ACTIVE=true;
-    static final boolean ACIDIC_CELLS_ACTIVE=true;
-    static final boolean NECRO_CELLS_ACTIVE=false;
+    static final boolean ACIDIC_CELLS_ACTIVE=false;
+    static final boolean NECRO_CELLS_ACTIVE=true;
     static final boolean VESSELS_ACTIVE=true;
     static final boolean T_CELLS_ACTIVE=true;
-    static final boolean OXYGEN_ACTIVE=false;
-    static final boolean GLUCOSE_ACTIVE=false;
-    static final boolean ACID_ACTIVE=true;
+    static final boolean OXYGEN_ACTIVE=true;
+    static final boolean GLUCOSE_ACTIVE=true;
+    static final boolean ACID_ACTIVE=false;
     static final boolean DRUG_ACTIVE=true;
 
     static final int SEED_TIME = 200;
@@ -35,12 +35,10 @@ public class CONST_AND_FUNCTIONS {
     //cell constants
     static final public double MAX_POP=BIN_LENGTH*BIN_LENGTH*NUM_BINS_1D*NUM_BINS_1D;
     static final double TIME_STEP=0.2; //days
-    static final double TUMOR_PROLIF_RATE=0.2*TIME_STEP;
     static final double NECROTIC_DECAY_RATE=0.01*TIME_STEP;
     static final double NORMAL_PROLIF_RATE=0.02*TIME_STEP;
     static final double NORMAL_DEATH_RATE=0.01*TIME_STEP;
 
-//    static final double TUMOR_PROLIF_RATE = 0.4 * TIME_STEP;
     static final double TUMOR_DEATH_RATE = 0.02*TIME_STEP;
 
     static final double TUMOUR_LOW_OXYGEN_DEATH_THRESHOLD = 0.01;
@@ -57,8 +55,8 @@ public class CONST_AND_FUNCTIONS {
     static final double TCELL_DEATH_RATE=0.02*TIME_STEP;
 
     //diffusible constants
-    static final double OXYGEN_DIFFUSION_RATE = 0.1;
-    static final double GLUCOSE_DIFFUSION_RATE = 0.1;
+    static final double OXYGEN_DIFFUSION_RATE = 0.05;
+    static final double GLUCOSE_DIFFUSION_RATE = 0.05;
     static final double ACID_DIFFUSION_RATE = 0.1;
     static final double DRUG_DIFFUSION_RATE = 0.02;
 

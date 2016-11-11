@@ -126,10 +126,10 @@ public class TumorCellPop extends CellPop {
        double necRho;
        for (int x = 0; x < xDim; x++) {
            for (int y = 0; y < yDim; y++) {
-               if(myVis!=null&&pops[I(x,y)]>1) {
-                   myVis.SetHeat(x, y, pops[I(x, y)] / MAX_POP);
-               }
-               myVis.SetHeat(x, y, 30*pops[I(x, y)] / MAX_POP);
+//               if(myVis!=null&&pops[I(x,y)]>1) {
+//                   myVis.SetHeat(x, y, pops[I(x, y)] / MAX_POP);
+//               }
+               myVis.SetHeat(x, y, pops[I(x, y)] / MAX_POP); //or *30
 
                if (visFull != null)
                {
